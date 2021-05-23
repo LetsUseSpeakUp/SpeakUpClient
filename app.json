@@ -1,0 +1,12 @@
+{
+  "name": "SpeakUpClient",
+  "displayName": "SpeakUpClient",
+  "expo": {
+    "name": "SpeakUpClient",
+    "slug": "SpeakUpClient",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
