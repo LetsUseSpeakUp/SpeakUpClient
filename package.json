@@ -11,9 +11,14 @@
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/native": "^5.9.4",
+    "events": "^3.3.0",
     "expo": "~41.0.1",
     "expo-splash-screen": "~0.10.2",
     "expo-updates": "~0.5.4",
+    "inherits": "^2.0.4",
+    "nets": "^3.2.0",
+    "once": "^1.4.0",
+    "pump": "^3.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
@@ -24,7 +29,10 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "~3.0.0",
     "react-native-unimodules": "~0.13.3",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "request": "^2.88.2",
+    "split2": "^3.2.2",
+    "through2": "^2.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
