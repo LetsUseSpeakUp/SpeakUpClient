@@ -78,6 +78,8 @@ export default function CallScreen() {
     const onHangUp = ()=>{
         //@ts-ignore
         callManager.endCall();
+        setCallState(CallState.Dialpad);
+
     }
 
     switch(callState){
