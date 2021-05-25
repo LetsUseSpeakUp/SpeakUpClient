@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { View, StyleSheet, Button, Text, TextInput} from 'react-native';
 
-export default function PlaceCallScreen(props: any){    
+export default function DialPadScreen(props: any){    
     const [receiverPhoneNumber, setReceiverPhoneNumber] = useState('')
 
     return(

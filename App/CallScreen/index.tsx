@@ -4,14 +4,14 @@ import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
 import {CallManager} from './Logic/CallManager'
 import RingingScreen from './RingingScreen'
 import GetPhoneNumberScreen from './GetPhoneNumberScreen'
-import PlaceCallScreen from './PlaceCallScreen'
+import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 
 
 export default function CallScreen() {    
 
-    enum CallState {GetPhoneNumber, PlaceCall, Ringing, Connecting, OnCall};
+    enum CallState {GetPhoneNumber, Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
     const [callState, setCallState] = useState(CallState.GetPhoneNumber);    
 
     const [callManager, setCallManager] = useState(null);
@@ -30,11 +30,11 @@ export default function CallScreen() {
 //@ts-ignore
         callManager.on('callReceived', (callerPhoneNumber: string)=>{
             setPartnerPhoneNumber(callerPhoneNumber);
-            setCallState(CallState.Ringing);
+            setCallState(CallState.Ringing_Receiver);
         })
 //@ts-ignore
         callManager.on('disconnected', ()=>{
-            setCallState(CallState.PlaceCall)
+            setCallState(CallState.Dialpad)
         })
 //@ts-ignore
         callManager.on('connected', ()=>{
@@ -42,7 +42,7 @@ export default function CallScreen() {
         })
 //@ts-ignore
         callManager.on('callDeclined', ()=>{
-            setCallState(CallState.PlaceCall);
+            setCallState(CallState.Dialpad);
         })
     }
 
@@ -50,7 +50,7 @@ export default function CallScreen() {
         setUserPhoneNumber(newPhoneNumber);
 //@ts-ignore
         setCallManager(new CallManager(newPhoneNumber));        
-        setCallState(CallState.PlaceCall);        
+        setCallState(CallState.Dialpad);        
     }
 
     const onRingAnswered = (acceptCall: boolean)=>{
@@ -60,9 +60,11 @@ export default function CallScreen() {
             setCallState(CallState.Connecting);
         }
         else{
-//@ts-ignore
-            callManager.declineCall()
-            setCallState(CallState.PlaceCall);
+            if(callState == CallState.Ringing_Receiver){
+                //@ts-ignore
+                callManager.declineCall()  
+            } 
+            setCallState(CallState.Dialpad);
         }
     }
 
@@ -70,7 +72,7 @@ export default function CallScreen() {
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
 //@ts-ignore
         callManager.placeCall(tempPartnerPhoneNumber);
-        setCallState(CallState.Connecting); //TODO: Make this ringingSender
+        setCallState(CallState.Ringing_Sender);
     }
 
     const onHangUp = ()=>{
@@ -80,8 +82,9 @@ export default function CallScreen() {
 
     switch(callState){
         case CallState.GetPhoneNumber: return (<GetPhoneNumberScreen onSetPhoneNumber={onMyPhoneNumberSet}/>);
-        case CallState.PlaceCall: return (<PlaceCallScreen userPhoneNumber={userPhoneNumber} onCallPlaced={onCallPlaced}/>)
-        case CallState.Ringing: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered}/>)
+        case CallState.Dialpad: return (<DialPadScreen userPhoneNumber={userPhoneNumber} onCallPlaced={onCallPlaced}/>)
+        case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
+        case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
         case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)
         case CallState.OnCall: return (<OnCallScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>);
         default: return(<View style={styles.container}><Text>Error - Unknown state</Text></View>)
