@@ -44,6 +44,10 @@ export default function CallScreen() {
         callManager.on('callDeclined', ()=>{
             setCallState(CallState.Dialpad);
         })
+        //@ts-ignore
+        callManager.on('partnerDisconnected', ()=>{
+            //TODO
+        })
     }
 
     const onMyPhoneNumberSet = (newPhoneNumber: string)=>{
@@ -79,7 +83,6 @@ export default function CallScreen() {
         //@ts-ignore
         callManager.endCall();
         setCallState(CallState.Dialpad);
-
     }
 
     switch(callState){

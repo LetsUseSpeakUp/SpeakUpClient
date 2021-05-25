@@ -72,21 +72,22 @@ class CallManager extends EventEmitter {
             }
         })
         this.signalServer.on(MessageType.Decline, (data: SignalServerData) => {
-            this.leaveAgoraChannel();            
             this.emit("callDeclined");
-            this.resetPartner();
+            this.endCall();            
         })
     }
 
     private setupAgoraManagerListeners = ()=>{
         this.agoraManager.on('disconnected', ()=>{
             this.emit('disconnected');
+            this.endCall();
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
         })
         this.agoraManager.on('partnerDisconnected', ()=>{
             this.emit('disconnected');
+            this.endCall();
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
@@ -97,7 +98,7 @@ class CallManager extends EventEmitter {
         this.agoraManager.joinChannel(channelName);                
     }
 
-    private leaveAgoraChannel = ()=>{
+    private leaveAgoraChannel = ()=>{        
         this.agoraManager.leaveChannel();
     }
 
