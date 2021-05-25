@@ -7592,6 +7592,11 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
+"react-native-agora@^3.3.3":
+  "integrity" "sha512-EiPvqn3vPoTu8D+xk21MRRbyAauYmBezJ9bsmyXTYKd7fb9C7eyyYb9QZ82KmXBLxjuzu3T7I03a1uM/wIztqA=="
+  "resolved" "https://registry.npmjs.org/react-native-agora/-/react-native-agora-3.3.3.tgz"
+  "version" "3.3.3"
+
 "react-native-contacts@^7.0.0":
   "integrity" "sha512-K8DYUo3voC/cHFqy7FJzDRCmtsI5fkhjb7tWqfGe1hU/78XL3BcevEC6ZFCeiBDC2PaU6Y1bsq9969mEYODhCw=="
   "resolved" "https://registry.npmjs.org/react-native-contacts/-/react-native-contacts-7.0.0.tgz"

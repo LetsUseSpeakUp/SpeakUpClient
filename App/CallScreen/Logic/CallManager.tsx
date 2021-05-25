@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
+import AgoraManager from './AgoraManager'
 
 
 /**
@@ -16,7 +17,7 @@ class CallManager extends EventEmitter {
     myPhoneNumber: string
     partnerPhoneNumber: string
     tempAgoraChannel: string
-    agoraManager: any //TODO
+    agoraManager: AgoraManager //TODO
 
     constructor(myPhoneNumber: string) {
         super();
@@ -26,7 +27,7 @@ class CallManager extends EventEmitter {
         this.tempAgoraChannel = "TEMPAGORACHANNELNOTSET";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
-        //TODO: init agoraManager
+        this.agoraManager = new AgoraManager();
         this.setupAgoraManager();
 
     }
