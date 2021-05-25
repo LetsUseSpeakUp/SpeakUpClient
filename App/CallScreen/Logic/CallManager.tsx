@@ -4,13 +4,11 @@ import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 
 /**
  * Listen to these events:
- * -'callReceived' (callerPhoneNumber)
+ * -'callReceived' also returns (callerPhoneNumber)
  * -'disconnected'
  * -'connected'
  * -'callDeclined'
  * 
- * TODO - Make it attempt to reconnect after disconnect if you didn't get a hangup message
- * from partner.
  */
 class CallManager extends EventEmitter {
 
@@ -18,6 +16,7 @@ class CallManager extends EventEmitter {
     myPhoneNumber: string
     partnerPhoneNumber: string
     tempAgoraChannel: string
+    agoraManager: any //TODO
 
     constructor(myPhoneNumber: string) {
         super();
@@ -27,11 +26,14 @@ class CallManager extends EventEmitter {
         this.tempAgoraChannel = "TEMPAGORACHANNELNOTSET";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
+        //TODO: init agoraManager
+        this.setupAgoraManager();
+
     }
 
     public placeCall(receiverPhoneNumber: string) {
         const agoraChannelName = this.generateAgoraChannelName(this.myPhoneNumber);
-        //TODO: Join Agora Channel
+        this.joinAgoraChannel(agoraChannelName);
         this.partnerPhoneNumber = receiverPhoneNumber;
         this.signalServer.sendSignal({agoraChannel: agoraChannelName, myPhoneNumber: this.myPhoneNumber,
             receiverPhoneNumber: this.partnerPhoneNumber});
@@ -52,7 +54,6 @@ class CallManager extends EventEmitter {
     }
 
     public endCall() {
-        //TODO
         this.leaveAgoraChannel();
         this.resetPartner();
     }
@@ -60,26 +61,31 @@ class CallManager extends EventEmitter {
     private setupSignalServer = (myNumber: string) => {
         this.signalServer.listenForMyPhoneNumber(myNumber);
         this.signalServer.on(MessageType.Signal, (data: SignalServerData) => {            
-            //TODO
-            //If already on call
-            //decline
-            //Else            
-            this.partnerPhoneNumber = data.sender;
-            this.tempAgoraChannel = data.message
-            this.emit("callReceived", data.sender);
-            
+            if(this.partnerPhoneNumber.length > 0){
+                this.signalServer.sendDecline(this.myPhoneNumber, data.sender);
+            }
+            else{
+                this.partnerPhoneNumber = data.sender;
+                this.tempAgoraChannel = data.message
+                this.emit("callReceived", data.sender);
+            }
         })
         this.signalServer.on(MessageType.Decline, (data: SignalServerData) => {
-            //TODO
-            //Leave Agora channel
+            this.leaveAgoraChannel();            
             this.emit("callDeclined");
             this.resetPartner();
         })
     }
 
+    private setupAgoraManager = ()=>{
+        //TODO
+            //TODO: emit connect when partner streams
+            //TODO: emit disconnect when partner loses stream
+    }
+
     private joinAgoraChannel = (channelName: string)=>{
         //TODO
-        //TODO: Put a timeout - if you don't connect to partner within 30 seconds, disconnect
+        //TODO: Put a timeout - if you don't connect to partner within 30 seconds, disconnect        
     }
 
     private leaveAgoraChannel = ()=>{
