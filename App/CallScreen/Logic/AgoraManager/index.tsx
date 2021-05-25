@@ -16,17 +16,12 @@ import RtcEngine, {
 export default class AgoraManager extends EventEmitter {
     rtcEngine: RtcEngine | undefined
 
-    tracks = {
-        localAudio: null,
-        remoteAudio: null
-    }
-
     options = {
         appid: 'cf3e232f50ad4d608ff97081a9ce8b72',
         uid: "",
     }
 
-    remotePartner: any
+    connectedToParter = false;
 
     constructor() {
         super();
@@ -42,10 +37,9 @@ export default class AgoraManager extends EventEmitter {
         await this.rtcEngine.setChannelProfile(ChannelProfile.Communication);
         this.rtcEngine.disableVideo();
         this.rtcEngine.enableAudio();
-
     }
 
-    public async joinChannel(channelName: string) { //TODO
+    public async joinChannel(channelName: string) {
         const channelToken = await this.getChannelToken(channelName);
         await this.rtcEngine?.joinChannel(
             channelToken,
@@ -53,11 +47,26 @@ export default class AgoraManager extends EventEmitter {
         );
 
         console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
+
+        setTimeout(()=>{
+            if(!this.isConnectedToPartner()){
+                console.log("AgoraManager::joinChannel -- failed to connect to partner after 30 seconds. Disconnecting");
+                this.leaveChannel();
+            }
+        }, 30000)
     }
 
     public async leaveChannel() {
         const leaveCode = await this.rtcEngine?.leaveChannel();
         console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
+    }
+
+    public isConnectedToPartner(){
+        return this.connectedToParter;
+    }
+
+    public generateChannelName(myPhoneNumber: string){
+        return (Date.now() + myPhoneNumber);
     }
 
     private async getChannelToken(channelName: string) {
@@ -84,18 +93,22 @@ export default class AgoraManager extends EventEmitter {
 
         this.rtcEngine?.addListener('UserJoined', (remoteUserId) => {
             console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId);
+            this.connectedToParter = true;
             this.emit('partnerJoined');
         })
         this.rtcEngine?.addListener('UserOffline', (remoteUserID, reason) => {
             console.log("AgoraManager.tsx:: user-left event. User: ", remoteUserID, " Reason: ", reason);
+            this.connectedToParter = false;
             this.emit('partnerDisconnected');
         })
         this.rtcEngine?.addListener('LeaveChannel', (rtcStates)=>{
             console.log("AgoraManager.tsx::left channel. Rtc stats: ", rtcStates);
+            this.connectedToParter = false;
             this.emit('disconnected');
         })
         this.rtcEngine?.addListener('ConnectionLost', () => {
             console.log("AgoraManager.tsx:: connectionLost event");
+            this.connectedToParter = false;
             this.emit('disconnected')
         })
         this.rtcEngine?.addListener('TokenPrivilegeWillExpire', () => {

@@ -28,12 +28,12 @@ class CallManager extends EventEmitter {
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
         this.agoraManager = new AgoraManager();
-        this.setupAgoraManager();
+        this.setupAgoraManagerListeners();
 
     }
 
     public placeCall(receiverPhoneNumber: string) {
-        const agoraChannelName = this.generateAgoraChannelName(this.myPhoneNumber);
+        const agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
         this.joinAgoraChannel(agoraChannelName);
         this.partnerPhoneNumber = receiverPhoneNumber;
         this.signalServer.sendSignal({agoraChannel: agoraChannelName, myPhoneNumber: this.myPhoneNumber,
@@ -78,23 +78,27 @@ class CallManager extends EventEmitter {
         })
     }
 
-    private setupAgoraManager = ()=>{
-        //TODO
-            //TODO: emit connect when partner streams
-            //TODO: emit disconnect when partner loses stream
+    private setupAgoraManagerListeners = ()=>{
+        this.agoraManager.on('disconnected', ()=>{
+            this.emit('disconnected');
+        })
+        this.agoraManager.on('partnerJoined', ()=>{
+            this.emit('connected');
+        })
+        this.agoraManager.on('partnerDisconnected', ()=>{
+            this.emit('disconnected');
+        })
+        this.agoraManager.on('tokenWillExpire', ()=>{
+            //TODO
+        })            
     }
 
     private joinAgoraChannel = (channelName: string)=>{
-        //TODO
-        //TODO: Put a timeout - if you don't connect to partner within 30 seconds, disconnect        
+        this.agoraManager.joinChannel(channelName);                
     }
 
     private leaveAgoraChannel = ()=>{
-        //TODO
-    }
-
-    private generateAgoraChannelName = (myNumber: string):string=>{
-        return "TODOSETAGORACHANNEL"; //TODO: Put this in agoraManager
+        this.agoraManager.leaveChannel();
     }
 
     private resetPartner = ()=>{
