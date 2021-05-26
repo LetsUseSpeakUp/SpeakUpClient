@@ -1,6 +1,8 @@
-const FileSystem = require('react-native-fs')
+import FileSystem, {UploadFileOptions, UploadFileItem} from 'react-native-fs';
 
 export default class ConvosServer{
+    serverEndpoint = "http://localhost:3999"
+
     public uploadConvo(filePath: string, metaData: ConvoMetaData){
         //TODO: Upload to server
     }
@@ -29,10 +31,6 @@ export default class ConvosServer{
         //TODO
     }
 
-    public _testFileUpload(filePath: string){
-        //TODO
-    }
-
     public _testFileCreationAndUpload(){        
         console.log("ConvosServer::_testFileCreationAndUpload");
         const dummyFilePath = FileSystem.DocumentDirectoryPath + '/speakupTestFile.txt'
@@ -43,13 +41,47 @@ export default class ConvosServer{
             return FileSystem.stat(dummyFilePath);
         }).then((stats)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File stats: ", stats);
+            const uploadFileItem: UploadFileItem = {
+                name: 'customDummyFile',
+                filename: 'speakupTestFile',
+                filepath: dummyFilePath,
+                filetype: 'txt'
+            };
+
+            const uploadParams = {
+                files: [uploadFileItem],
+                metaData: this._getDummyConvoMetaData()
+            };
+
+            return this.uploadFileToServer(uploadParams);
+        }).then((response)=>{
+            console.log("ConvosServer::_testFileCreationAndUpload. File uploaded with status code ", response.statusCode);
         })
         .catch((error)=>{
             console.log("ERROR -- ConvosServer::_testFileCreationAndUpload: ", error);
         })
     }
 
-    // private uploadFileToServer
+    private uploadFileToServer(uploadRequestParams: UploadRequestParams){
+        const uploadEndpoint = this.serverEndpoint + "/uploadAudio"
+        return FileSystem.uploadFiles({
+            toUrl: uploadEndpoint,
+            files: uploadRequestParams.files,
+            fields: {
+                'convoMetaData': JSON.stringify(uploadRequestParams.metaData)
+            }
+        })
+    }
+
+    private _getDummyConvoMetaData(): ConvoMetaData{
+        const dummyData: ConvoMetaData = {
+            initiatorUID: "DUMMYINITIATORUID",
+            receiverUID: "DUMMYRECEIVERUID",
+            convoUID: "DUMMYCONVOUID",
+            timestampStarted: 123456,
+            convoLength: 100
+        };
+    }
 
 }
 
@@ -71,6 +103,7 @@ export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
 }
 
-type uploadRequestParams = {
-
+type UploadRequestParams = {
+    files: UploadFileItem[],
+    metaData: ConvoMetaData;
 }
