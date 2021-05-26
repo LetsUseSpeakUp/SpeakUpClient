@@ -57,8 +57,14 @@ export default class ConvosServer{
     public _testExistingFileUpload(){
         console.log("AgoraManager::_testExistingFileUpload")
         const existingFilePath = "/var/mobile/Containers/Data/Application/419EF074-75EE-4CCF-84E7-7723E6B40E9D/Documents1622056666479Phone.aac";        
-        FileSystem.exists(existingFilePath).then((doesExist)=>{
-            if(!doesExist) throw("File doesn't exist");
+        
+        FileSystem.readDir(FileSystem.DocumentDirectoryPath).then((result)=>{
+            const fileNames = result.map((singleFile)=>singleFile.name).join();
+            console.log("AgoraManager::_testExistingFileUpload. Document directory contents: ", fileNames);
+            return FileSystem.exists(existingFilePath)
+        })
+        .then((doesExist)=>{
+            if(!doesExist) throw("File doesn't exist")
             return this.uploadConvoPromise(existingFilePath, this._getDummyConvoMetaData());
         })
         .then((response)=>{
