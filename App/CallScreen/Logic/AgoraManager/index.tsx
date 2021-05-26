@@ -11,6 +11,7 @@ import RtcEngine, {
  * partnerJoined
  * partnerDisconnected
  * tokenWillExpire
+ * recordingCreated (filePath: string) //TODO
  */
 
 export default class AgoraManager extends EventEmitter {

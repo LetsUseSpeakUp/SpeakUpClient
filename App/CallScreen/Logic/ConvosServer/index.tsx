@@ -29,6 +29,15 @@ export default class ConvosServer{
         //TODO
     }
 
+    public _testFileUpload(filePath: string){
+        //TODO
+    }
+
+    public _testFileCreationAndUpload(){        
+        //TODO
+        console.log("ConvosServer::_testFileCreationAndUpload");
+    }
+
 }
 
 export type ConvoMetaData = {    
