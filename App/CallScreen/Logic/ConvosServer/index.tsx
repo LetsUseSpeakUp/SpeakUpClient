@@ -1,4 +1,4 @@
-
+const FileSystem = require('react-native-fs')
 
 export default class ConvosServer{
     public uploadConvo(filePath: string, metaData: ConvoMetaData){
@@ -34,9 +34,22 @@ export default class ConvosServer{
     }
 
     public _testFileCreationAndUpload(){        
-        //TODO
         console.log("ConvosServer::_testFileCreationAndUpload");
+        const dummyFilePath = FileSystem.DocumentDirectoryPath + '/speakupTestFile.txt'
+        // FileSystem.
+        
+        FileSystem.writeFile(dummyFilePath, 'Hey this is a test file of speakup', 'utf8')
+        .then((success)=>{
+            return FileSystem.stat(dummyFilePath);
+        }).then((stats)=>{
+            console.log("ConvosServer::_testFileCreationAndUpload. File stats: ", stats);
+        })
+        .catch((error)=>{
+            console.log("ERROR -- ConvosServer::_testFileCreationAndUpload: ", error);
+        })
     }
+
+    // private uploadFileToServer
 
 }
 
@@ -56,4 +69,8 @@ export type ConvoStatus = {
 
 export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
+}
+
+type uploadRequestParams = {
+
 }
