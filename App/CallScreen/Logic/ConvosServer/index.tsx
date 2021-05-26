@@ -53,7 +53,7 @@ export default class ConvosServer{
         const uploadEndpoint = this.serverEndpoint + "/uploadAudio"        
         return FileSystem.uploadFiles({
             toUrl: uploadEndpoint,
-            files: [this.getUploadFileItem(filePath, metaData.convoUID)],
+            files: [this.getUploadFileItem(filePath, metaData.convoUID + '.txt')],
             fields: {
                 'convoMetaData': JSON.stringify(metaData)
             }
