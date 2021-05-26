@@ -41,7 +41,7 @@ export default class ConvosServer{
         }).then((stats)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File stats: ", stats);
             const uploadFileItem: UploadFileItem = {
-                name: 'customDummyFile',
+                name: 'convoFile',
                 filename: 'speakupTestFile',
                 filepath: dummyFilePath,
                 filetype: 'txt'
