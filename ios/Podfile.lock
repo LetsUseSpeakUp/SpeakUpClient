@@ -1,5 +1,5 @@
 PODS:
-  - AgoraRtcEngine_iOS (3.3.2)
+  - AgoraRtcEngine_iOS (3.4.2)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXApplication (3.1.2):
@@ -217,8 +217,8 @@ PODS:
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
   - React-jsinspector (0.63.4)
-  - react-native-agora (3.3.3):
-    - AgoraRtcEngine_iOS (= 3.3.2)
+  - react-native-agora (3.4.2):
+    - AgoraRtcEngine_iOS (= 3.4.2)
     - React
   - react-native-contacts (7.0.0):
     - React-Core
@@ -556,7 +556,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AgoraRtcEngine_iOS: 851e11fa7cbc0cba04f407eac1a9e32b872765a1
+  AgoraRtcEngine_iOS: 3a4d64f2866ffc122e090a693153bb673021f6fe
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXApplication: 4797b8b37f0b0470f587fdccf6407f44b50d18b5
@@ -584,7 +584,7 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
-  react-native-agora: c237fdc8faaeab7a3ccded3ee70bef834e7601a4
+  react-native-agora: 8fe461c6e314fd6e4da746fabcac2b0a3b263c75
   react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area: e8230b0017d76c00de6b01e2412dcf86b127c6a3

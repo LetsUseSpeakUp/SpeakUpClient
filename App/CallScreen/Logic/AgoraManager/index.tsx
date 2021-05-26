@@ -64,8 +64,9 @@ export default class AgoraManager extends EventEmitter {
     }
 
     public startRecording(convoMetaData: ConvoMetaData){
-        this.convoMetaData = convoMetaData;
         console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
+        this.convoMetaData = convoMetaData;
+
     }
 
     private finishRecording(){
