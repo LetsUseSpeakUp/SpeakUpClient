@@ -72,7 +72,11 @@ export default function CallScreen() {
             if(callState == CallState.Ringing_Receiver){
                 //@ts-ignore
                 callManager.declineCall()  
-            } 
+            }
+            else if(callState == CallState.Ringing_Sender){
+                //@ts-ignore
+                callManager.endCall();
+            }
             setCallState(CallState.Dialpad);
         }
     }

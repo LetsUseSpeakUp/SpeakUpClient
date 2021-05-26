@@ -58,6 +58,7 @@ class CallManager extends EventEmitter {
     }
 
     public endCall() {
+        console.log("CallManager::endCall");
         this.leaveAgoraChannel();
         this.resetPartner();
     }
