@@ -3,8 +3,11 @@ import RtcEngine, {
     ChannelProfile,
     ClientRole,
     RtcEngineConfig,
+    AudioRecordingConfiguration,
+    AudioRecordingPosition
 } from 'react-native-agora';
 
+import FileSystem from 'react-native-fs'
 import ConvosServer, {ConvoMetaData} from '../ConvosServer'
 
 /**
@@ -63,10 +66,21 @@ export default class AgoraManager extends EventEmitter {
         }, 30000)
     }
 
+    /**
+     * You should only call this after you've gotten a 'connected' message
+     * @param convoMetaData 
+     */
     public startRecording(convoMetaData: ConvoMetaData){
         console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
         this.convoMetaData = convoMetaData;
+        const filePath = this.getFilePathOfConvo(convoMetaData.convoUID);
+        const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
+        this.rtcEngine?.startAudioRecordingWithConfig(config);
+    }
 
+    private getFilePathOfConvo(convoUID: string): string{
+        const filePath = FileSystem.DocumentDirectoryPath + convoUID + '.aac';
+        return filePath
     }
 
     private finishRecording(){
@@ -76,9 +90,9 @@ export default class AgoraManager extends EventEmitter {
         }
 
         const convoLength = Date.now() - this.convoMetaData?.timestampStarted;
-        this.convoMetaData.convoLength = convoLength;
-        //TODO: emit event and filePath
+        this.convoMetaData.convoLength = convoLength;        
         console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
+        this.emit('recordingComplete', this.getFilePathOfConvo(this.convoMetaData.convoUID));
     }
 
     public async leaveChannel() { 

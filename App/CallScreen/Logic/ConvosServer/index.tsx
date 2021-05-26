@@ -40,19 +40,7 @@ export default class ConvosServer{
             return FileSystem.stat(dummyFilePath);
         }).then((stats)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File stats: ", stats);
-            const uploadFileItem: UploadFileItem = {
-                name: 'convoFile',
-                filename: 'speakupTestFile',
-                filepath: dummyFilePath,
-                filetype: 'txt'
-            };
-
-            const uploadParams = {
-                files: [uploadFileItem],
-                metaData: this._getDummyConvoMetaData()
-            };
-
-            return this.uploadFileToServer(uploadParams);
+            return this.uploadFileToServer(dummyFilePath, this._getDummyConvoMetaData());
         }).then((response)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File uploaded with response ", response);
         })
@@ -61,16 +49,27 @@ export default class ConvosServer{
         })
     }
 
-    private uploadFileToServer(uploadRequestParams: UploadRequestParams){
+    private uploadFileToServer(filePath: string, metaData: ConvoMetaData){
         const uploadEndpoint = this.serverEndpoint + "/uploadAudio"        
         return FileSystem.uploadFiles({
             toUrl: uploadEndpoint,
-            files: uploadRequestParams.files,
+            files: [this.getUploadFileItem(filePath, metaData.convoUID)],
             fields: {
-                'convoMetaData': JSON.stringify(uploadRequestParams.metaData)
+                'convoMetaData': JSON.stringify(metaData)
             }
         }).promise;
     }
+
+    private getUploadFileItem(filePath: string, fileName: string){
+        const uploadFileItem: UploadFileItem = {
+            name: 'convoFile',
+            filename: fileName,
+            filepath: filePath,
+            filetype: 'aac' //TODO: get it from the file
+        }
+        return uploadFileItem;
+    }
+
 
     private _getDummyConvoMetaData(): ConvoMetaData{
         const dummyData: ConvoMetaData = {
@@ -102,9 +101,4 @@ export type ConvoStatus = {
 
 export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
-}
-
-type UploadRequestParams = {
-    files: UploadFileItem[],
-    metaData: ConvoMetaData;
 }
