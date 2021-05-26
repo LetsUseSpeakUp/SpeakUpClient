@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
+import {ConvoMetaData} from './ConvosServer'
 
 
 /**
@@ -16,15 +17,16 @@ class CallManager extends EventEmitter {
     signalServer: SignalServer
     myPhoneNumber: string
     partnerPhoneNumber: string
-    tempAgoraChannel: string
+    agoraChannelName: string
     agoraManager: AgoraManager
+    isInitiator = false
 
     constructor(myPhoneNumber: string) {
         super();
 
         this.myPhoneNumber = myPhoneNumber;
         this.partnerPhoneNumber = "";
-        this.tempAgoraChannel = "";
+        this.agoraChannelName = "";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
         this.agoraManager = new AgoraManager();
@@ -33,20 +35,21 @@ class CallManager extends EventEmitter {
     }
 
     public placeCall(receiverPhoneNumber: string) {
-        const agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
-        this.joinAgoraChannel(agoraChannelName);
+        this.isInitiator = true;
+        this.agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
+        this.joinAgoraChannel(this.agoraChannelName);
         this.partnerPhoneNumber = receiverPhoneNumber;
-        this.signalServer.sendSignal({agoraChannel: agoraChannelName, myPhoneNumber: this.myPhoneNumber,
+        this.signalServer.sendSignal({agoraChannel: this.agoraChannelName, myPhoneNumber: this.myPhoneNumber,
             receiverPhoneNumber: this.partnerPhoneNumber});
     }
 
     public acceptCall() {
-        if(this.tempAgoraChannel.length == 0){
-            console.log("ERROR -- CallManager.tsx. Temp Agora Channel name is length 0");
+        if(this.agoraChannelName.length == 0){
+            console.log("ERROR -- CallManager.tsx. Agora Channel name is length 0");
             return;
         }
-        
-        this.joinAgoraChannel(this.tempAgoraChannel);
+        this.isInitiator = false;
+        this.joinAgoraChannel(this.agoraChannelName);
     }
 
     public declineCall() {        
@@ -69,7 +72,8 @@ class CallManager extends EventEmitter {
             }
             else if(this.partnerPhoneNumber.length == 0){
                 this.partnerPhoneNumber = data.sender;
-                this.tempAgoraChannel = data.message
+                this.agoraChannelName = data.message
+                this.isInitiator = false;
                 this.emit("callReceived", data.sender);
             }
         })
@@ -86,6 +90,8 @@ class CallManager extends EventEmitter {
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
+            if(this.isInitiator)
+                this.startRecording();
         })
         this.agoraManager.on('partnerDisconnected', ()=>{
             this.emit('disconnected');
@@ -94,6 +100,9 @@ class CallManager extends EventEmitter {
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
         })            
+        this.agoraManager.on('recordingComplete', (filePath:string)=>{
+            //TODO
+        })
     }
 
     private joinAgoraChannel = (channelName: string)=>{
@@ -105,8 +114,24 @@ class CallManager extends EventEmitter {
     }
 
     private resetPartner = ()=>{
-        this.tempAgoraChannel = "";
+        this.agoraChannelName = "";
         this.partnerPhoneNumber = "";
+    }
+
+    private startRecording = ()=>{
+        if(!this.isInitiator){
+            console.log("ERROR -- CallManager::startRecording. Not initiator"); //TODO: Only initiator records until we figure out split track syncing
+            return;
+        }
+
+        const convoMetaData: ConvoMetaData = {
+            initiatorUID: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
+            receiverUID: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
+            convoUID: this.agoraChannelName,
+            timestampStarted: Date.now(),
+            convoLength: 0    
+        };
+        this.agoraManager.startRecording(convoMetaData);
     }
 }
 

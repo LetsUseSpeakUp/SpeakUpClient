@@ -5,13 +5,15 @@ import RtcEngine, {
     RtcEngineConfig,
 } from 'react-native-agora';
 
+import ConvosServer, {ConvoMetaData} from '../ConvosServer'
+
 /**
  * Emits
  * disconnected
  * partnerJoined
  * partnerDisconnected
  * tokenWillExpire
- * recordingCreated (filePath: string) //TODO
+ * recordingComplete (filePath: string) //TODO
  */
 
 export default class AgoraManager extends EventEmitter {
@@ -58,12 +60,13 @@ export default class AgoraManager extends EventEmitter {
         }, 30000)
     }
 
-    public startRecording(convoMetaData: any){
-        //TODO: When do we call this?
+    public startRecording(convoMetaData: ConvoMetaData){
+        //TODO
+        console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
     }
 
-    public async leaveChannel() {
-        const leaveCode = await this.rtcEngine?.leaveChannel();
+    public async leaveChannel() { 
+        const leaveCode = await this.rtcEngine?.leaveChannel(); //TODO: Check if client is connected before client.leave so we don't get annoying error message
         console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
     }
 
@@ -97,11 +100,8 @@ export default class AgoraManager extends EventEmitter {
             console.log('Error', err);
         });
 
-        //TODO: Why is it declining?
-        //TODO: On joined channel
-            //If partner is already there, emit partner joined and set connectedToPartner True
-        //TODO: If you get a decline message before you've joined the Agora channel, leave ASAP
-
+        //TODO: if you get call declined message before joining channel, leave ASAP
+            //Timeout will handle this, but it will be slower
         this.rtcEngine?.addListener('UserJoined', (remoteUserId) => {
             console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId); //TODO: Does this get called when partner joins before you?
             this.connectedToParter = true;
