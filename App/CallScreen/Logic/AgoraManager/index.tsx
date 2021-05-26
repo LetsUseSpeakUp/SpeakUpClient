@@ -25,6 +25,8 @@ export default class AgoraManager extends EventEmitter {
     }
 
     connectedToParter = false;
+    //@ts-ignore
+    convoMetaData: ConvoMetaData
 
     constructor() {
         super();
@@ -48,7 +50,8 @@ export default class AgoraManager extends EventEmitter {
             channelToken,
             channelName, null, 0
         );
-
+        //@ts-ignore
+        this.convoMetaData = null;
         console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
 
         const intervalID = setInterval(()=>{
@@ -61,8 +64,20 @@ export default class AgoraManager extends EventEmitter {
     }
 
     public startRecording(convoMetaData: ConvoMetaData){
-        //TODO
+        this.convoMetaData = convoMetaData;
         console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
+    }
+
+    private finishRecording(){
+        if(!this.convoMetaData){
+            console.log("AgoraManager::finishRecording. Recording not started");
+            return;
+        }
+
+        const convoLength = Date.now() - this.convoMetaData?.timestampStarted;
+        this.convoMetaData.convoLength = convoLength;
+        //TODO: emit event and filePath
+        console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
     }
 
     public async leaveChannel() { 
@@ -116,11 +131,13 @@ export default class AgoraManager extends EventEmitter {
             console.log("AgoraManager.tsx::left channel. Rtc stats: ", rtcStates);
             this.connectedToParter = false;
             this.emit('disconnected');
+            this.finishRecording();
         })
         this.rtcEngine?.addListener('ConnectionLost', () => {
             console.log("AgoraManager.tsx:: connectionLost event");
             this.connectedToParter = false;
             this.emit('disconnected')
+            this.finishRecording();
         })
         this.rtcEngine?.addListener('TokenPrivilegeWillExpire', () => {
             console.log("AgoraManager.tsx:: token will expire");

@@ -3,7 +3,7 @@ import FileSystem, {UploadFileOptions, UploadFileItem} from 'react-native-fs';
 export default class ConvosServer{
     serverEndpoint = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
-    public uploadConvo(filePath: string, metaData: ConvoMetaData){
+    public uploadConvo(filePath: string, metaData: ConvoMetaData){ //TODO: Handle no connection so reupload when you have one
         //TODO: Upload to server
     }
 
