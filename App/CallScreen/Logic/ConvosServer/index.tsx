@@ -63,7 +63,6 @@ export default class ConvosServer{
 
     private uploadFileToServer(uploadRequestParams: UploadRequestParams){
         const uploadEndpoint = this.serverEndpoint + "/uploadAudio"
-        // const uploadEndpoint = "https://en1h0hm2ty59e.x.pipedream.net/"
         return FileSystem.uploadFiles({
             toUrl: uploadEndpoint,
             files: uploadRequestParams.files,
