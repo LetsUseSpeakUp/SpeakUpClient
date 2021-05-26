@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetaData} from './ConvosServer'
+import ConvosServer, {ConvoMetaData} from './ConvosServer'
 
 
 /**
@@ -99,10 +99,7 @@ class CallManager extends EventEmitter {
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
-        })            
-        this.agoraManager.on('recordingComplete', (filePath:string)=>{
-            //TODO
-        })
+        })                    
     }
 
     private joinAgoraChannel = (channelName: string)=>{

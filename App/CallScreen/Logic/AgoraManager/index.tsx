@@ -16,7 +16,7 @@ import ConvosServer, {ConvoMetaData} from '../ConvosServer'
  * partnerJoined
  * partnerDisconnected
  * tokenWillExpire
- * recordingComplete (filePath: string) //TODO
+ * recordingUploaded //TODO
  */
 
 export default class AgoraManager extends EventEmitter {
@@ -80,7 +80,7 @@ export default class AgoraManager extends EventEmitter {
 
     private getFilePathOfConvo(convoUID: string): string{
         const filePath = FileSystem.DocumentDirectoryPath + convoUID + '.aac';
-        return filePath
+        return filePath;
     }
 
     private finishRecording(){
@@ -92,7 +92,9 @@ export default class AgoraManager extends EventEmitter {
         const convoLength = Date.now() - this.convoMetaData?.timestampStarted;
         this.convoMetaData.convoLength = convoLength;        
         console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
-        this.emit('recordingComplete', this.getFilePathOfConvo(this.convoMetaData.convoUID));
+        const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
+        const convoServer = new ConvosServer();
+        convoServer.uploadConvo(filePath, this.convoMetaData);
     }
 
     public async leaveChannel() { 

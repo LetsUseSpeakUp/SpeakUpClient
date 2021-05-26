@@ -3,8 +3,16 @@ import FileSystem, {UploadFileOptions, UploadFileItem} from 'react-native-fs';
 export default class ConvosServer{
     serverEndpoint = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
-    public uploadConvo(filePath: string, metaData: ConvoMetaData){ //TODO: Handle no connection so reupload when you have one
-        //TODO: Upload to server
+    //TODO: Handle no connection so reupload when you have one
+    public uploadConvo(filePath: string, metaData: ConvoMetaData){
+        const uploadEndpoint = this.serverEndpoint + "/uploadAudio"        
+        return FileSystem.uploadFiles({
+            toUrl: uploadEndpoint,
+            files: [this.getUploadFileItem(filePath, metaData.convoUID + '.txt')],
+            fields: {
+                'convoMetaData': JSON.stringify(metaData)
+            }
+        }).promise;
     }
 
     public getAllConvosMetaDataForUser(userUID: string): ConvoMetaData[]{
@@ -47,17 +55,6 @@ export default class ConvosServer{
         .catch((error)=>{
             console.log("ERROR -- ConvosServer::_testFileCreationAndUpload: ", error);
         })
-    }
-
-    private uploadFileToServer(filePath: string, metaData: ConvoMetaData){
-        const uploadEndpoint = this.serverEndpoint + "/uploadAudio"        
-        return FileSystem.uploadFiles({
-            toUrl: uploadEndpoint,
-            files: [this.getUploadFileItem(filePath, metaData.convoUID + '.txt')],
-            fields: {
-                'convoMetaData': JSON.stringify(metaData)
-            }
-        }).promise;
     }
 
     private getUploadFileItem(filePath: string, fileName: string){
