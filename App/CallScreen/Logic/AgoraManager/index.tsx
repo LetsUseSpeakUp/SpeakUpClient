@@ -75,11 +75,15 @@ export default class AgoraManager extends EventEmitter {
         this.convoMetaData = convoMetaData;
         const filePath = this.getFilePathOfConvo(convoMetaData.convoUID);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
-        this.rtcEngine?.startAudioRecordingWithConfig(config);
+        this.rtcEngine?.startAudioRecordingWithConfig(config).then(()=>{
+            console.log("AgoraManager::startRecording. Promise returned without error. FilePath: ", filePath);
+        }).catch((error)=>{
+            console.log("ERROR -- AgoraManager::startRecording: ", error);
+        });
     }
 
     private getFilePathOfConvo(convoUID: string): string{
-        const filePath = FileSystem.DocumentDirectoryPath + convoUID + '.aac';
+        const filePath = FileSystem.DocumentDirectoryPath + '/' + convoUID + '.aac';
         return filePath;
     }
 
@@ -92,11 +96,17 @@ export default class AgoraManager extends EventEmitter {
         const convoLength = Date.now() - this.convoMetaData?.timestampStarted;
         this.convoMetaData.convoLength = convoLength;        
         console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
-        const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
-        const convoServer = new ConvosServer();
-        convoServer.uploadConvo(filePath, this.convoMetaData);
-        //@ts-ignore
-        this.convoMetaData = null;
+        this.rtcEngine?.stopAudioRecording().then(()=>{
+            console.log("AgoraManager::finishRecording without errors.");
+            const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
+            const convoServer = new ConvosServer();
+            convoServer.uploadConvo(filePath, this.convoMetaData);
+        }).catch((error)=>{
+            console.log("ERROR -- AgoraManager::finishRecording: ", error);
+        }).finally(()=>{
+            //@ts-ignore
+            this.convoMetaData = null;
+        })                
     }
 
     public async leaveChannel() { 

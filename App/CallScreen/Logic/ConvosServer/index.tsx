@@ -60,7 +60,8 @@ export default class ConvosServer{
         
         FileSystem.readDir(FileSystem.DocumentDirectoryPath).then((result)=>{
             const fileNames = result.map((singleFile)=>singleFile.name).join();
-            console.log("AgoraManager::_testExistingFileUpload. Document directory contents: ", fileNames);
+            console.log("AgoraManager::_testExistingFileUpload. Document directory: ",
+            FileSystem.DocumentDirectoryPath, " |contents: ", fileNames);
             return FileSystem.exists(existingFilePath)
         })
         .then((doesExist)=>{

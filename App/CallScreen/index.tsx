@@ -24,7 +24,7 @@ export default function CallScreen() {
 
     useEffect(()=>{
         const server = new ConvosServer(); //TODO: Delete this. Just for testing
-        server._testExistingFileUpload();
+        // server._testExistingFileUpload();
     }, [])
 
     const connectCallManagerListeners = ()=>{
