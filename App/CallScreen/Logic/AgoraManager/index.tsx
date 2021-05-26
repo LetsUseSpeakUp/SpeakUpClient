@@ -49,10 +49,11 @@ export default class AgoraManager extends EventEmitter {
 
         console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
 
-        setInterval(()=>{
+        const intervalID = setInterval(()=>{
             if(!this.isConnectedToPartner()){
                 console.log("AgoraManager::joinChannel -- not connected to partner after 30 seconds. Disconnecting");
                 this.leaveChannel();
+                clearInterval(intervalID);
             }
         }, 30000)
     }
@@ -96,6 +97,7 @@ export default class AgoraManager extends EventEmitter {
             console.log('Error', err);
         });
 
+        //TODO: Why is it declining?
         //TODO: On joined channel
             //If partner is already there, emit partner joined and set connectedToPartner True
         //TODO: If you get a decline message before you've joined the Agora channel, leave ASAP
