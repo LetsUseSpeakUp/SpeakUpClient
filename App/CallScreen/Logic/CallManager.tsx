@@ -17,14 +17,14 @@ class CallManager extends EventEmitter {
     myPhoneNumber: string
     partnerPhoneNumber: string
     tempAgoraChannel: string
-    agoraManager: AgoraManager //TODO
+    agoraManager: AgoraManager
 
     constructor(myPhoneNumber: string) {
         super();
 
         this.myPhoneNumber = myPhoneNumber;
-        this.partnerPhoneNumber = "PARTNERPHONENUMBERNOTSET";
-        this.tempAgoraChannel = "TEMPAGORACHANNELNOTSET";
+        this.partnerPhoneNumber = "";
+        this.tempAgoraChannel = "";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
         this.agoraManager = new AgoraManager();
@@ -62,10 +62,12 @@ class CallManager extends EventEmitter {
     private setupSignalServer = (myNumber: string) => {
         this.signalServer.listenForMyPhoneNumber(myNumber);
         this.signalServer.on(MessageType.Signal, (data: SignalServerData) => {            
-            if(this.partnerPhoneNumber.length > 0){
+            if(this.partnerPhoneNumber.length > 0 && data.sender != this.partnerPhoneNumber){
+                console.log("CallManager::signal message received. Already connected so declining. Partner: ",
+                this.partnerPhoneNumber , " Requester: ", data.sender);
                 this.signalServer.sendDecline(this.myPhoneNumber, data.sender);
             }
-            else{
+            else if(this.partnerPhoneNumber.length == 0){
                 this.partnerPhoneNumber = data.sender;
                 this.tempAgoraChannel = data.message
                 this.emit("callReceived", data.sender);

@@ -20,12 +20,7 @@ export default function CallScreen() {
 
     useEffect(()=>{
         if(callManager != null) connectCallManagerListeners();
-    }, [callManager])
-
-    useEffect(()=>{
-        const convosServer = new ConvosServer(); //TODO: Just for testing. Delete this
-        convosServer._testFileCreationAndUpload();
-    })
+    }, [callManager])    
 
     const connectCallManagerListeners = ()=>{
         if(callManager == null){

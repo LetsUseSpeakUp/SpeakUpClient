@@ -57,6 +57,10 @@ export default class AgoraManager extends EventEmitter {
         }, 30000)
     }
 
+    public startRecording(convoMetaData: any){
+        //TODO: When do we call this?
+    }
+
     public async leaveChannel() {
         const leaveCode = await this.rtcEngine?.leaveChannel();
         console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
@@ -92,8 +96,12 @@ export default class AgoraManager extends EventEmitter {
             console.log('Error', err);
         });
 
+        //TODO: On joined channel
+            //If partner is already there, emit partner joined and set connectedToPartner True
+        //TODO: If you get a decline message before you've joined the Agora channel, leave ASAP
+
         this.rtcEngine?.addListener('UserJoined', (remoteUserId) => {
-            console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId);
+            console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId); //TODO: Does this get called when partner joins before you?
             this.connectedToParter = true;
             this.emit('partnerJoined');
         })
