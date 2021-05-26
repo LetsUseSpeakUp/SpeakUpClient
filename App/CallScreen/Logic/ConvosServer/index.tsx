@@ -62,7 +62,7 @@ export default class ConvosServer{
     }
 
     private uploadFileToServer(uploadRequestParams: UploadRequestParams){
-        const uploadEndpoint = this.serverEndpoint + "/uploadAudio"
+        const uploadEndpoint = this.serverEndpoint + "/uploadAudio"        
         return FileSystem.uploadFiles({
             toUrl: uploadEndpoint,
             files: uploadRequestParams.files,
@@ -80,6 +80,8 @@ export default class ConvosServer{
             timestampStarted: 123456,
             convoLength: 100
         };
+
+        return dummyData;
     }
 
 }
