@@ -48,7 +48,7 @@ export default class ConvosServer{
             return FileSystem.stat(dummyFilePath);
         }).then((stats)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File stats: ", stats);
-            return this.uploadFileToServer(dummyFilePath, this._getDummyConvoMetaData());
+            return this.uploadConvo(dummyFilePath, this._getDummyConvoMetaData());
         }).then((response)=>{
             console.log("ConvosServer::_testFileCreationAndUpload. File uploaded with response ", response);
         })
