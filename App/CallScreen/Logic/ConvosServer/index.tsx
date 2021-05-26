@@ -1,7 +1,7 @@
 import FileSystem, {UploadFileOptions, UploadFileItem} from 'react-native-fs';
 
 export default class ConvosServer{
-    serverEndpoint = "http://localhost:3999"
+    serverEndpoint = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
     public uploadConvo(filePath: string, metaData: ConvoMetaData){
         //TODO: Upload to server
@@ -34,7 +34,6 @@ export default class ConvosServer{
     public _testFileCreationAndUpload(){        
         console.log("ConvosServer::_testFileCreationAndUpload");
         const dummyFilePath = FileSystem.DocumentDirectoryPath + '/speakupTestFile.txt'
-        // FileSystem.
         
         FileSystem.writeFile(dummyFilePath, 'Hey this is a test file of speakup', 'utf8')
         .then((success)=>{
@@ -55,7 +54,7 @@ export default class ConvosServer{
 
             return this.uploadFileToServer(uploadParams);
         }).then((response)=>{
-            console.log("ConvosServer::_testFileCreationAndUpload. File uploaded with status code ", response.statusCode);
+            console.log("ConvosServer::_testFileCreationAndUpload. File uploaded with response ", response);
         })
         .catch((error)=>{
             console.log("ERROR -- ConvosServer::_testFileCreationAndUpload: ", error);
@@ -64,13 +63,14 @@ export default class ConvosServer{
 
     private uploadFileToServer(uploadRequestParams: UploadRequestParams){
         const uploadEndpoint = this.serverEndpoint + "/uploadAudio"
+        // const uploadEndpoint = "https://en1h0hm2ty59e.x.pipedream.net/"
         return FileSystem.uploadFiles({
             toUrl: uploadEndpoint,
             files: uploadRequestParams.files,
             fields: {
                 'convoMetaData': JSON.stringify(uploadRequestParams.metaData)
             }
-        })
+        }).promise;
     }
 
     private _getDummyConvoMetaData(): ConvoMetaData{
