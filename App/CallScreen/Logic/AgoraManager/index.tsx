@@ -95,6 +95,8 @@ export default class AgoraManager extends EventEmitter {
         const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
         const convoServer = new ConvosServer();
         convoServer.uploadConvo(filePath, this.convoMetaData);
+        //@ts-ignore
+        this.convoMetaData = null;
     }
 
     public async leaveChannel() { 

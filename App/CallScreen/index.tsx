@@ -22,6 +22,11 @@ export default function CallScreen() {
         if(callManager != null) connectCallManagerListeners();
     }, [callManager])    
 
+    useEffect(()=>{
+        const server = new ConvosServer(); //TODO: Delete this. Just for testing
+        server._testExistingFileUpload();
+    }, [])
+
     const connectCallManagerListeners = ()=>{
         if(callManager == null){
             console.log("ERROR -- DebuggingCallScreen.tsx -- callManager is null")

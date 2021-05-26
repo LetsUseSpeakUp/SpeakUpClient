@@ -54,6 +54,19 @@ export default class ConvosServer{
         })
     }
 
+    public _testExistingFileUpload(){
+        console.log("AgoraManager::_testExistingFileUpload")
+        const existingFilePath = "/var/mobile/Containers/Data/Application/419EF074-75EE-4CCF-84E7-7723E6B40E9D/Documents1622056666479Phone.aac";        
+        //TODO: Does file exist?
+        this.uploadConvoPromise(existingFilePath, this._getDummyConvoMetaData())
+        .then((response)=>{
+            console.log("AgoraManager::_testExistingFileUpload. Upload response: ", response);
+        })
+        .catch((error)=>{
+            console.log("AgoraManager::_testExistingFileUpload. ERROR ", error);
+        })
+    }
+
     private getUploadFileItem(filePath: string, fileName: string){
         const uploadFileItem: UploadFileItem = {
             name: 'convoFile',
