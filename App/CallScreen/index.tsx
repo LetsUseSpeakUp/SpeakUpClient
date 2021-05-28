@@ -34,6 +34,7 @@ export default function CallScreen({route, navigation}) {
 //@ts-ignore
         callManager.on('disconnected', ()=>{
             setCallState(CallState.Dialpad)
+            //TODO: Navigate to Convos page/that exact convo
         })
 //@ts-ignore
         callManager.on('connected', ()=>{

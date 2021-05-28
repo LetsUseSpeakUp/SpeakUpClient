@@ -8,7 +8,7 @@ import RtcEngine, {
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
-import ConvosServer, {ConvoMetaData} from '../ConvosServer'
+import {ConvoMetaData, uploadConvo} from '../ConvosManager'
 
 /**
  * Emits
@@ -99,8 +99,7 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine?.stopAudioRecording().then(()=>{
             console.log("AgoraManager::finishRecording without errors.");
             const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
-            const convoServer = new ConvosServer();
-            convoServer.uploadConvo(filePath, this.convoMetaData);
+            uploadConvo(filePath, this.convoMetaData);
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         }).finally(()=>{
