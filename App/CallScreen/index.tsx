@@ -10,12 +10,11 @@ import OnCallScreen from './OnCallScreen/'
 
 export default function CallScreen({route, navigation}) {    
 
-    console.log("CallScreen. User Phone number: ", route.params.userPhoneNumber);
-    enum CallState {GetPhoneNumber, Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
-    const [callState, setCallState] = useState(CallState.GetPhoneNumber);    
+    enum CallState {Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
+    const [callState, setCallState] = useState(CallState.Dialpad);    
 
-    const [callManager, setCallManager] = useState(null);
-    const [userPhoneNumber, setUserPhoneNumber] = useState('');
+    const userPhoneNumber = route.params.userPhoneNumber;
+    const [callManager, setCallManager] = useState(new CallManager(userPhoneNumber)); //TODO: Figure out how to make persistent variable in react without useState
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');     
 
     useEffect(()=>{
@@ -48,13 +47,6 @@ export default function CallScreen({route, navigation}) {
         callManager.on('partnerDisconnected', ()=>{
             //TODO
         })
-    }
-
-    const onMyPhoneNumberSet = (newPhoneNumber: string)=>{
-        setUserPhoneNumber(newPhoneNumber);
-//@ts-ignore
-        setCallManager(new CallManager(newPhoneNumber));        
-        setCallState(CallState.Dialpad);        
     }
 
     const onRingAnswered = (acceptCall: boolean)=>{
@@ -90,7 +82,6 @@ export default function CallScreen({route, navigation}) {
     }
 
     switch(callState){
-        case CallState.GetPhoneNumber: return (<GetPhoneNumberScreen onSetPhoneNumber={onMyPhoneNumberSet}/>);
         case CallState.Dialpad: return (<DialPadScreen userPhoneNumber={userPhoneNumber} onCallPlaced={onCallPlaced}/>)
         case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
         case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
