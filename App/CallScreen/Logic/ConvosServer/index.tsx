@@ -32,7 +32,7 @@ export default class ConvosServer{
         //TODO
     }
 
-    public disapproveConvo(convoUID: string, userUID: string){
+    public denyConvo(convoUID: string, userUID: string){
         //TODO
     }
 

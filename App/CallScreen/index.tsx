@@ -7,10 +7,10 @@ import GetPhoneNumberScreen from './GetPhoneNumberScreen'
 import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
-import ConvosServer from './Logic/ConvosServer'
 
-export default function CallScreen() {    
+export default function CallScreen({route, navigation}) {    
 
+    console.log("CallScreen. User Phone number: ", route.params.userPhoneNumber);
     enum CallState {GetPhoneNumber, Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
     const [callState, setCallState] = useState(CallState.GetPhoneNumber);    
 
@@ -21,11 +21,6 @@ export default function CallScreen() {
     useEffect(()=>{
         if(callManager != null) connectCallManagerListeners();
     }, [callManager])    
-
-    useEffect(()=>{
-        const server = new ConvosServer(); //TODO: Delete this. Just for testing
-        // server._testExistingFileUpload();
-    }, [])
 
     const connectCallManagerListeners = ()=>{
         if(callManager == null){
