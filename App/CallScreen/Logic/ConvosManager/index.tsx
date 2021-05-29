@@ -25,18 +25,17 @@ const currentConvosMetadata: CurrentConvosMetadata = {fetchedFromServer: false, 
 
 export const uploadConvo = function (filePath: string, metaData: ConvoMetaData) {  //TODO: Handle no connection and reupload when you have one
     console.log("ConvosManager::uploadConvo. filepath: ", filePath, " metaData: ", metaData);
-    uploadConvoPromise(filePath, metaData).then((response) => {
+   
+    return uploadConvoPromise(filePath, metaData).then((response) => {
         console.log("ConvosManager::uploadConvo. Response: ", response);
         if(!currentConvosMetadata.fetchedFromServer){
             console.log("ERROR -- ConvosManager::uploadConvo. Uploading convo without having fetched from server");
             currentConvosMetadata.metadata.push(metaData);
         }
-    }).catch((error) => {
-        console.log("ERROR -- ConvosManager::uploadConvo: ", error);
     })
 }
 
-export const getAllConvosMetadataForUser = async function (userUID: string): ConvoMetaData[] {
+export const getAllConvosMetadataForUser = async function (userUID: string) {
     try{
         if(!currentConvosMetadata.fetchedFromServer){
             //TODO: Fetch from server

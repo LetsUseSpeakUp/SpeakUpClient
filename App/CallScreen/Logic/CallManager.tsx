@@ -6,11 +6,11 @@ import {ConvoMetaData} from './ConvosManager'
 
 /**
  * Listen to these events:
- * -'callReceived' also returns (callerPhoneNumber)
+ * -'callReceived' returns (callerPhoneNumber)
  * -'disconnected'
  * -'connected'
  * -'callDeclined'
- * 
+ * -'convoUploaded' returns (convoId)
  */
 class CallManager extends EventEmitter {
 
@@ -100,7 +100,10 @@ class CallManager extends EventEmitter {
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
-        })                    
+        })        
+        this.agoraManager.on('convoUploaded', (convoId: string)=>{
+            this.emit('convoUploaded', convoId);
+        })            
     }
 
     private joinAgoraChannel = (channelName: string)=>{

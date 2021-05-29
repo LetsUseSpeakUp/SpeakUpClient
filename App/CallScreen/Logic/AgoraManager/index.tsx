@@ -16,7 +16,7 @@ import {ConvoMetaData, uploadConvo} from '../ConvosManager'
  * partnerJoined
  * partnerDisconnected
  * tokenWillExpire
- * recordingUploaded //TODO
+ * convoUploaded
  */
 
 export default class AgoraManager extends EventEmitter {
@@ -93,13 +93,16 @@ export default class AgoraManager extends EventEmitter {
             return;
         }
 
-        const convoLength = Date.now() - this.convoMetaData?.timestampStarted;
+        const convoLength = Date.now() - this.convoMetaData.timestampStarted;
         this.convoMetaData.convoLength = convoLength;        
         console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
+
         this.rtcEngine?.stopAudioRecording().then(()=>{
             console.log("AgoraManager::finishRecording without errors.");
             const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
-            uploadConvo(filePath, this.convoMetaData);
+            return uploadConvo(filePath, this.convoMetaData);
+        }).then(()=>{
+            this.emit('convoUploaded', this.convoMetaData.convoUID);
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         }).finally(()=>{
