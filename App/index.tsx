@@ -35,12 +35,12 @@ export default function App() {
     }
   }, [convosMetadata])
 
-  const onNavToLatestConvo = (idToNavTo: string) => {
+  const onNavToLatestConvo = (idToNavTo: string) => { //TODO: Figure out non-serializable warning and pass to call screen
     convoToNavTo.current = idToNavTo;
     getAllConvosMetadataForUser(userPhoneNumber).then((metadata) => {
       setConvosMetadata(metadata);
     })
-  }
+  };
 
   if (!isLogged) {
     return <LoginScreen onSetPhoneNumber={(phoneNumber: string) => setUserPhoneNumber(phoneNumber)} />
@@ -50,7 +50,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, onNavToLatestConvo: onNavToLatestConvo }} />
+        <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber}} /> 
         <Tab.Screen name={"Contacts"} component={ContactsScreen} />
         <Tab.Screen name={"Convos"} component={ConvosScreen} />
       </Tab.Navigator>

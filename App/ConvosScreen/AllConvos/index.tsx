@@ -1,6 +1,6 @@
-import react from 'react';
+import React from 'react';
 import {ConvoMetadata} from '../../CallScreen/Logic/ConvosManager'
-import { FlatList, StyleSheet, Text, View, ListRenderItem} from 'react-native';
+import { FlatList, StyleSheet, Text, Button, ListRenderItem} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ConvoListItem: ListRenderItem<ConvoMetadata> = ({item} : {item: ConvoMetadata})=>{
+const ConvoListItem = ({metadata, onPress} : {metadata: ConvoMetadata, onPress: any})=>{ //TODO: figure out typescript of onpress
     return(
-        //TODO
+        <Button onPress={onPress} title={metadata.convoId}></Button> //TODO
     );
 }
 
@@ -26,16 +26,19 @@ export default function AllConvos({convosMetadata} : {convosMetadata: ConvoMetad
         console.log("AllConvos. Convo pressed: ", convoId);
     }
     
-    const RenderItem = ({metadata}:any)=>{
+    const RenderItem: ListRenderItem<ConvoMetadata>  = ({item}: {item: ConvoMetadata})=>{
         return (
-            //TODO
+            <ConvoListItem
+                metadata={item}
+                onPress={()=>{onConvoPressed(item.convoId)}}
+            />
         )
     }
 
     return (
         <FlatList<ConvoMetadata>
             data={convosMetadata}
-            renderItem={ConvoListItem}
+            renderItem={RenderItem}
             keyExtractor={(metadata=>metadata.convoId)}
         />
     );
