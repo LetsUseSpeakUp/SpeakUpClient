@@ -73,7 +73,7 @@ export default class AgoraManager extends EventEmitter {
     public startRecording(convoMetaData: ConvoMetaData){
         console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
         this.convoMetaData = convoMetaData;
-        const filePath = this.getFilePathOfConvo(convoMetaData.convoUID);
+        const filePath = this.getFilePathOfConvo(convoMetaData.convoId);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
         this.rtcEngine?.startAudioRecordingWithConfig(config).then(()=>{
             console.log("AgoraManager::startRecording. Promise returned without error. FilePath: ", filePath);
@@ -82,8 +82,8 @@ export default class AgoraManager extends EventEmitter {
         });
     }
 
-    private getFilePathOfConvo(convoUID: string): string{
-        const filePath = FileSystem.DocumentDirectoryPath + '/' + convoUID + '.aac';
+    private getFilePathOfConvo(convoId: string): string{
+        const filePath = FileSystem.DocumentDirectoryPath + '/' + convoId + '.aac';
         return filePath;
     }
 
@@ -99,10 +99,10 @@ export default class AgoraManager extends EventEmitter {
 
         this.rtcEngine?.stopAudioRecording().then(()=>{
             console.log("AgoraManager::finishRecording without errors.");
-            const filePath = this.getFilePathOfConvo(this.convoMetaData.convoUID);
+            const filePath = this.getFilePathOfConvo(this.convoMetaData.convoId);
             return uploadConvo(filePath, this.convoMetaData);
         }).then(()=>{
-            this.emit('convoUploaded', this.convoMetaData.convoUID);
+            this.emit('convoUploaded', this.convoMetaData.convoId);
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         }).finally(()=>{

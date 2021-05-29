@@ -126,9 +126,9 @@ class CallManager extends EventEmitter {
         }
 
         const convoMetaData: ConvoMetaData = {
-            initiatorUID: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
-            receiverUID: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
-            convoUID: this.agoraChannelName,
+            initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
+            receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
+            convoId: this.agoraChannelName,
             timestampStarted: Date.now(),
             convoLength: 0    
         };
