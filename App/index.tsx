@@ -5,14 +5,14 @@ import ConvosScreen from './ConvosScreen'
 import ContactsScreen from './ContactsScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
-import { getAllConvosMetadataForUser, ConvoMetaData } from './CallScreen/Logic/ConvosManager'
+import { getAllConvosMetadataForUser, ConvoMetadata } from './CallScreen/Logic/ConvosManager'
 
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
-  const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetaData>);
+  const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const convoToNavTo = useRef('');
   const isLogged = userPhoneNumber.length > 0;
 

@@ -1,5 +1,6 @@
 import react from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import {ConvoMetadata} from '../../CallScreen/Logic/ConvosManager'
+import { FlatList, StyleSheet, Text, View, ListRenderItem} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,11 +14,29 @@ const styles = StyleSheet.create({
   },
 });
 
+const ConvoListItem: ListRenderItem<ConvoMetadata> = ({item} : {item: ConvoMetadata})=>{
+    return(
+        //TODO
+    );
+}
 
-export default function AllConvos(props: any){
+export default function AllConvos({convosMetadata} : {convosMetadata: ConvoMetadata[]}){
+    const onConvoPressed = (convoId: string)=>{
+        //TODO
+        console.log("AllConvos. Convo pressed: ", convoId);
+    }
+    
+    const RenderItem = ({metadata}:any)=>{
+        return (
+            //TODO
+        )
+    }
+
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Convos!</Text>
-        </View>
+        <FlatList<ConvoMetadata>
+            data={convosMetadata}
+            renderItem={ConvoListItem}
+            keyExtractor={(metadata=>metadata.convoId)}
+        />
     );
 }
