@@ -8,7 +8,11 @@ export type ConvoMetaData = {
     convoId: string,
     timestampStarted: number,
     convoLength: number,
-    convoStatus?: ConvoStatus
+    convoStatus?: ConvoStatus,
+    initiatorFirstName?: string,
+    initiatorLastName?: string,
+    receiverFirstName?: string,
+    receiverLastName?: string
 }
 
 export type ConvoStatus = {
@@ -36,34 +40,70 @@ export const uploadConvo = function (filePath: string, metaData: ConvoMetaData) 
 }
 
 export const getAllConvosMetadataForUser = async function (userId: string) {
-    try{
-        const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser"; //TODO: Use this
-        const formData = new FormData();
-        formData.append('phoneNumber', userId);
+    try{        
         if(!currentConvosMetadata.fetchedFromServer){
-            const response = await fetch(getMetadataEndpoint, {
-                method: 'POST',
-                body: formData
-            })
-            if(response.status === 404) throw('404 error: ' + response.statusText);
-
-            const json = await response.json();
-            if(response.status === 400 || response.status === 500)
-                throw(response.status + " error: " + json.message);
-            console.log("ConvosManager::getAllConvosMetadataForUser. Successfully received. Json: ", json);
-            //TODO: Set currentConvosMetaData
-            currentConvosMetadata.fetchedFromServer = true;
+            const metadataJson = await fetchAllMetadataForUser(userId);    
+            const metadataAsInitiator:any = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
+            const metadataAsReceiver:any = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
+            currentConvosMetadata.metadata = currentConvosMetadata.metadata.concat(metadataAsInitiator, metadataAsReceiver);            
+            currentConvosMetadata.fetchedFromServer = true; 
         }
 
         return currentConvosMetadata.metadata;
     }
     catch(error){
         console.log("ERROR -- ConvosManager::getAllConvosMetadataForUser ", error);
-        //TODO: throw it further app (and handle it)
+        return [];        
     }
+}
+
+const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[])=>{
+    return fetchedMetadata.map((fetched)=>{
+        if(!fetched.initiator_first_name && !fetched.receiver_first_name){
+            console.log("ERROR -- ConvosManager::convertFetchedMetadataToConvoMetadata. Missing required field. Fetched data: ", fetched);
+            return;
+        }
+        
+        const convoStatus: ConvoStatus = {
+            initiatorResponse: fetched.initiator_approval,
+            receiverResponse: fetched.receiver_approval
+        };
+
+        const metadata: ConvoMetaData = {
+            initiatorId: fetched.initiator_phone_number,
+            receiverId: fetched.receiver_phone_number,
+            convoId: fetched.convo_id,
+            timestampStarted: fetched.timestamp_of_start,
+            convoLength: fetched.length,
+            convoStatus: convoStatus,
+            initiatorFirstName: fetched.initiator_first_name,
+            initiatorLastName: fetched.initiator_last_name,
+            receiverFirstName: fetched.receiver_first_name,
+            receiverLastName: fetched.receiver_last_name
+        };
+        return metadata;
+    })
+}
+
+/**
+ * Returns a promise of the response converted to json. Caller should handle errors
+ * @param userId 
+ */
+const fetchAllMetadataForUser = async function(userId: string){
+    const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
+    const formData = new FormData();
+    formData.append('phoneNumber', userId);
+    const response = await fetch(getMetadataEndpoint, {
+        method: 'POST',
+        body: formData
+    })
+    if (response.status === 404) throw ('404 error: ' + response.statusText);
+
+    const json = await response.json();
+    if (response.status === 400 || response.status === 500)
+        throw (response.status + " error: " + json.message);
     
-    const allConvos = Array<ConvoMetaData>();
-    return allConvos;
+    return json
 }
 
 const getStreamingURLOfConvo = function (convoId: string): string {

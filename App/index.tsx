@@ -20,12 +20,15 @@ export default function App() {
   useEffect(()=>{
     if(userPhoneNumber.length > 0){
       getAllConvosMetadataForUser(userPhoneNumber).then((metadata)=>{
+        console.log("App. Metadata fetched: ", metadata);
         setConvosMetadata(metadata);
       })
     }
   }, [userPhoneNumber])
 
   useEffect(()=>{
+    console.log("App. Convos metadata updated: ", convosMetadata);
+
     if(convoToNavTo.current.length > 0){
       console.log("App:: Nav to latest convo. Id: ", convoToNavTo.current);
       convoToNavTo.current = '';
@@ -44,7 +47,6 @@ export default function App() {
     return <LoginScreen onSetPhoneNumber={(phoneNumber: string)=>setUserPhoneNumber(phoneNumber)}/>
   }
   
-  console.log("App. Convos metadata: ", convosMetadata);
 
   return (
     <NavigationContainer>
