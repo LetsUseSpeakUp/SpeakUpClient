@@ -1,6 +1,6 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
 
-const serverEndpoint = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
+const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
 export type ConvoMetaData = {
     initiatorId: string,
@@ -37,15 +37,29 @@ export const uploadConvo = function (filePath: string, metaData: ConvoMetaData) 
 
 export const getAllConvosMetadataForUser = async function (userId: string) {
     try{
+        const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser"; //TODO: Use this
+        const formData = new FormData();
+        formData.append('phoneNumber', userId);
         if(!currentConvosMetadata.fetchedFromServer){
-            //TODO: Fetch from server
+            const response = await fetch(getMetadataEndpoint, {
+                method: 'POST',
+                body: formData
+            })
+            if(response.status === 404) throw('404 error: ' + response.statusText);
+
+            const json = await response.json();
+            if(response.status === 400 || response.status === 500)
+                throw(response.status + " error: " + json.message);
+            console.log("ConvosManager::getAllConvosMetadataForUser. Successfully received. Json: ", json);
+            //TODO: Set currentConvosMetaData
             currentConvosMetadata.fetchedFromServer = true;
         }
 
         return currentConvosMetadata.metadata;
     }
     catch(error){
-        console.log("ERROR -- ConvosManager::getAllConvosMetadataForUser");
+        console.log("ERROR -- ConvosManager::getAllConvosMetadataForUser ", error);
+        //TODO: throw it further app (and handle it)
     }
     
     const allConvos = Array<ConvoMetaData>();
