@@ -2,7 +2,7 @@ import FileSystem, { UploadFileItem } from 'react-native-fs';
 
 const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
-export type ConvoMetaData = {
+export type ConvoMetadata = {
     initiatorId: string,
     receiverId: string,
     convoId: string,
@@ -24,10 +24,10 @@ export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
 }
 
-type CurrentConvosMetadata = {fetchedFromServer: boolean, metadata: ConvoMetaData[]}
+type CurrentConvosMetadata = {fetchedFromServer: boolean, metadata: ConvoMetadata[]}
 const currentConvosMetadata: CurrentConvosMetadata = {fetchedFromServer: false, metadata: []};
 
-export const uploadConvo = function (filePath: string, metaData: ConvoMetaData) {  //TODO: Handle no connection and reupload when you have one
+export const uploadConvo = function (filePath: string, metaData: ConvoMetadata) {  //TODO: Handle no connection and reupload when you have one
     console.log("ConvosManager::uploadConvo. filepath: ", filePath, " metaData: ", metaData);
    
     return uploadConvoPromise(filePath, metaData).then((response) => {
@@ -69,7 +69,7 @@ const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[])=>{
             receiverResponse: fetched.receiver_approval
         };
 
-        const metadata: ConvoMetaData = {
+        const metadata: ConvoMetadata = {
             initiatorId: fetched.initiator_phone_number,
             receiverId: fetched.receiver_phone_number,
             convoId: fetched.convo_id,
@@ -133,7 +133,7 @@ export const _testFileCreationAndUpload = function () {
             return FileSystem.stat(dummyFilePath);
         }).then((stats) => {
             console.log("ConvosManager::_testFileCreationAndUpload. File stats: ", stats);
-            return uploadConvoPromise(dummyFilePath, _getDummyConvoMetaData());
+            return uploadConvoPromise(dummyFilePath, _getDummyConvoMetadata());
         }).then((response) => {
             console.log("ConvosManager::_testFileCreationAndUpload. File uploaded with response ", response);
         })
@@ -154,7 +154,7 @@ export const _testExistingFileUpload = function () {
     })
         .then((doesExist) => {
             if (!doesExist) throw ("File doesn't exist")
-            return uploadConvoPromise(existingFilePath, _getDummyConvoMetaData());
+            return uploadConvoPromise(existingFilePath, _getDummy());
         })
         .then((response) => {
             console.log("ConvosManager::_testExistingFileUpload. Upload response: ", response);
@@ -175,8 +175,8 @@ const getUploadFileItem = function (filePath: string, fileName: string) {
     return uploadFileItem;
 }
 
-const uploadConvoPromise = function (filePath: string, metaData: ConvoMetaData) {
-    const uploadEndpoint = serverEndpoint + "/uploadAudio"
+const uploadConvoPromise = function (filePath: string, metaData: ConvoMetadata) {
+    const uploadEndpoint = SERVERENDPOINT + "/uploadAudio"
     return FileSystem.uploadFiles({
         toUrl: uploadEndpoint,
         files: [getUploadFileItem(filePath, metaData.convoId + '.aac')], //TODO: Instead of .aac, get it from the file
@@ -186,8 +186,8 @@ const uploadConvoPromise = function (filePath: string, metaData: ConvoMetaData) 
     }).promise;
 }
 
-const _getDummyConvoMetaData = function (): ConvoMetaData {
-    const dummyData: ConvoMetaData = {
+const _getDummyConvoMetadata = function (): ConvoMetadata {
+    const dummyData: ConvoMetadata = {
         initiatorId: "DUMMYINITIATORUID",
         receiverId: "DUMMYRECEIVERUID",
         convoId: "DUMMYCONVOUID",

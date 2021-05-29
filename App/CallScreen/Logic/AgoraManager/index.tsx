@@ -8,7 +8,7 @@ import RtcEngine, {
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
-import {ConvoMetaData, uploadConvo} from '../ConvosManager'
+import {ConvoMetadata, uploadConvo} from '../ConvosManager'
 
 /**
  * Emits
@@ -28,8 +28,8 @@ export default class AgoraManager extends EventEmitter {
     }
 
     connectedToParter = false;
-    //@ts-ignore
-    convoMetaData: ConvoMetaData
+    
+    convoMetadata: ConvoMetadata | any
 
     constructor() {
         super();
@@ -54,7 +54,7 @@ export default class AgoraManager extends EventEmitter {
             channelName, null, 0
         );
         //@ts-ignore
-        this.convoMetaData = null;
+        this.convoMetadata = null;
         console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
 
         const intervalID = setInterval(()=>{
@@ -68,12 +68,12 @@ export default class AgoraManager extends EventEmitter {
 
     /**
      * You should only call this after you've gotten a 'connected' message
-     * @param convoMetaData 
+     * @param convoMetadata 
      */
-    public startRecording(convoMetaData: ConvoMetaData){
-        console.log("AgoraManager::startRecording. Convo meta data: ", convoMetaData);
-        this.convoMetaData = convoMetaData;
-        const filePath = this.getFilePathOfConvo(convoMetaData.convoId);
+    public startRecording(convoMetadata: ConvoMetadata){
+        console.log("AgoraManager::startRecording. Convo meta data: ", convoMetadata);
+        this.convoMetadata = convoMetadata;
+        const filePath = this.getFilePathOfConvo(convoMetadata.convoId);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
         this.rtcEngine?.startAudioRecordingWithConfig(config).then(()=>{
             console.log("AgoraManager::startRecording. Promise returned without error. FilePath: ", filePath);
@@ -88,26 +88,26 @@ export default class AgoraManager extends EventEmitter {
     }
 
     private finishRecording(){
-        if(!this.convoMetaData){
+        if(!this.convoMetadata){
             console.log("AgoraManager::finishRecording. Recording not started");
             return;
         }
 
-        const convoLength = Date.now() - this.convoMetaData.timestampStarted;
-        this.convoMetaData.convoLength = convoLength;        
-        console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetaData);
+        const convoLength = Date.now() - this.convoMetadata.timestampStarted;
+        this.convoMetadata.convoLength = convoLength;        
+        console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetadata);
 
         this.rtcEngine?.stopAudioRecording().then(()=>{
             console.log("AgoraManager::finishRecording without errors.");
-            const filePath = this.getFilePathOfConvo(this.convoMetaData.convoId);
-            return uploadConvo(filePath, this.convoMetaData);
+            const filePath = this.getFilePathOfConvo(this.convoMetadata.convoId);
+            return uploadConvo(filePath, this.convoMetadata);
         }).then(()=>{
-            this.emit('convoUploaded', this.convoMetaData.convoId);
+            this.emit('convoUploaded', this.convoMetadata.convoId);
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         }).finally(()=>{
             //@ts-ignore
-            this.convoMetaData = null;
+            this.convoMetadata = null;
         })                
     }
 

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetaData} from './ConvosManager'
+import {ConvoMetadata} from './ConvosManager'
 
 
 /**
@@ -125,14 +125,14 @@ class CallManager extends EventEmitter {
             return;
         }
 
-        const convoMetaData: ConvoMetaData = {
+        const convoMetadata: ConvoMetadata = {
             initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
             receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
             convoId: this.agoraChannelName,
             timestampStarted: Date.now(),
             convoLength: 0    
         };
-        this.agoraManager.startRecording(convoMetaData);
+        this.agoraManager.startRecording(convoMetadata);
     }
 }
 
