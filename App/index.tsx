@@ -50,9 +50,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber}} /> 
+        <Tab.Screen name={"Call"} component={CallScreen} initialParams={{userPhoneNumber: userPhoneNumber}} /> 
         <Tab.Screen name={"Contacts"} component={ContactsScreen} />
-        <Tab.Screen name={"Convos"} component={ConvosScreen} />
+        <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{convosMetadata: convosMetadata}} />
       </Tab.Navigator>
     </NavigationContainer>
   );
