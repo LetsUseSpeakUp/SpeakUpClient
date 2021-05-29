@@ -154,7 +154,7 @@ export const _testExistingFileUpload = function () {
     })
         .then((doesExist) => {
             if (!doesExist) throw ("File doesn't exist")
-            return uploadConvoPromise(existingFilePath, _getDummy());
+            return uploadConvoPromise(existingFilePath, _getDummyConvoMetadata());
         })
         .then((response) => {
             console.log("ConvosManager::_testExistingFileUpload. Upload response: ", response);
