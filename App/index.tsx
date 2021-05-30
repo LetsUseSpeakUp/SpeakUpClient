@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ConvosScreen from './ConvosScreen'
-import ContactsScreen from './ContactsScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
 import {fetchLatestConvosMetadataForUser, ConvoMetadata, ConvoResponseType, ConvoStatus } from './ConvosData/ConvosManager'
@@ -50,7 +49,7 @@ export default function App() {
   const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
     console.log("App. onApproveOrDenySingleConvo. Id: ", convoId, " Approve: ", shouldApprove);
     const approvalStatusCode = shouldApprove ? 1: -1;
-        //TODO: call ConvosManager to send this update
+        //TODO: call ConvosManager to send this update to server
 
     const i = convosMetadata.findIndex((convo)=>convo.convoId === convoId);
     const currentConvoVal = convosMetadata[i];
@@ -90,7 +89,6 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber }} />
-          {/* <Tab.Screen name={"Contacts"} component={ContactsScreen} /> */}
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
         </Tab.Navigator>
       </NavigationContainer>

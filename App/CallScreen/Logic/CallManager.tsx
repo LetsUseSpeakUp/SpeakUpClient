@@ -7,7 +7,9 @@ import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
 /**
  * Listen to these events:
  * -'callReceived' returns (callerPhoneNumber)
- * -'disconnected'
+ * -'disconnected' 
+ * This event is important, because the calling system won't be ready to call again
+ * until it's sent out the disconnected message.
  * -'connected'
  * -'callDeclined'
  * -'convoAdded' returns (convoMetadata)
@@ -60,9 +62,19 @@ class CallManager extends EventEmitter {
 
     public endCall() {
         console.log("CallManager::endCall");
-        this.leaveAgoraChannel();
-        this.resetPartner();
-        this.finalizeConvoMetadata();
+        const state = "connected" //TODO
+        if(state === "connected"){
+            this.leaveAgoraChannel();
+            this.resetPartner();
+            this.finalizeConvoMetadata();
+        }
+        else if (state === "connecting"){
+            this.leaveAgoraChannel();
+            this.resetPartner();            
+        }
+        else{
+            console.log("ERROR -- CallManager::endCall. Not connected or connecting");
+        }
     }
 
     private setupSignalServer = (myNumber: string) => {
@@ -87,9 +99,11 @@ class CallManager extends EventEmitter {
     }
 
     private setupAgoraManagerListeners = ()=>{
-        this.agoraManager.on('disconnected', ()=>{
+        this.agoraManager.on('leftChannelWithoutRecording', ()=>{                        
             this.emit('disconnected');
-            this.endCall();
+        })
+        this.agoraManager.on('leftChannel', ()=>{            
+        
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
@@ -98,11 +112,11 @@ class CallManager extends EventEmitter {
                 this.startRecording();
         })
         this.agoraManager.on('partnerDisconnected', ()=>{
-            this.emit('disconnected');
             this.endCall();
         })
-        this.agoraManager.on('shouldUploadConvo', ()=>{
+        this.agoraManager.on('recordingComplete', ()=>{
             this.uploadConvo();
+            this.emit('disconnected');
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO

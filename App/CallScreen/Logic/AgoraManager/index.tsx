@@ -4,19 +4,25 @@ import RtcEngine, {
     ClientRole,
     RtcEngineConfig,
     AudioRecordingConfiguration,
-    AudioRecordingPosition
+    AudioRecordingPosition,
+    ConnectionStateType
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
 
 /**
  * Emits
- * disconnected
- * partnerJoined
- * partnerDisconnected
- * tokenWillExpire
- * shouldUploadConvo (convoFilePath)
+ * -leftChannel
+ * -leftChannelWithoutRecording
+ * -partnerJoined
+ * -partnerDisconnected
+ * -tokenWillExpire
+ * -recordingComplete
  */
+
+export enum ConnectionState{
+    Ready, Connecting, DisconnectRequested, Connected
+}
 
 export default class AgoraManager extends EventEmitter {
     rtcEngine: RtcEngine | undefined
@@ -25,8 +31,8 @@ export default class AgoraManager extends EventEmitter {
         appid: 'cf3e232f50ad4d608ff97081a9ce8b72',
         uid: "",
     }
-
-    connectedToParter = false;
+    
+    connectionState = ConnectionState.Ready
     
     constructor() {
         super();
@@ -45,13 +51,21 @@ export default class AgoraManager extends EventEmitter {
     }
 
     public async joinChannel(channelName: string) {
+        if(this.connectionState === ConnectionState.Connected){
+            console.log("ERROR. AgoraManager::joinChannel. connection state == connected");
+        }
+        this.connectionState = ConnectionState.Connecting;
+
         const channelToken = await this.getChannelToken(channelName);
         await this.rtcEngine?.joinChannel(
             channelToken,
             channelName, null, 0
         );
 
-        console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
+        console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production
+        if(this.connectionState === ConnectionState.DisconnectRequested){
+            this.leaveChannel();
+        }
 
         const intervalID = setInterval(()=>{
             if(!this.isConnectedToPartner()){
@@ -67,6 +81,9 @@ export default class AgoraManager extends EventEmitter {
      */
     public startRecording(convoId: string){
         console.log("AgoraManager::startRecording.");
+        if(this.connectionState !== ConnectionState.Connected){
+            console.log("ERROR -- AgoraManager::startRecording. Not in appropriate state for recording: ", this.connectionState)
+        }
         
         const filePath = this.getFilePathOfConvo(convoId);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
@@ -86,19 +103,31 @@ export default class AgoraManager extends EventEmitter {
         console.log("AgoraManager::finishRecording.");
 
         this.rtcEngine?.stopAudioRecording().then(()=>{
-            console.log("AgoraManager::finishRecording without errors.");        
+            console.log("AgoraManager::finishRecording without errors.");  
+            this.emit('shouldUploadConvo')      
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         })  
     }
 
     public async leaveChannel() { 
-        const leaveCode = await this.rtcEngine?.leaveChannel(); //TODO: Check if client is connected before client.leave so we don't get annoying error message
-        console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
+        if(this.connectionState === ConnectionState.Connecting){
+            this.connectionState = ConnectionState.DisconnectRequested;
+        }
+        else{
+            const rtcEngineState = await this.rtcEngine?.getConnectionState();
+            if(rtcEngineState === ConnectionStateType.Disconnected){
+                console.log("AgoraManager.tsx::leaveChannel. Not connected. Doing nothing.");
+                return;
+            }
+
+            const leaveCode = await this.rtcEngine?.leaveChannel();
+            console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
+        }
     }
 
     public isConnectedToPartner(){
-        return this.connectedToParter;
+        return this.connectionState === ConnectionState.Connected;
     }
 
     public generateChannelName(myPhoneNumber: string){
@@ -126,34 +155,39 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine?.addListener('Error', (err) => {
             console.log('Error', err);
         });
-
-        //TODO: if you get call declined message before joining channel, leave ASAP
-            //Timeout will handle this, but it will be slower
+        
         this.rtcEngine?.addListener('UserJoined', (remoteUserId) => {
-            console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId); //TODO: Does this get called when partner joins before you?
-            this.connectedToParter = true;
+            console.log("AgoraManager.tsx:: user-joined event. User: ", remoteUserId);
+            this.connectionState = ConnectionState.Connected;
             this.emit('partnerJoined');
         })
         this.rtcEngine?.addListener('UserOffline', (remoteUserID, reason) => {
             console.log("AgoraManager.tsx:: user-left event. User: ", remoteUserID, " Reason: ", reason);
-            this.connectedToParter = false;
             this.emit('partnerDisconnected');
         })
         this.rtcEngine?.addListener('LeaveChannel', (rtcStats)=>{
-            console.log("AgoraManager.tsx::left channel. Rtc stats: ", rtcStats);
-            this.connectedToParter = false;
-            this.emit('disconnected');
-            this.finishRecording();
+            console.log("AgoraManager.tsx::left channel. State: ", this.connectionState, " Rtc Stats: ", rtcStats);            
+            this.onLeftChannel();
         })
         this.rtcEngine?.addListener('ConnectionLost', () => {
             console.log("AgoraManager.tsx:: connectionLost event");
-            this.connectedToParter = false;
-            this.emit('disconnected')
-            this.finishRecording();
+            this.onLeftChannel();
         })
         this.rtcEngine?.addListener('TokenPrivilegeWillExpire', () => {
             console.log("AgoraManager.tsx:: token will expire");
             this.emit('tokenWillExpire');
         })
+    }
+
+    private onLeftChannel(){
+        if (this.connectionState === ConnectionState.Connected){
+            this.connectionState = ConnectionState.Ready;            
+            this.emit('leftChannel');
+            this.finishRecording();
+        }
+        else{
+            this.connectionState = ConnectionState.Ready;
+            this.emit('leftChannelWithoutRecording');
+        }
     }
 }

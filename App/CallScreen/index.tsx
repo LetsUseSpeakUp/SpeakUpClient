@@ -23,7 +23,7 @@ export default function CallScreen({route, navigation}: any) {
     }, [])    
 
     const connectCallManagerListeners = ()=>{
-        if(callManager.current == null){
+        if(callManager.current === null){
             console.log("ERROR -- DebuggingCallScreen.tsx -- callManager is null")
             return;
         }
@@ -32,7 +32,9 @@ export default function CallScreen({route, navigation}: any) {
             setCallState(CallState.Ringing_Receiver);
         })
         callManager.current.on('disconnected', ()=>{
+            console.log("CallScreen::Call manager disconnected 1");
             setCallState(CallState.Dialpad)
+            console.log("CallScreen::Call manager disconnected 2");
         })
         callManager.current.on('connected', ()=>{
             setCallState(CallState.OnCall)
@@ -41,6 +43,7 @@ export default function CallScreen({route, navigation}: any) {
             setCallState(CallState.Dialpad);
         })        
         callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
+            console.log("CallScreen. ConvoAdded: ", convoMetadata);
             //TODO: use context
         })
     }
