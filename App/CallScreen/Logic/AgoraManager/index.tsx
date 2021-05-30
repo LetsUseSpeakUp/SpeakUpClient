@@ -50,8 +50,7 @@ export default class AgoraManager extends EventEmitter {
             channelToken,
             channelName, null, 0
         );
-        //@ts-ignore
-        this.convoMetadata = null;
+
         console.log("AgoraManager::joinChannel. Channel token: ", channelToken);
 
         const intervalID = setInterval(()=>{
@@ -65,12 +64,11 @@ export default class AgoraManager extends EventEmitter {
 
     /**
      * You should only call this after you've gotten a 'connected' message
-     * @param convoMetadata 
      */
-    public startRecording(convoMetadata: ConvoMetadata){
-        console.log("AgoraManager::startRecording. Convo meta data: ", convoMetadata);
-        this.convoMetadata = convoMetadata;
-        const filePath = this.getFilePathOfConvo(convoMetadata.convoId);
+    public startRecording(convoId: string){
+        console.log("AgoraManager::startRecording.");
+        
+        const filePath = this.getFilePathOfConvo(convoId);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
         this.rtcEngine?.startAudioRecordingWithConfig(config).then(()=>{
             console.log("AgoraManager::startRecording. Promise returned without error. FilePath: ", filePath);
@@ -79,33 +77,19 @@ export default class AgoraManager extends EventEmitter {
         });
     }
 
-    private getFilePathOfConvo(convoId: string): string{
+    public getFilePathOfConvo(convoId: string): string{
         const filePath = FileSystem.DocumentDirectoryPath + '/' + convoId + '.aac';
         return filePath;
     }
 
-    private finishRecording(){
-        if(!this.convoMetadata){
-            console.log("AgoraManager::finishRecording. Recording not started");
-            return;
-        }
-
-        const convoLength = Date.now() - this.convoMetadata.timestampStarted;
-        this.convoMetadata.convoLength = convoLength;        
-        console.log("AgoraManager::finishRecording. Convo meta data: ", this.convoMetadata);
+    private finishRecording(){        
+        console.log("AgoraManager::finishRecording.");
 
         this.rtcEngine?.stopAudioRecording().then(()=>{
-            console.log("AgoraManager::finishRecording without errors.");
-            const filePath = this.getFilePathOfConvo(this.convoMetadata.convoId);
-            return uploadConvo(filePath, this.convoMetadata);
-        }).then(()=>{
-            this.emit('convoUploaded', this.convoMetadata.convoId);
+            console.log("AgoraManager::finishRecording without errors.");        
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
-        }).finally(()=>{
-            //@ts-ignore
-            this.convoMetadata = null;
-        })                
+        })  
     }
 
     public async leaveChannel() { 
@@ -155,8 +139,8 @@ export default class AgoraManager extends EventEmitter {
             this.connectedToParter = false;
             this.emit('partnerDisconnected');
         })
-        this.rtcEngine?.addListener('LeaveChannel', (rtcStates)=>{
-            console.log("AgoraManager.tsx::left channel. Rtc stats: ", rtcStates);
+        this.rtcEngine?.addListener('LeaveChannel', (rtcStats)=>{
+            console.log("AgoraManager.tsx::left channel. Rtc stats: ", rtcStats);
             this.connectedToParter = false;
             this.emit('disconnected');
             this.finishRecording();

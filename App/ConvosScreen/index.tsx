@@ -1,7 +1,7 @@
 import React from 'react'
 import {Text, View} from 'react-native';
 import AllConvos from './AllConvos'
-import {ConvoMetadata} from '../CallScreen/Logic/ConvosManager'
+import {ConvoMetadata} from '../ConvosData/ConvosManager'
 
 export default function ConvosScreen({route, navigation}: any) {
   const {convosMetadata} = route.params;

@@ -101,14 +101,13 @@ class CallManager extends EventEmitter {
             this.emit('disconnected');
             this.endCall();
         })
-        this.agoraManager.on('shouldUploadConvo', (convoFilepath)=>{
-            this.uploadConvo(convoFilepath);
+        this.agoraManager.on('shouldUploadConvo', ()=>{
+            this.uploadConvo();
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
         })                
     }
-    //TODO: In callers, remove listener for convoUploaded and replace it with convoAdded
 
     private joinAgoraChannel = (channelName: string)=>{
         this.agoraManager.joinChannel(channelName);                
@@ -128,8 +127,12 @@ class CallManager extends EventEmitter {
             console.log("ERROR -- CallManager::startRecording. Not initiator"); //TODO: Only initiator records until we figure out split track syncing
             return;
         }
+        if(this.convoMetadata === undefined){
+            console.log("ERROR -- CallManager::startRecording. convoMetadata is null");
+            return;
+        }
                  
-        this.agoraManager.startRecording();
+        this.agoraManager.startRecording(this.convoMetadata.convoId);
     }
 
     private initializeConvoMetadata = ()=>{
@@ -153,7 +156,7 @@ class CallManager extends EventEmitter {
         this.emit('convoAdded', this.convoMetadata);
     }
 
-    private uploadConvo = async (convoFilepath: string)=>{
+    private uploadConvo = async ()=>{
         try{
             if(this.convoMetadata === undefined){            
                 throw 'Convometadata is null';
@@ -162,10 +165,11 @@ class CallManager extends EventEmitter {
                 console.log("ERROR -- CallManager::uploadConvo. Convometadata was not finalized. Finalizing and uploading.");
                 this.finalizeConvoMetadata();
             }
-            return await uploadConvo(convoFilepath, this.convoMetadata);
+            const filePath =  this.agoraManager.getFilePathOfConvo(this.convoMetadata.convoId)
+            return await uploadConvo(filePath, this.convoMetadata);
         }
         catch(error){
-            console.log("ERROR -- CallManager::uploadConvo: ", error);
+            console.log("ERROR -- CallManager::uploadConvo: ", error, " metadata: ", this.convoMetadata);
         }
     }
 }

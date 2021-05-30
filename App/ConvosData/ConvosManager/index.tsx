@@ -24,19 +24,18 @@ export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
 }
 
-export const uploadConvo = function (filePath: string, metaData: ConvoMetadata) {  //TODO: Handle no connection and reupload when you have one
+export const uploadConvo = async function (filePath: string, metaData: ConvoMetadata) {  //TODO: Handle no connection and reupload when you have one
     console.log("ConvosManager::uploadConvo. filepath: ", filePath, " metaData: ", metaData);
    
-    return uploadConvoPromise(filePath, metaData).then((response) => {
-        console.log("ConvosManager::uploadConvo. Response: ", response);        
-        return response;
-    })
+    const response = await uploadConvoPromise(filePath, metaData);
+    console.log("ConvosManager::uploadConvo. Response: ", response);
+    return response;
 }
 
 /**
  * The reason we fetch from the server instead of from disk
- * is because partner may change the approval status. Then only way to have the latest
- * up-to-date status is by querying the server. 
+ * is because partner may change the approval status. Then the 
+ * only way to have the latest up-to-date status is by querying the server. 
  * At some point, we can put in an optimization that writes to disk and tells the server
  * "only give me the changes since I last queried". But that's way down the line.
  * @param userId 

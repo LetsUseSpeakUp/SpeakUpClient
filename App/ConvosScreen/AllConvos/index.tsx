@@ -1,5 +1,5 @@
 import React from 'react';
-import {ConvoMetadata} from '../../CallScreen/Logic/ConvosManager'
+import {ConvoMetadata} from '../../ConvosData/ConvosManager'
 import { FlatList, StyleSheet, Text, Button, ListRenderItem} from 'react-native';
 
 const styles = StyleSheet.create({

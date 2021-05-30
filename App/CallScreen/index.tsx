@@ -7,6 +7,7 @@ import GetPhoneNumberScreen from './GetPhoneNumberScreen'
 import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
+import { ConvoMetadata } from '../ConvosData/ConvosManager';
 
 
 export default function CallScreen({route, navigation}: any) {    
@@ -40,8 +41,8 @@ export default function CallScreen({route, navigation}: any) {
         callManager.current.on('callDeclined', ()=>{
             setCallState(CallState.Dialpad);
         })        
-        callManager.current.on('convoUploaded', (convoId: string)=>{
-            route.params.onNavToLatestConvo(convoId);
+        callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
+            //TODO: use context
         })
     }
 
