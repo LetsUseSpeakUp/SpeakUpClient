@@ -7,9 +7,9 @@ export default function AllConvos({route, navigation}: any) {
     const convosContext = React.useContext(ConvosContext);
     const convosMetadata = convosContext.allConvosMetadata;
 
-    const onConvoPressed = (convoId: string) => {
-        //TODO: nav to 
+    const onConvoPressed = (convoId: string) => {        
         console.log("AllConvos. Convo pressed: ", convoId);
+        navigation.navigate('SingleConvoDetails', {convoId: convoId})
     }
 
     const RenderItem: ListRenderItem<ConvoMetadata> = ({ item }: { item: ConvoMetadata }) => {
