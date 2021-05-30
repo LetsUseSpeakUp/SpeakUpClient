@@ -48,7 +48,7 @@ export const fetchLatestConvosMetadataForUser = async (userId: string)=>{
         return metadataAsInitiator.concat(metadataAsReceiver);
     }
     catch(error){
-        console.log("ERROR -- ConvosManager::fetchExisstingConvosMetadataForUser: ", error);
+        console.log("ERROR -- ConvosManager::fetchExisstingConvosMetadataForUser: ", error);        
         return [];
     }
 }
@@ -97,7 +97,7 @@ const fetchAllMetadataForUser = async function(userId: string){
 
     const json = await response.json();
     if (response.status === 400 || response.status === 500)
-        throw (response.status + " error: " + json.message);
+        throw (response.status + " error: " + json.message.message);
     
     return json
 }

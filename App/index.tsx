@@ -17,10 +17,11 @@ export default function App() {
   const convoToNavToBuffer = useRef('');
   const isLogged = userPhoneNumber.length > 0;
 
-  //TODO: Wire up context values
-
   useEffect(() => {
     if (userPhoneNumber.length > 0) {
+      if(convosMetadata.length > 0){
+        console.log("ERROR -- App. Phone number was changed after fetching convosMetadata");
+      }
       fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
         setConvosMetadata(metadata);
       })
