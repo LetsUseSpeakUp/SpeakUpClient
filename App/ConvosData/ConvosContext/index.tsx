@@ -15,10 +15,10 @@ const dummyNavToNewRouteFunc = (newRoute: string)=>{}
  */
 const ConvosContext = React.createContext({
     allConvosMetadata: [] as ConvoMetadata[],
-    setAllConvosMetadata: ([]: ConvoMetadata[])=>{},
-    navToNewRoute: dummyNavToNewRouteFunc,
     addSingleConvoMetadata: (singleMetadata: ConvoMetadata)=>{},
-    requestFetchSingleConvoStatus: (convoId: string)=>{}
+    requestFetchSingleConvoStatus: (convoId: string)=>{},
+    convoToNavTo: '',
+    approveSingleConvo: (myPhoneNumber: string, convoId: string)=>{}
 })
 
 export default ConvosContext;

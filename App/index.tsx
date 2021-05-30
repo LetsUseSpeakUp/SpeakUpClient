@@ -5,42 +5,50 @@ import ConvosScreen from './ConvosScreen'
 import ContactsScreen from './ContactsScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
-import { getAllConvosMetadataForUser, ConvoMetadata } from './ConvosData/ConvosManager'
-
+import { fetchLatestConvosMetadataForUser, ConvoMetadata } from './ConvosData/ConvosManager'
+import ConvosContext from './ConvosData/ConvosContext'
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
-  const convoToNavTo = useRef('');
+  const [convoToNavTo, setConvoToNavTo] = useState('');
+  const convoToNavToBuffer = useRef('');
   const isLogged = userPhoneNumber.length > 0;
 
+  //TODO: Wire up context values
 
   useEffect(() => {
     if (userPhoneNumber.length > 0) {
-      getAllConvosMetadataForUser(userPhoneNumber).then((metadata) => {
+      fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
         setConvosMetadata(metadata);
       })
     }
   }, [userPhoneNumber])
 
   useEffect(() => {
-    console.log("App. Convos metadata updated: ", convosMetadata);
-
-    if (convoToNavTo.current.length > 0) {
-      console.log("App:: Nav to latest convo. Id: ", convoToNavTo.current);
-      convoToNavTo.current = '';
-      //TODO: nav to it
+    if (convoToNavToBuffer.current.length > 0) {
+      const bufferBuffer = convoToNavToBuffer.current;
+      convoToNavToBuffer.current = '';
+      setConvoToNavTo(bufferBuffer);
     }
   }, [convosMetadata])
 
-  const onNavToLatestConvo = (idToNavTo: string) => { //TODO: Figure out non-serializable warning and pass to call screen
-    convoToNavTo.current = idToNavTo;
-    getAllConvosMetadataForUser(userPhoneNumber).then((metadata) => {
-      setConvosMetadata(metadata);
-    })
-  };
+  const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {
+    convoToNavToBuffer.current = singleConvoMetadata.convoId;
+    const newConvosMetadata = convosMetadata.concat(singleConvoMetadata);
+    setConvosMetadata(newConvosMetadata);
+  }
+
+  const onRequestFetchSingleConvoStatus = (convoId: string) => {
+    //TODO
+  }
+
+  const onApproveSingleConvo = (myPhoneNumber: string, convoId: string) => {
+    //TODO: call ConvosManager
+    //TODO: Update convosMetadata
+  }
 
   if (!isLogged) {
     return <LoginScreen onSetPhoneNumber={(phoneNumber: string) => setUserPhoneNumber(phoneNumber)} />
@@ -48,12 +56,17 @@ export default function App() {
 
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name={"Call"} component={CallScreen} initialParams={{userPhoneNumber: userPhoneNumber}} /> 
-        <Tab.Screen name={"Contacts"} component={ContactsScreen} />
-        <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber}} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <ConvosContext.Provider value={{
+      allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
+      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, approveSingleConvo: onApproveSingleConvo
+    }}>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber }} />
+          <Tab.Screen name={"Contacts"} component={ContactsScreen} />
+          <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </ConvosContext.Provider>
   );
 }
