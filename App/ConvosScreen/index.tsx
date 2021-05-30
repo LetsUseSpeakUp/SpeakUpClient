@@ -1,12 +1,17 @@
 import React from 'react'
-import {Text, View} from 'react-native';
 import AllConvos from './AllConvos'
-import {ConvoMetadata} from '../ConvosData/ConvosManager'
-import ConvosContext from '../ConvosData/ConvosContext' 
+import {createStackNavigator} from '@react-navigation/stack'
+import { NavigationContainer } from '@react-navigation/native';
+import SingleConvoDetails from './SingleConvoDetails';
 
 export default function ConvosScreen({route, navigation}: any) {  
-  const convosContext = React.useContext(ConvosContext);
-  //TODO: Make this a stack
-  return (<AllConvos convosMetadata={convosContext.allConvosMetadata}/>);
+  const Stack = createStackNavigator();
+
+  return(
+      <Stack.Navigator initialRouteName="AllConvos">
+        <Stack.Screen name="AllConvos" component={AllConvos}/>
+        <Stack.Screen name="SingleConvoDetails" component={SingleConvoDetails}/>
+      </Stack.Navigator>    
+  )
   
 }
