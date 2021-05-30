@@ -6,11 +6,7 @@ import ConvosContext from '../ConvosData/ConvosContext'
 
 export default function ConvosScreen({route, navigation}: any) {  
   const convosContext = React.useContext(ConvosContext);
+  //TODO: Make this a stack
   return (<AllConvos convosMetadata={convosContext.allConvosMetadata}/>);
   
-  return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Convos!</Text>
-      </View>
-    );
-  }
+}

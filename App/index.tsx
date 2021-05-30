@@ -5,7 +5,7 @@ import ConvosScreen from './ConvosScreen'
 import ContactsScreen from './ContactsScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
-import { fetchLatestConvosMetadataForUser, ConvoMetadata } from './ConvosData/ConvosManager'
+import {fetchLatestConvosMetadataForUser, ConvoMetadata } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 
 const Tab = createBottomTabNavigator();
