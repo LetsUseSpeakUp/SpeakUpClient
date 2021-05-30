@@ -9,9 +9,8 @@ export default function ConvosScreen({route, navigation}: any) {
 
   return(
       <Stack.Navigator initialRouteName="AllConvos">
-        <Stack.Screen name="AllConvos" component={AllConvos}/>
-        <Stack.Screen name="SingleConvoDetails" component={SingleConvoDetails}/>
+        <Stack.Screen name="All Convos" component={AllConvos}/>
+        <Stack.Screen name="Convo Details" component={SingleConvoDetails}/>
       </Stack.Navigator>    
   )
-  
 }

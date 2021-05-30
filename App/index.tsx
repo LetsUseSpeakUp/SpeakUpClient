@@ -5,7 +5,7 @@ import ConvosScreen from './ConvosScreen'
 import ContactsScreen from './ContactsScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
-import {fetchLatestConvosMetadataForUser, ConvoMetadata } from './ConvosData/ConvosManager'
+import {fetchLatestConvosMetadataForUser, ConvoMetadata, ConvoResponseType, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +20,7 @@ export default function App() {
   useEffect(() => {
     if (userPhoneNumber.length > 0) {
       if(convosMetadata.length > 0){
-        console.log("ERROR -- App. Phone number was changed after fetching convosMetadata");
+        console.log("ERROR -- App. Phone number was changed after fetching convosMetadata. New number: ", userPhoneNumber);
       }
       fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
         setConvosMetadata(metadata);
@@ -43,12 +43,38 @@ export default function App() {
   }
 
   const onRequestFetchSingleConvoStatus = (convoId: string) => {
+    console.log("App. onRequestFetchSingleConvoStatus. Convo Id: ", convoId);
     //TODO
   }
 
-  const onApproveSingleConvo = (myPhoneNumber: string, convoId: string) => {
-    //TODO: call ConvosManager
-    //TODO: Update convosMetadata
+  const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
+    console.log("App. onApproveOrDenySingleConvo. Id: ", convoId, " Approve: ", shouldApprove);
+    const approvalStatusCode = shouldApprove ? 1: -1;
+        //TODO: call ConvosManager to send this update
+
+    const i = convosMetadata.findIndex((convo)=>convo.convoId === convoId);
+    const currentConvoVal = convosMetadata[i];
+    const amIInitiator = convosMetadata[i].initiatorFirstName === undefined;
+
+    const newMetadata = convosMetadata.slice();
+    if(amIInitiator){
+      if(currentConvoVal.convoStatus === undefined){
+        console.log("ERROR -- onApproveOrDenySingleConvo. Current convo status is null.");
+        return;
+      }
+      const newConvoStatus: ConvoStatus = {initiatorResponse: approvalStatusCode, receiverResponse: currentConvoVal.convoStatus.receiverResponse};
+      newMetadata[i].convoStatus = newConvoStatus;
+    }
+    else{
+      if(currentConvoVal.convoStatus === undefined){
+        console.log("ERROR -- onApproveOrDenySingleConvo. Current convo status is null.");
+        return;
+      }
+      const newConvoStatus: ConvoStatus = {initiatorResponse: currentConvoVal.convoStatus.initiatorResponse, receiverResponse: approvalStatusCode,};
+      newMetadata[i].convoStatus = newConvoStatus;
+    }
+    
+    setConvosMetadata(newMetadata);
   }
 
   if (!isLogged) {
@@ -59,7 +85,7 @@ export default function App() {
   return (
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
-      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, approveSingleConvo: onApproveSingleConvo
+      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, approveOrDenySingleConvo: onApproveOrDenySingleConvo
     }}>
       <NavigationContainer>
         <Tab.Navigator>

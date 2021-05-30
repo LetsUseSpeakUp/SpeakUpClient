@@ -21,7 +21,7 @@ export type ConvoStatus = {
 }
 
 export enum ConvoResponseType {
-    Unanswered, Approved, Disapproved
+    Unanswered = 0, Approved = 1, Disapproved = -1
 }
 
 export const uploadConvo = async function (filePath: string, metaData: ConvoMetadata) {  //TODO: Handle no connection and reupload when you have one
