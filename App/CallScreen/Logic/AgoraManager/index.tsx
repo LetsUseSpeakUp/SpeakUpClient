@@ -8,7 +8,7 @@ import RtcEngine, {
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
-import {ConvoMetadata, uploadConvo} from '../ConvosManager'
+import {ConvoMetadata, uploadConvo} from '../../../ConvosData/ConvosManager'
 
 /**
  * Emits
@@ -29,7 +29,7 @@ export default class AgoraManager extends EventEmitter {
 
     connectedToParter = false;
     
-    convoMetadata: ConvoMetadata | any
+    convoMetadata: ConvoMetadata | any //TODO: Delete this
 
     constructor() {
         super();

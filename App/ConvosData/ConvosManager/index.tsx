@@ -24,36 +24,33 @@ export enum ConvoResponseType {
     Unanswered, Approved, Disapproved
 }
 
-type CurrentConvosMetadata = {fetchedFromServer: boolean, metadata: ConvoMetadata[]}
-const currentConvosMetadata: CurrentConvosMetadata = {fetchedFromServer: false, metadata: []};
-
 export const uploadConvo = function (filePath: string, metaData: ConvoMetadata) {  //TODO: Handle no connection and reupload when you have one
     console.log("ConvosManager::uploadConvo. filepath: ", filePath, " metaData: ", metaData);
    
     return uploadConvoPromise(filePath, metaData).then((response) => {
-        console.log("ConvosManager::uploadConvo. Response: ", response);
-        if(!currentConvosMetadata.fetchedFromServer){
-            console.log("ERROR -- ConvosManager::uploadConvo. Uploading convo without having fetched from server");
-            currentConvosMetadata.metadata.push(metaData);
-        }
+        console.log("ConvosManager::uploadConvo. Response: ", response);        
+        return response;
     })
 }
 
-export const getAllConvosMetadataForUser = async function (userId: string) {
-    try{        
-        if(!currentConvosMetadata.fetchedFromServer){
-            const metadataJson = await fetchAllMetadataForUser(userId);    
-            const metadataAsInitiator:any = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
-            const metadataAsReceiver:any = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
-            currentConvosMetadata.metadata = currentConvosMetadata.metadata.concat(metadataAsInitiator, metadataAsReceiver);            
-            currentConvosMetadata.fetchedFromServer = true; 
-        }
-
-        return currentConvosMetadata.metadata;
+/**
+ * The reason we fetch from the server instead of from disk
+ * is because partner may change the approval status. Then only way to have the latest
+ * up-to-date status is by querying the server. 
+ * At some point, we can put in an optimization that writes to disk and tells the server
+ * "only give me the changes since I last queried". But that's way down the line.
+ * @param userId 
+ */
+export const fetchLatestConvosMetadataForUser = async (userId: string)=>{
+    try{
+        const metadataJson = await fetchAllMetadataForUser(userId);    
+        const metadataAsInitiator = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
+        const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
+        return metadataAsInitiator.concat(metadataAsReceiver);
     }
     catch(error){
-        console.log("ERROR -- ConvosManager::getAllConvosMetadataForUser ", error);
-        return [];        
+        console.log("ERROR -- ConvosManager::fetchExisstingConvosMetadataForUser: ", error);
+        return [];
     }
 }
 

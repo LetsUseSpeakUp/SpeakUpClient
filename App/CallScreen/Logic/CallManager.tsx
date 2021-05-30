@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetadata} from './ConvosManager'
+import {ConvoMetadata} from '../../ConvosData/ConvosManager'
 
 
 /**
@@ -10,7 +10,7 @@ import {ConvoMetadata} from './ConvosManager'
  * -'disconnected'
  * -'connected'
  * -'callDeclined'
- * -'convoUploaded' returns (convoId)
+ * -'convoAdded' returns (convoMetadata)
  */
 class CallManager extends EventEmitter {
 
@@ -20,6 +20,7 @@ class CallManager extends EventEmitter {
     agoraChannelName: string
     agoraManager: AgoraManager
     isInitiator = false
+    convoMetadata: ConvoMetadata | undefined
 
     constructor(myPhoneNumber: string) {
         super();
@@ -61,6 +62,7 @@ class CallManager extends EventEmitter {
         console.log("CallManager::endCall");
         this.leaveAgoraChannel();
         this.resetPartner();
+        this.finalizeConvoMetadata();
     }
 
     private setupSignalServer = (myNumber: string) => {
@@ -91,6 +93,7 @@ class CallManager extends EventEmitter {
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
+            this.initializeConvoMetadata();
             if(this.isInitiator)
                 this.startRecording();
         })
@@ -100,11 +103,9 @@ class CallManager extends EventEmitter {
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
-        })        
-        this.agoraManager.on('convoUploaded', (convoId: string)=>{
-            this.emit('convoUploaded', convoId);
-        })            
+        })                
     }
+    //TODO: Remove listener for convoUploaded and replace it with convoAdded
 
     private joinAgoraChannel = (channelName: string)=>{
         this.agoraManager.joinChannel(channelName);                
@@ -124,15 +125,29 @@ class CallManager extends EventEmitter {
             console.log("ERROR -- CallManager::startRecording. Not initiator"); //TODO: Only initiator records until we figure out split track syncing
             return;
         }
+                 
+        this.agoraManager.startRecording();
+    }
 
-        const convoMetadata: ConvoMetadata = {
+    private initializeConvoMetadata = ()=>{ //TODO: Call this
+        this.convoMetadata = {
             initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
             receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
             convoId: this.agoraChannelName,
             timestampStarted: Date.now(),
             convoLength: 0    
         };
-        this.agoraManager.startRecording(convoMetadata);
+    }
+
+    private finalizeConvoMetadata = ()=>{
+        if(this.convoMetadata === undefined){
+            console.log("ERROR -- CallManager::finalizeConvoMetadata. ConvoMetadata is null");
+            return;
+        }
+        
+        const convoLength = Date.now() - this.convoMetadata.timestampStarted;
+        this.convoMetadata.convoLength = convoLength;
+        this.emit('convoAdded', this.convoMetadata);
     }
 }
 
