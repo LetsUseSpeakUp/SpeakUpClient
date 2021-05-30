@@ -62,19 +62,16 @@ class CallManager extends EventEmitter {
 
     public endCall() {
         console.log("CallManager::endCall");
-        const state = "connected" //TODO
-        if(state === "connected"){
+        
+        if(this.agoraManager.isConnectedToPartner()){
             this.leaveAgoraChannel();
             this.resetPartner();
             this.finalizeConvoMetadata();
         }
-        else if (state === "connecting"){
+        else{
             this.leaveAgoraChannel();
             this.resetPartner();            
-        }
-        else{
-            console.log("ERROR -- CallManager::endCall. Not connected or connecting");
-        }
+        }        
     }
 
     private setupSignalServer = (myNumber: string) => {
