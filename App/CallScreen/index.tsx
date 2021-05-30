@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react'
 
-import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
+import { View, StyleSheet, Text} from 'react-native';
 import {CallManager} from './Logic/CallManager'
 import RingingScreen from './RingingScreen'
-import GetPhoneNumberScreen from './GetPhoneNumberScreen'
 import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
