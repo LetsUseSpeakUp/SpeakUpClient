@@ -9,13 +9,13 @@ import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 
 
-export default function CallScreen({route, navigation}) {    
+export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
     const [callState, setCallState] = useState(CallState.Dialpad);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
-    const callManager = useRef(new CallManager(userPhoneNumber)); //TODO: Figure out how to make persistent variable in react without useState
+    const callManager = useRef(new CallManager(userPhoneNumber));
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');     
 
     useEffect(()=>{
@@ -33,36 +33,29 @@ export default function CallScreen({route, navigation}) {
         })
         callManager.current.on('disconnected', ()=>{
             setCallState(CallState.Dialpad)
-            //TODO: Navigate to Convos page/that exact convo
         })
         callManager.current.on('connected', ()=>{
             setCallState(CallState.OnCall)
         })
         callManager.current.on('callDeclined', ()=>{
             setCallState(CallState.Dialpad);
-        })
-        callManager.current.on('partnerDisconnected', ()=>{
-            //TODO
-        })
+        })        
         callManager.current.on('convoUploaded', (convoId: string)=>{
             route.params.onNavToLatestConvo(convoId);
         })
     }
 
     const onRingAnswered = (acceptCall: boolean)=>{
-        if(acceptCall){
-//@ts-ignore
-            callManager.acceptCall();
+        if(acceptCall){            
+            callManager.current.acceptCall();
             setCallState(CallState.Connecting);
         }
         else{
             if(callState == CallState.Ringing_Receiver){
-                //@ts-ignore
-                callManager.declineCall()  
+                callManager.current.declineCall()  
             }
             else if(callState == CallState.Ringing_Sender){
-                //@ts-ignore
-                callManager.endCall();
+                callManager.current.endCall();
             }
             setCallState(CallState.Dialpad);
         }
@@ -70,14 +63,12 @@ export default function CallScreen({route, navigation}) {
 
     const onCallPlaced = (tempPartnerPhoneNumber: string)=>{
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
-//@ts-ignore
-        callManager.placeCall(tempPartnerPhoneNumber);
+        callManager.current.placeCall(tempPartnerPhoneNumber);
         setCallState(CallState.Ringing_Sender);
     }
 
     const onHangUp = ()=>{
-        //@ts-ignore
-        callManager.endCall();
+        callManager.current.endCall();
         setCallState(CallState.Dialpad);
     }
 

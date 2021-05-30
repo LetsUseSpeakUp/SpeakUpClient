@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetadata} from '../../ConvosData/ConvosManager'
+import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
 
 
 /**
@@ -101,11 +101,14 @@ class CallManager extends EventEmitter {
             this.emit('disconnected');
             this.endCall();
         })
+        this.agoraManager.on('shouldUploadConvo', (convoFilepath)=>{
+            this.uploadConvo(convoFilepath);
+        })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
         })                
     }
-    //TODO: Remove listener for convoUploaded and replace it with convoAdded
+    //TODO: In callers, remove listener for convoUploaded and replace it with convoAdded
 
     private joinAgoraChannel = (channelName: string)=>{
         this.agoraManager.joinChannel(channelName);                
@@ -129,7 +132,7 @@ class CallManager extends EventEmitter {
         this.agoraManager.startRecording();
     }
 
-    private initializeConvoMetadata = ()=>{ //TODO: Call this
+    private initializeConvoMetadata = ()=>{
         this.convoMetadata = {
             initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
             receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
@@ -148,6 +151,22 @@ class CallManager extends EventEmitter {
         const convoLength = Date.now() - this.convoMetadata.timestampStarted;
         this.convoMetadata.convoLength = convoLength;
         this.emit('convoAdded', this.convoMetadata);
+    }
+
+    private uploadConvo = async (convoFilepath: string)=>{
+        try{
+            if(this.convoMetadata === undefined){            
+                throw 'Convometadata is null';
+            }
+            if(this.convoMetadata.convoLength === 0){
+                console.log("ERROR -- CallManager::uploadConvo. Convometadata was not finalized. Finalizing and uploading.");
+                this.finalizeConvoMetadata();
+            }
+            return await uploadConvo(convoFilepath, this.convoMetadata);
+        }
+        catch(error){
+            console.log("ERROR -- CallManager::uploadConvo: ", error);
+        }
     }
 }
 
