@@ -21,7 +21,7 @@ import FileSystem from 'react-native-fs'
  */
 
 export enum ConnectionState{
-    Ready, Connecting, DisconnectRequested, Connected
+    Ready = 0, Connecting = 1, DisconnectRequested = 2, Connected = 3
 }
 
 export default class AgoraManager extends EventEmitter {
@@ -62,10 +62,7 @@ export default class AgoraManager extends EventEmitter {
             channelName, null, 0
         );
 
-        console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production
-        if(this.connectionState === ConnectionState.DisconnectRequested){
-            this.leaveChannel();
-        }
+        console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production        
 
         const intervalID = setInterval(()=>{
             if(!this.isConnectedToPartner()){
@@ -111,10 +108,10 @@ export default class AgoraManager extends EventEmitter {
     }
 
     public async leaveChannel() { 
+        console.log("AgoraManager::leaveChannel. State: ", this.connectionState);
         if(this.connectionState === ConnectionState.Connecting){
             this.connectionState = ConnectionState.DisconnectRequested;
-        }
-        else{
+        }        
             const rtcEngineState = await this.rtcEngine?.getConnectionState();
             if(rtcEngineState === ConnectionStateType.Disconnected){
                 console.log("AgoraManager.tsx::leaveChannel. Not connected. Doing nothing.");
@@ -123,7 +120,6 @@ export default class AgoraManager extends EventEmitter {
 
             const leaveCode = await this.rtcEngine?.leaveChannel();
             console.log("AgoraManager.tsx::leaveChannel. Code: ", leaveCode);
-        }
     }
 
     public isConnectedToPartner(){
@@ -177,10 +173,18 @@ export default class AgoraManager extends EventEmitter {
             console.log("AgoraManager.tsx:: token will expire");
             this.emit('tokenWillExpire');
         })
+        this.rtcEngine?.addListener('JoinChannelSuccess', ()=>{
+            if(this.connectionState === ConnectionState.DisconnectRequested){
+                this.leaveChannel();
+            }
+        })
     }
 
     private onLeftChannel(){
-        if (this.connectionState === ConnectionState.Connected){
+        if(this.connectionState === ConnectionState.Ready){
+            return; //For some reason, AgoraManager spams us with a bunch of disconnect events if we leave very quickly after calling join. This is so we only emit one.
+        }
+        else if (this.connectionState === ConnectionState.Connected){
             this.connectionState = ConnectionState.Ready;            
             this.emit('leftChannel');
             this.finishRecording();

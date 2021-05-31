@@ -96,11 +96,12 @@ class CallManager extends EventEmitter {
     }
 
     private setupAgoraManagerListeners = ()=>{
-        this.agoraManager.on('leftChannelWithoutRecording', ()=>{                        
+        this.agoraManager.on('leftChannelWithoutRecording', ()=>{  
+            console.log("CallManager. onAgoraManager leftChannelWithoutRecording");
             this.emit('disconnected');
         })
         this.agoraManager.on('leftChannel', ()=>{            
-        
+            console.log("CallManager. onAgoraManager leftChannel");
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');

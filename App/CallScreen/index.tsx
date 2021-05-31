@@ -11,7 +11,7 @@ import { ConvoMetadata } from '../ConvosData/ConvosManager';
 
 export default function CallScreen({route, navigation}: any) {    
 
-    enum CallState {Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, OnCall};
+    enum CallState {Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
     const [callState, setCallState] = useState(CallState.Dialpad);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
@@ -32,9 +32,8 @@ export default function CallScreen({route, navigation}: any) {
             setCallState(CallState.Ringing_Receiver);
         })
         callManager.current.on('disconnected', ()=>{
-            console.log("CallScreen::Call manager disconnected 1");
+            console.log("CallScreen::Callmanager emitted disconnected");
             setCallState(CallState.Dialpad)
-            console.log("CallScreen::Call manager disconnected 2");
         })
         callManager.current.on('connected', ()=>{
             setCallState(CallState.OnCall)
@@ -72,7 +71,7 @@ export default function CallScreen({route, navigation}: any) {
 
     const onHangUp = ()=>{
         callManager.current.endCall();
-        setCallState(CallState.Dialpad);
+        setCallState(CallState.Disconnecting);
     }
 
     switch(callState){
@@ -81,6 +80,7 @@ export default function CallScreen({route, navigation}: any) {
         case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
         case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)
         case CallState.OnCall: return (<OnCallScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>);
+        case CallState.Disconnecting: return(<View style={styles.container}><Text>Disconnecting</Text></View>)
         default: return(<View style={styles.container}><Text>Error - Unknown state</Text></View>)
     }
 }

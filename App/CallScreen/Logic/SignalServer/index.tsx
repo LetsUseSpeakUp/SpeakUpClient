@@ -59,7 +59,7 @@ class SignalServer extends EventEmitter{
     }
 
     listenForMyPhoneNumber(myPhoneNumber: string){
-        console.log("SignalSever::listenForMyPhoneNumber. My phone number: ", myPhoneNumber);
+        console.log("SignalServer::listenForMyPhoneNumber. My phone number: ", myPhoneNumber);
         this.signalHub.subscribe(myPhoneNumber)
         .on('data', (data: SignalServerData)=>{
             console.log("SignalServer.tsx::My Phone Number Received a message. My Phone number: ", myPhoneNumber
