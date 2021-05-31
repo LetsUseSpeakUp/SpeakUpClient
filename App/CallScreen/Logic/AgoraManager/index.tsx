@@ -13,7 +13,7 @@ import FileSystem from 'react-native-fs'
 /**
  * Emits
  * -leftChannel
- * -leftChannelWithoutRecording
+ * -leftChannelWithoutConnecting
  * -partnerJoined
  * -partnerDisconnected
  * -tokenWillExpire
@@ -32,6 +32,8 @@ export default class AgoraManager extends EventEmitter {
         uid: "",
     }
     
+    startedRecording = false
+
     connectionState = ConnectionState.Ready
     
     constructor() {
@@ -77,10 +79,11 @@ export default class AgoraManager extends EventEmitter {
      * You should only call this after you've gotten a 'connected' message
      */
     public startRecording(convoId: string){
-        console.log("AgoraManager::startRecording.");
+        console.log("AgoraManager::startRecording.");            
         if(this.connectionState !== ConnectionState.Connected){
             console.log("ERROR -- AgoraManager::startRecording. Not in appropriate state for recording: ", this.connectionState)
         }
+        this.startedRecording = true;
         
         const filePath = this.getFilePathOfConvo(convoId);
         const config = new AudioRecordingConfiguration(filePath, {recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback});
@@ -98,10 +101,15 @@ export default class AgoraManager extends EventEmitter {
 
     private finishRecording(){        
         console.log("AgoraManager::finishRecording.");
+        if(!this.startedRecording){
+            console.log("ERROR AgoraManager. Called finishRecording without start recording ever being called. Exiting");
+            return;
+        }
+        this.startedRecording = false;
 
         this.rtcEngine?.stopAudioRecording().then(()=>{
             console.log("AgoraManager::finishRecording without errors.");  
-            this.emit('shouldUploadConvo')      
+            this.emit('shouldUploadConvo')
         }).catch((error)=>{
             console.log("ERROR -- AgoraManager::finishRecording: ", error);
         })  
@@ -187,11 +195,12 @@ export default class AgoraManager extends EventEmitter {
         else if (this.connectionState === ConnectionState.Connected){
             this.connectionState = ConnectionState.Ready;            
             this.emit('leftChannel');
-            this.finishRecording();
+            if(this.startedRecording)
+                this.finishRecording();
         }
         else{
             this.connectionState = ConnectionState.Ready;
-            this.emit('leftChannelWithoutRecording');
+            this.emit('leftChannelWithoutConnecting');
         }
     }
 }
