@@ -6,7 +6,7 @@ import RingingScreen from './RingingScreen'
 import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
-import { ConvoMetadata } from '../ConvosData/ConvosManager';
+import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
 
 
@@ -33,6 +33,7 @@ export default function CallScreen({route, navigation}: any) {
 
     useEffect(()=>{
         connectCallManagerListeners();
+        _testExistingFileUpload();
     }, [])    
 
     const connectCallManagerListeners = ()=>{
