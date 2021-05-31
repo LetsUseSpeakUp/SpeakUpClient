@@ -24,6 +24,7 @@ export default function App() {
         console.log("ERROR -- App. Phone number was changed after fetching convosMetadata. New number: ", userPhoneNumber);
       }
       ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
+        convoToNavToBuffer.current = metadata[0].convoId; //TODO: Just for testing. Delete this
         setConvosMetadata(metadata);
       })
     }
