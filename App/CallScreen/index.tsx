@@ -84,9 +84,11 @@ export default function CallScreen({route, navigation}: any) {
         const dummyMetadata: ConvoMetadata = {
             convoId: 'dummy5-1',
             initiatorId: '005',
-            receiverId: '001',
-            timestampStarted: 1622485591,
-            convoLength: 3451
+            receiverId: '001', //Make sure you're 001 when using this
+            timestampStarted: Date.now(),
+            convoLength: 3451,
+            initiatorFirstName: 'FirstName005',
+            initiatorLastName: 'LastName005'
         };
         convosContext.addSingleConvoMetadata(dummyMetadata);
     }

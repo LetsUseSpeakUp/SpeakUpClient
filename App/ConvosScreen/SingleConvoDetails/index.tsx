@@ -44,6 +44,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     )
 }
 
+
 function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefined): string{
     if(approvalStatus === ConvoResponseType.Approved) return "Approved";
     if(approvalStatus === ConvoResponseType.Disapproved) return "Disapproved";
@@ -55,13 +56,14 @@ function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefin
 }
 
 function getFormattedTimeFromTimestamp(timestamp: number): string{
-    const date = new Date(timestamp * 1000);
+    const date = new Date(timestamp);
     const hours = date.getHours();
     const minutes = "0" + date.getMinutes();
     const seconds = "0" + date.getSeconds();    
+    const month = date.getMonth() + 1; //0 indexed
 
     const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    const formattedDate = date.getMonth() + "/" + date.getDay() + "/" + date.getFullYear();
+    const formattedDate = month + "/" + date.getDate() + "/" + date.getFullYear();
     return formattedTime + " " + formattedDate;
 }
 
