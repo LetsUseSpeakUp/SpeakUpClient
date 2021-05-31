@@ -48,6 +48,7 @@ function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefin
     if(approvalStatus === ConvoResponseType.Approved) return "Approved";
     if(approvalStatus === ConvoResponseType.Disapproved) return "Disapproved";
     if(approvalStatus === ConvoResponseType.Unanswered) return "Unanswered";
+    if(approvalStatus === undefined) return "Unanswered";
 
     console.log("ERROR -- SingleConvoDetails::convertApprovalStatusToText. Uknown approval status: ", approvalStatus);
     return "ERROR";

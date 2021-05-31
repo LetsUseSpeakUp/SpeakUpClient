@@ -10,7 +10,7 @@ import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
  * -'disconnected' 
  * This event is important, because the calling system won't be ready to call again
  * until it's sent out the disconnected message.
- * -'connected'
+ * -'connected': called only when the user has joined the channel and the partner has joined the channel as well
  * -'callDeclined'
  * -'convoAdded' returns (convoMetadata)
  */
@@ -18,7 +18,9 @@ class CallManager extends EventEmitter {
 
     signalServer: SignalServer
     myPhoneNumber: string
-    partnerPhoneNumber: string
+    partnerPhoneNumber: string    
+    partnerFirstName: string
+    partnerLastName: string
     agoraChannelName: string
     agoraManager: AgoraManager
     isInitiator = false
@@ -28,7 +30,9 @@ class CallManager extends EventEmitter {
         super();
 
         this.myPhoneNumber = myPhoneNumber;
-        this.partnerPhoneNumber = "";
+        this.partnerPhoneNumber = "";        
+        this.partnerFirstName = "";
+        this.partnerLastName = "";
         this.agoraChannelName = "";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
@@ -57,21 +61,12 @@ class CallManager extends EventEmitter {
 
     public declineCall() {        
         this.signalServer.sendDecline(this.myPhoneNumber, this.partnerPhoneNumber);
-        this.resetPartner();
+        this.resetCallState();
     }
 
     public endCall() {
         console.log("CallManager::endCall");
-        
-        if(this.agoraManager.isConnectedToPartner()){
-            this.leaveAgoraChannel();
-            this.resetPartner();
-            this.finalizeConvoMetadata();
-        }
-        else{
-            this.leaveAgoraChannel();
-            this.resetPartner();            
-        }        
+        this.leaveAgoraChannel();            
     }
 
     private setupSignalServer = (myNumber: string) => {
@@ -86,7 +81,7 @@ class CallManager extends EventEmitter {
                 this.partnerPhoneNumber = data.sender;
                 this.agoraChannelName = data.message
                 this.isInitiator = false;
-                this.emit("callReceived", data.sender);
+                this.emit("callReceived", data.sender); //TODO: Retrieve partner info before emitting this (firstname and lastname)
             }
         })
         this.signalServer.on(MessageType.Decline, (data: SignalServerData) => {
@@ -96,12 +91,23 @@ class CallManager extends EventEmitter {
     }
 
     private setupAgoraManagerListeners = ()=>{
-        this.agoraManager.on('leftChannelWithoutRecording', ()=>{  //TODO: still finalize as long as it wasn't a 
+        this.agoraManager.on('leftChannelWithoutConnecting', ()=>{
             console.log("CallManager. onAgoraManager leftChannelWithoutRecording");
+            this.finalizeConvoMetadata();
+            this.resetCallState();
             this.emit('disconnected');
         })
         this.agoraManager.on('leftChannel', ()=>{            
             console.log("CallManager. onAgoraManager leftChannel");
+            const finalizedMetadata = this.finalizeConvoMetadata();
+            this.resetCallState();
+            this.emit('disconnected');
+            this.emit('convoAdded', finalizedMetadata);
+            if(finalizedMetadata !== undefined)
+                this.agoraManager.stopRecording(finalizedMetadata);
+            else{
+                console.log("ERROR -- CallManager onAgoraManager left channel. Convo metadata is null");
+            }
         })
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
@@ -112,9 +118,8 @@ class CallManager extends EventEmitter {
         this.agoraManager.on('partnerDisconnected', ()=>{
             this.endCall();
         })
-        this.agoraManager.on('recordingComplete', ()=>{
-            this.uploadConvo();
-            this.emit('disconnected');
+        this.agoraManager.on('recordingComplete', (convoMetadata: ConvoMetadata)=>{
+            this.uploadConvo(convoMetadata);            
         })
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
@@ -129,9 +134,12 @@ class CallManager extends EventEmitter {
         this.agoraManager.leaveChannel();
     }
 
-    private resetPartner = ()=>{
+    private resetCallState = ()=>{
         this.agoraChannelName = "";
-        this.partnerPhoneNumber = "";
+        this.partnerPhoneNumber = "";     
+        this.partnerFirstName = "";
+        this.partnerLastName = "";
+        this.convoMetadata = undefined;        
     }
 
     private startRecording = ()=>{
@@ -147,41 +155,40 @@ class CallManager extends EventEmitter {
         this.agoraManager.startRecording(this.convoMetadata.convoId);
     }
 
-    private initializeConvoMetadata = ()=>{
+    private initializeConvoMetadata = ()=>{ 
         this.convoMetadata = {
             initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
             receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
+            receiverFirstName: this.isInitiator ? this.partnerFirstName : undefined,
+            receiverLastName: this.isInitiator ? this.partnerLastName: undefined,
+            initiatorFirstName: this.isInitiator ? undefined : this.partnerFirstName,
+            initiatorLastName: this.isInitiator ? undefined: this.partnerLastName,
             convoId: this.agoraChannelName,
             timestampStarted: Date.now(),
             convoLength: 0    
         };
     }
 
-    private finalizeConvoMetadata = ()=>{
+    private finalizeConvoMetadata = (): ConvoMetadata | undefined=>{
         if(this.convoMetadata === undefined){
-            console.log("ERROR -- CallManager::finalizeConvoMetadata. ConvoMetadata is null");
-            return;
+            console.log("CallManager::finalizeConvoMetadata. ConvoMetadata is null");
+            return undefined;
         }
         
         const convoLength = Date.now() - this.convoMetadata.timestampStarted;
         this.convoMetadata.convoLength = convoLength;
-        this.emit('convoAdded', this.convoMetadata);
+        const finalizedMetadata = this.convoMetadata;
+        this.convoMetadata = undefined;
+        return finalizedMetadata;
     }
 
-    private uploadConvo = async ()=>{
-        try{
-            if(this.convoMetadata === undefined){            
-                throw 'Convometadata is null';
-            }
-            if(this.convoMetadata.convoLength === 0){
-                console.log("ERROR -- CallManager::uploadConvo. Convometadata was not finalized. Finalizing and uploading.");
-                this.finalizeConvoMetadata();
-            }
-            const filePath =  this.agoraManager.getFilePathOfConvo(this.convoMetadata.convoId)
-            return await uploadConvo(filePath, this.convoMetadata);
+    private uploadConvo = async (associatedMetadata: ConvoMetadata)=>{
+        try{            
+            const filePath =  this.agoraManager.getFilePathOfConvo(associatedMetadata.convoId)
+            return await uploadConvo(filePath, associatedMetadata);
         }
         catch(error){
-            console.log("ERROR -- CallManager::uploadConvo: ", error, " metadata: ", this.convoMetadata);
+            console.log("ERROR -- CallManager::uploadConvo: ", error, " metadata: ", associatedMetadata);
         }
     }
 }
