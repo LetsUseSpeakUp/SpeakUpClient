@@ -7,21 +7,9 @@ export default function ConvosScreen({route, navigation}: any) {
   const Stack = createStackNavigator();
 
   return(
-      <Stack.Navigator initialRouteName="All Convos">
+      <Stack.Navigator>
         <Stack.Screen name="All Convos" component={AllConvos}/>
-        <Stack.Screen 
-          name="Convo Details" 
-          component={SingleConvoDetails}
-          options={{
-          headerLeft: (props) => (
-            <HeaderBackButton
-              {...props}
-              onPress={() => {
-                navigation.reset({routes: [{name: 'All Convos'}]})                
-              }}
-            />
-          ),
-        }}/>
+        <Stack.Screen name="Convo Details" component={SingleConvoDetails}/>
       </Stack.Navigator>    
   )
 }
