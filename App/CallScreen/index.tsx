@@ -19,7 +19,7 @@ export default function CallScreen({route, navigation}: any) {
     const callManager = useRef(new CallManager(userPhoneNumber));
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const convosContext = useContext(ConvosContext);
-
+    const _curDummyCount = useRef(0);
     
 
     useEffect(()=>{
@@ -82,7 +82,7 @@ export default function CallScreen({route, navigation}: any) {
      */
     const _sendDummyConvoMetadata = ()=>{ 
         const dummyMetadata: ConvoMetadata = {
-            convoId: 'dummy5-1',
+            convoId: 'dummy5-1_num_' + _curDummyCount.current++,
             initiatorId: '005',
             receiverId: '001', //Make sure you're 001 when using this
             timestampStarted: Date.now(),
