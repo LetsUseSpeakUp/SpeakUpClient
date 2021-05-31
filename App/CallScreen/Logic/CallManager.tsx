@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
+import {ConvoMetadata, uploadConvo, getUserInfo} from '../../ConvosData/ConvosManager'
 
 
 /**
@@ -41,13 +41,22 @@ class CallManager extends EventEmitter {
 
     }
 
-    public placeCall(receiverPhoneNumber: string) {
-        this.isInitiator = true;
-        this.agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
-        this.joinAgoraChannel(this.agoraChannelName);
-        this.partnerPhoneNumber = receiverPhoneNumber;
-        this.signalServer.sendSignal({agoraChannel: this.agoraChannelName, myPhoneNumber: this.myPhoneNumber,
-            receiverPhoneNumber: this.partnerPhoneNumber});
+    public async placeCall(receiverPhoneNumber: string) {
+        try{
+            const partnerInfo = await getUserInfo(receiverPhoneNumber);
+            this.partnerFirstName = partnerInfo.firstName;
+            this.partnerLastName = partnerInfo.lastName;
+            this.isInitiator = true;
+            this.agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
+            this.joinAgoraChannel(this.agoraChannelName);
+            this.partnerPhoneNumber = receiverPhoneNumber;
+            this.signalServer.sendSignal({agoraChannel: this.agoraChannelName, myPhoneNumber: this.myPhoneNumber,
+                receiverPhoneNumber: this.partnerPhoneNumber});
+        }
+        catch(error){
+            console.log("ERROR -- CallManager::placeCall. Unable to get user info for receiver: ", 
+            receiverPhoneNumber , " Error message: ", error);
+        }
     }
 
     public acceptCall() {
@@ -71,17 +80,27 @@ class CallManager extends EventEmitter {
 
     private setupSignalServer = (myNumber: string) => {
         this.signalServer.listenForMyPhoneNumber(myNumber);
-        this.signalServer.on(MessageType.Signal, (data: SignalServerData) => {            
+        this.signalServer.on(MessageType.Signal, async (data: SignalServerData) => {            
             if(this.partnerPhoneNumber.length > 0 && data.sender != this.partnerPhoneNumber){
                 console.log("CallManager::signal message received. Already connected so declining. Partner: ",
                 this.partnerPhoneNumber , " Requester: ", data.sender);
                 this.signalServer.sendDecline(this.myPhoneNumber, data.sender);
             }
             else if(this.partnerPhoneNumber.length == 0){
-                this.partnerPhoneNumber = data.sender;
-                this.agoraChannelName = data.message
-                this.isInitiator = false;
-                this.emit("callReceived", data.sender); //TODO: Retrieve partner info before emitting this (firstname and lastname)
+                try{
+                    const userInfo = await getUserInfo(data.sender);
+                    this.partnerFirstName = userInfo.firstName;
+                    this.partnerLastName = userInfo.lastName;
+                    this.partnerPhoneNumber = data.sender;
+                    this.agoraChannelName = data.message
+                    this.isInitiator = false;
+                    this.emit("callReceived", data.sender);
+                }
+                catch(error){
+                    console.log("ERROR -- CallManager.onSignalReceived. Could not find user info for signaller: ", 
+                    data.sender, " . Declining call. Error message: ", error);
+                    this.signalServer.sendDecline(this.myPhoneNumber, data.sender);
+                }
             }
         })
         this.signalServer.on(MessageType.Decline, (data: SignalServerData) => {

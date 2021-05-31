@@ -33,6 +33,19 @@ export const uploadConvo = async function (filePath: string, metaData: ConvoMeta
 }
 
 /**
+ * This will throw an error if the user is not found, so catch it
+ * @param userPhoneNumber 
+ * @returns 
+ */
+export const getUserInfo = async function(userPhoneNumber: string){
+    const formData = new FormData();
+    formData.append('phoneNumber', userPhoneNumber);
+    const endpoint = SERVERENDPOINT + "/users/query";
+    const response = await sendFormDataToServerEndpoint(formData, endpoint);
+    return {firstName: response.firstName, lastName: response.lastName};
+}
+
+/**
  * The reason we fetch from the server instead of from disk
  * is because partner may change the approval status. Then the 
  * only way to have the latest up-to-date status is by querying the server. 
@@ -42,7 +55,7 @@ export const uploadConvo = async function (filePath: string, metaData: ConvoMeta
  */
 export const fetchLatestConvosMetadataForUser = async (userId: string)=>{
     try{
-        const metadataJson = await fetchAllMetadataForUser(userId);    
+        const metadataJson = await fetchAllMetadataForUserFromServer(userId);    
         const metadataAsInitiator = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
         const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
         return metadataAsInitiator.concat(metadataAsReceiver);
@@ -85,7 +98,7 @@ const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[])=>{
  * Returns a promise of the response converted to json. Caller should handle errors
  * @param userId 
  */
-const fetchAllMetadataForUser = async function(userId: string){
+const fetchAllMetadataForUserFromServer = async function(userId: string){
     const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
     const formData = new FormData();
     formData.append('phoneNumber', userId);
