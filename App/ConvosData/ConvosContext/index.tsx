@@ -18,7 +18,8 @@ const ConvosContext = React.createContext({
     addSingleConvoMetadata: (singleMetadata: ConvoMetadata)=>{},
     requestFetchSingleConvoStatus: (convoId: string)=>{},
     convoToNavTo: '',
-    approveOrDenySingleConvo: (approveOrDeny: boolean, convoId: string)=>{}
+    approveOrDenySingleConvo: (approveOrDeny: boolean, convoId: string)=>{},
+    clearConvoToNavTo: ()=>{}
 })
 
 export default ConvosContext;

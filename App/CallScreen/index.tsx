@@ -20,13 +20,16 @@ export default function CallScreen({route, navigation}: any) {
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const convosContext = useContext(ConvosContext);
 
-    const convoToNavTo = convosContext.convoToNavTo;
-    if(convoToNavTo.length > 0){
-        convosContext.clearConvoToNavTo();
-        console.log("CallScreen saw convoToNavTo change. Nav: ", convoToNavTo);
-        navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}});
-        // navigation.navigate('Convo Details', {convoId: convoId})
-    }
+    
+
+    useEffect(()=>{
+        const convoToNavTo = convosContext.convoToNavTo;
+        if(convoToNavTo.length > 0){
+            convosContext.clearConvoToNavTo();
+            console.log("CallScreen saw convoToNavTo change. Nav: ", convoToNavTo);
+            navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}});
+        }    
+    }, [convosContext.convoToNavTo])
 
     useEffect(()=>{
         connectCallManagerListeners();
