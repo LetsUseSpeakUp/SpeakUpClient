@@ -76,7 +76,23 @@ export default function CallScreen({route, navigation}: any) {
         }
     }
 
+    /**
+     * This is just for testing. Don't use it once you're done testing a function
+     * @returns 
+     */
+    const _sendDummyConvoMetadata = ()=>{ 
+        const dummyMetadata: ConvoMetadata = {
+            convoId: 'dummy5-1',
+            initiatorId: '005',
+            receiverId: '001',
+            timestampStarted: 1622485591,
+            convoLength: 3451
+        };
+        convosContext.addSingleConvoMetadata(dummyMetadata);
+    }
+
     const onCallPlaced = (tempPartnerPhoneNumber: string)=>{
+        _sendDummyConvoMetadata(); return; //TODO: Delete this. just for testing.
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
         callManager.current.placeCall(tempPartnerPhoneNumber);
         setCallState(CallState.Ringing_Sender);

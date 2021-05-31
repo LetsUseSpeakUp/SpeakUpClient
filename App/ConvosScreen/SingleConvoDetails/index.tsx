@@ -25,7 +25,7 @@ export default function SingleConvoDetails({route, navigation}: any){
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
     const dateTime = getFormattedTimeFromTimestamp(metadata.timestampStarted);
-    const convoLength = metadata.convoLength + " milliseconds";
+    const convoLength = metadata.convoLength + " milliseconds"; //TODO: Get formatted time
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
     
@@ -62,4 +62,8 @@ function getFormattedTimeFromTimestamp(timestamp: number): string{
     const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
     const formattedDate = date.getMonth() + "/" + date.getDay() + "/" + date.getFullYear();
     return formattedTime + " " + formattedDate;
+}
+
+function getFormattedTimeFromMs(timeInMs: number): string{
+    return ''; //TODO
 }
