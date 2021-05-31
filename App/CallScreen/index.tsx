@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useContext} from 'react'
 
 import { View, StyleSheet, Text} from 'react-native';
 import {CallManager} from './Logic/CallManager'
@@ -7,6 +7,7 @@ import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata } from '../ConvosData/ConvosManager';
+import ConvosContext from '../ConvosData/ConvosContext'
 
 
 export default function CallScreen({route, navigation}: any) {    
@@ -16,7 +17,14 @@ export default function CallScreen({route, navigation}: any) {
 
     const userPhoneNumber = route.params.userPhoneNumber;
     const callManager = useRef(new CallManager(userPhoneNumber));
-    const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');     
+    const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
+    const convosContext = useContext(ConvosContext);
+
+    const convoToNavTo = convosContext.convoToNavTo;
+    if(convoToNavTo.length > 0){
+        convosContext.clearConvoToNavTo();
+        navigation.navigate('Convos', {screen: convoToNavTo})
+    }
 
     useEffect(()=>{
         connectCallManagerListeners();
@@ -43,7 +51,7 @@ export default function CallScreen({route, navigation}: any) {
         })        
         callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
             console.log("CallScreen. ConvoAdded: ", convoMetadata);
-            //TODO: use context
+            convosContext.addSingleConvoMetadata(convoMetadata);
         })
     }
 

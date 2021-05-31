@@ -4,7 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ConvosScreen from './ConvosScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
-import {fetchLatestConvosMetadataForUser, ConvoMetadata, ConvoResponseType, ConvoStatus } from './ConvosData/ConvosManager'
+import * as ConvosManager from './ConvosData/ConvosManager'
+import {ConvoMetadata, ConvoStatus} from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 
 const Tab = createBottomTabNavigator();
@@ -13,6 +14,7 @@ export default function App() {
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const [convoToNavTo, setConvoToNavTo] = useState('');
+  const clearConvoToNavTo = ()=>{setConvoToNavTo('')}
   const convoToNavToBuffer = useRef('');
   const isLogged = userPhoneNumber.length > 0;
 
@@ -21,7 +23,7 @@ export default function App() {
       if(convosMetadata.length > 0){
         console.log("ERROR -- App. Phone number was changed after fetching convosMetadata. New number: ", userPhoneNumber);
       }
-      fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
+      ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
         setConvosMetadata(metadata);
       })
     }
@@ -36,6 +38,7 @@ export default function App() {
   }, [convosMetadata])
 
   const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {
+    console.log("App. onAddSingleConvoMetadata: ", singleConvoMetadata);
     convoToNavToBuffer.current = singleConvoMetadata.convoId;
     const newConvosMetadata = convosMetadata.concat(singleConvoMetadata);
     setConvosMetadata(newConvosMetadata);
@@ -48,8 +51,12 @@ export default function App() {
 
   const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
     console.log("App. onApproveOrDenySingleConvo. Id: ", convoId, " Approve: ", shouldApprove);
-    const approvalStatusCode = shouldApprove ? 1: -1;
-        //TODO: call ConvosManager to send this update to server
+    if(shouldApprove)
+      ConvosManager.approveConvo(convoId, userPhoneNumber);
+    else 
+      ConvosManager.denyConvo(convoId, userPhoneNumber);
+
+    const approvalStatusCode = shouldApprove ? 1: -1;        
 
     const i = convosMetadata.findIndex((convo)=>convo.convoId === convoId);
     const currentConvoVal = convosMetadata[i];
@@ -84,7 +91,8 @@ export default function App() {
   return (
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
-      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, approveOrDenySingleConvo: onApproveOrDenySingleConvo
+      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, 
+      approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo
     }}>
       <NavigationContainer>
         <Tab.Navigator>

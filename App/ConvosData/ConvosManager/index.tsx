@@ -89,17 +89,7 @@ const fetchAllMetadataForUser = async function(userId: string){
     const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
     const formData = new FormData();
     formData.append('phoneNumber', userId);
-    const response = await fetch(getMetadataEndpoint, {
-        method: 'POST',
-        body: formData
-    })
-    if (response.status === 404) throw ('404 error: ' + response.statusText);
-
-    const json = await response.json();
-    if (response.status === 400 || response.status === 500)
-        throw (response.status + " error: " + json.message.message);
-    
-    return json
+    return sendFormDataToServerEndpoint(formData, getMetadataEndpoint);
 }
 
 const getStreamingURLOfConvo = function (convoId: string): string {
@@ -112,12 +102,38 @@ const getSnippetURLOfConvo = function (convoId: string, startTimestamp: number, 
     return "";
 }
 
-const approveConvo = function (convoId: string, userId: string) {
-    //TODO
+export const approveConvo = function (convoId: string, userId: string) {
+    const approveConvoEndpoint = SERVERENDPOINT + "/convos/setapproval";
+    const formData = new FormData();
+    formData.append('convoId', convoId);
+    formData.append('phoneNumber', userId);
+    formData.append('approval', '1');
+
+    sendFormDataToServerEndpoint(formData, approveConvoEndpoint);
 }
 
-const denyConvo = function (convoId: string, userId: string) {
-    //TODO
+export const denyConvo = function (convoId: string, userId: string) {
+    const approveConvoEndpoint = SERVERENDPOINT + "/convos/setapproval";
+    const formData = new FormData();
+    formData.append('convoId', convoId);
+    formData.append('phoneNumber', userId);
+    formData.append('approval', '-1');
+
+    sendFormDataToServerEndpoint(formData, approveConvoEndpoint);
+}
+
+const sendFormDataToServerEndpoint = async function(formData: Formdata, serverEndpoint: string){
+    const response = await fetch(serverEndpoint, {
+        method: 'POST',
+        body: formData
+    })
+    if (response.status === 404) throw ('404 error: ' + response.statusText);
+
+    const json = await response.json();
+    if (response.status === 400 || response.status === 500)
+        throw (response.status + " error: " + json.message.message);
+    
+    return json
 }
 
 export const _testFileCreationAndUpload = function () {
