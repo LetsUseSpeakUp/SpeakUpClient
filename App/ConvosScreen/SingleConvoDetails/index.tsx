@@ -1,19 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Button} from 'react-native'
 import {ConvoResponseType} from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
+import {RefreshControl, ScrollView} from 'react-native'
 
 export default function SingleConvoDetails({route, navigation}: any){
     const convosContext = React.useContext(ConvosContext);
-    if(route.params === undefined){
-        console.log("ERROR -- SingleConvoDetails. Params is undefined. route: ", route);
-        return(
-            <View><Text>ERROR: params undefined. Please contact support.</Text></View>
-        );
-    }
-
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
+    const [refreshing, setRefreshing] = useState(false); //TODO: Actually use this
+
+    useEffect(()=>{
+        convosContext.requestFetchSingleConvoStatus(convoId); //TODO: Fetch from ConvosManager here and send it up through the context
+    })
 
     if(metadata === undefined){
         console.log("ERROR -- SingleConvoDetails. Metadata is undefined. convoId: ", convoId);
@@ -31,7 +30,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
     
     return(
-        <View>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{convosContext.requestFetchSingleConvoStatus(convoId);}}/>}>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
             <Text>Time of Call: {dateTime}</Text>
@@ -41,7 +40,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
             <Button title="Refresh" onPress={()=>{convosContext.requestFetchSingleConvoStatus(convoId)}}></Button>
-        </View>
+        </ScrollView>
     )
 }
 
