@@ -23,7 +23,9 @@ export default function CallScreen({route, navigation}: any) {
     const convoToNavTo = convosContext.convoToNavTo;
     if(convoToNavTo.length > 0){
         convosContext.clearConvoToNavTo();
-        navigation.navigate('Convos', {screen: convoToNavTo})
+        console.log("CallScreen saw convoToNavTo change. Nav: ", convoToNavTo);
+        navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}});
+        // navigation.navigate('Convo Details', {convoId: convoId})
     }
 
     useEffect(()=>{

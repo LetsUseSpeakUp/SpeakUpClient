@@ -5,13 +5,20 @@ import ConvosContext from '../../ConvosData/ConvosContext'
 
 export default function SingleConvoDetails({route, navigation}: any){
     const convosContext = React.useContext(ConvosContext);
+    if(route.params === undefined){
+        console.log("ERROR -- SingleConvoDetails. Params is undefined. route: ", route);
+        return(
+            <View><Text>ERROR: params undefined. Please contact support.</Text></View>
+        );
+    }
+
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
 
     if(metadata === undefined){
         console.log("ERROR -- SingleConvoDetails. Metadata is undefined. convoId: ", convoId);
         return(
-            <View>ERROR: Could not find convo with convoId {convoId}. Please contact support.</View>
+            <View><Text>ERROR: Could not find convo with convoId {convoId}. Please contact support.</Text></View>
         );
     }
     const amIInitiator = metadata.initiatorFirstName === undefined;
