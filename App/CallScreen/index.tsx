@@ -26,7 +26,6 @@ export default function CallScreen({route, navigation}: any) {
         const convoToNavTo = convosContext.convoToNavTo;
         if(convoToNavTo.length > 0){
             convosContext.clearConvoToNavTo();
-            console.log("CallScreen saw convoToNavTo change. Nav: ", convoToNavTo);
             navigation.navigate('Convos')
             navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}});            
         }    
@@ -94,8 +93,7 @@ export default function CallScreen({route, navigation}: any) {
         convosContext.addSingleConvoMetadata(dummyMetadata);
     }
 
-    const onCallPlaced = (tempPartnerPhoneNumber: string)=>{
-        _sendDummyConvoMetadata(); return; //TODO: Delete this. just for testing.
+    const onCallPlaced = (tempPartnerPhoneNumber: string)=>{        
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
         callManager.current.placeCall(tempPartnerPhoneNumber);
         setCallState(CallState.Ringing_Sender);
