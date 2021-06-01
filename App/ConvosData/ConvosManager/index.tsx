@@ -130,7 +130,7 @@ export const downloadConvo = async function (convoId: string){
     })    
 }
 
-const getSnippetURLOfConvo = async function (convoId: string, startTimestamp: number, endTimestamp: number): string {
+const getSnippetURLOfConvo = function (convoId: string, startTimestamp: number, endTimestamp: number): string {
     //TODO
     return "";
 }

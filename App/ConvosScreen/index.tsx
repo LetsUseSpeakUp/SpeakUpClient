@@ -3,6 +3,7 @@ import AllConvos from './AllConvos'
 import {createStackNavigator} from '@react-navigation/stack'
 import SingleConvoDetails from './SingleConvoDetails';
 import ConvosContext from '../ConvosData/ConvosContext'
+import ConvoPlayer from './ConvoPlayer'
 
 
 export default function ConvosScreen({route, navigation}: any) {  
@@ -18,10 +19,11 @@ export default function ConvosScreen({route, navigation}: any) {
     }
   }, [convosContext.convoToNavTo])
 
-  return(
-      <Stack.Navigator>
+  return( //TODO: Remove initial route name when done testing player
+      <Stack.Navigator initialRouteName="Convo Player">
         <Stack.Screen name="All Convos" component={AllConvos}/>
         <Stack.Screen name="Convo Details" component={SingleConvoDetails}/>
+        <Stack.Screen name="Convo Player" component={ConvoPlayer}/>
       </Stack.Navigator>    
   )
 }
