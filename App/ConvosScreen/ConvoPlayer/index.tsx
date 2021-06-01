@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Button } from "react-native";
-import { Slider } from 'react-native-elements'
 import TrackPlayer from 'react-native-track-player';
-import {useTrackPlayerProgress} from 'react-native-track-player';
+import {useTrackPlayerProgress, usePlaybackState} from 'react-native-track-player';
+import Slider from '@react-native-community/slider';
 
 export default function ConvoPlayer() {
     const [isPlayerInitialized, setIsPlayerInitialized] = useState(false);
-    const [playbackState, setPlaybackState] = useState(TrackPlayer.STATE_NONE);
-    const trackPlayerProgress = useTrackPlayerProgress(100);
-    const trackPosition = trackPlayerProgress.position;
-    const trackDuration = trackPlayerProgress.duration;
-    // const [sliderProgress, setSliderProgress] = useState(0)
+    const playbackState = usePlaybackState();
+    const trackPlayerProgress = useTrackPlayerProgress(100);    
+    const [sliderProgress, setSliderProgress] = useState(0)
     // const [slidingCompleteVal, setSlidingCompleteVal] = useState(0);
 
     useEffect(() => {
@@ -20,27 +18,40 @@ export default function ConvoPlayer() {
         });
     }, []);
 
+    useEffect(()=>{
+        console.log("Playback state updated: ", playbackState);
+    }, [playbackState]);
+
+    useEffect(()=>{
+        console.log("trackProgress updated: ", trackPlayerProgress);
+    }, [trackPlayerProgress]);
+
     const onPlayPauseButtonPressed= ()=>{
+        console.log("On play pause button pressed. State: ", playbackState,  " progress: ", trackPlayerProgress);
         if(playbackState === TrackPlayer.STATE_PLAYING){
             TrackPlayer.pause();
-            setPlaybackState(TrackPlayer.STATE_PAUSED);
         }
         else{
             TrackPlayer.play();
-            setPlaybackState(TrackPlayer.STATE_PLAYING);
         }
+    }
+
+    const setSlidingCompleteVal = (sliderVal: number)=>{
+        console.log("ConvoPlayer. Set sliding complete. Slider val: ", sliderVal , " playback state: ", playbackState, " Track player: ", trackPlayerProgress);
+
+        TrackPlayer.seekTo(sliderVal*trackPlayerProgress.duration);
     }
 
     return (
         <SafeAreaView style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 20 }}>
             <Slider
                 // value={sliderProgress}
-                // onValueChange={(value) => setSliderProgress(value)}
-                // onSlidingComplete={(value) => { setSlidingCompleteVal(value) }}
-                thumbStyle={{ height: 30, width: 10 }}  
+                // onValueChange={(value) => setSliderProgress(value)}                
+                // onSlidingComplete={setSlidingCompleteVal}
+                // style={{ height: 30, width: 10 }}  
             />
-            <Text>Track Position: {trackPosition}</Text>
-            <Text>Track Duration: {trackDuration}</Text>
+            <Text>Track Position: {trackPlayerProgress.position}</Text>
+            <Text>Track Duration: {trackPlayerProgress.duration}</Text>
             <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause": "Play"} onPress={() => {onPlayPauseButtonPressed()}} disabled={!isPlayerInitialized}/>
         </SafeAreaView>
 
@@ -50,11 +61,16 @@ export default function ConvoPlayer() {
 
 async function initializeTrackPlayer() { //TODO: Take convo details as param
     await TrackPlayer.setupPlayer();
-    TrackPlayer.updateOptions({
+    await TrackPlayer.updateOptions({
+        stopWithApp: true,
         capabilities: [
             TrackPlayer.CAPABILITY_PAUSE,
             TrackPlayer.CAPABILITY_PLAY,
-        ]
+        ],
+        compactCapabilities: [
+            TrackPlayer.CAPABILITY_PLAY,
+            TrackPlayer.CAPABILITY_PAUSE
+          ]
     })
     await TrackPlayer.add({ //TODO: Update this
         id: 'songID1',
