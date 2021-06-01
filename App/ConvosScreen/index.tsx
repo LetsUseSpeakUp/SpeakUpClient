@@ -13,8 +13,7 @@ export default function ConvosScreen({route, navigation}: any) {
   useEffect(()=>{
     const convoToNavTo = convosContext.convoToNavTo;
     if(convoToNavTo.length > 0){
-      convosContext.clearConvoToNavTo();
-      console.log("ConvosScreen. convosContext changed 1.");      
+      convosContext.clearConvoToNavTo();      
       navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}}); 
     }
   }, [convosContext.convoToNavTo])

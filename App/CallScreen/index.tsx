@@ -8,8 +8,6 @@ import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
-import { CommonActions } from '@react-navigation/native';
-
 
 export default function CallScreen({route, navigation}: any) {    
 
@@ -25,29 +23,8 @@ export default function CallScreen({route, navigation}: any) {
 
     useEffect(()=>{
         const convoToNavTo = convosContext.convoToNavTo;
-        if(convoToNavTo.length > 0){
-            // convosContext.clearConvoToNavTo();
-            // console.log("CallScreen. convosContext changed 1.");
-            navigation.jumpTo('Convos')
-            // navigation.navigate('Convos')            
-            // navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}});                        
-            // navigation.reset({
-            //     index: 1,
-            //     routes: [
-            //         {name: 'Convos'},
-            //         {name: 'Convo Details', params: {convoId: convoToNavTo}},
-            //       ]
-            // })
-
-           /* navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [
-                    {name: 'Convos'},
-                    {name: 'Convo Details', params: {convoId: convoToNavTo}},
-                  ],
-                })
-              ); */
+        if(convoToNavTo.length > 0){            
+            navigation.navigate('Convos')            
         }    
     }, [convosContext.convoToNavTo])
 
