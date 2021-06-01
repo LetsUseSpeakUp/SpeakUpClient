@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import {useState} from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Button} from "react-native";
 import { Slider } from 'react-native-elements'
 
 
 export default function ConvoPlayer() {
     //TODO
     return (
-        <ProgressSlider/>
+        <SafeAreaView style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 20 }}>
+            <ProgressSlider/>
+            <Button title="Play" onPress={()=>{}} />
+        </SafeAreaView>
+        
     )
 }
 
@@ -15,17 +19,12 @@ function ProgressSlider() {
     const [progress, setProgress] = useState(0)
     const [slidingCompleteVal, setSlidingCompleteVal] = useState(0);
 
-    const onSlidingComplete = (value: number)=>{
-        console.log("ConvoPlayer. onSlidingComplete. Progress val: ", value);
+    const onSlidingComplete = (value: number)=>{        
         setSlidingCompleteVal(value);
-    }
-
-    useEffect(()=>{
-        console.log("ConvoPlayer. progress changed. Progress: ", progress);
-    }, [progress])
+    }    
 
     return (
-        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 20 }}>
+        <View >
             <Slider
                 value={progress}
                 onValueChange={(value) => setProgress(value)}
