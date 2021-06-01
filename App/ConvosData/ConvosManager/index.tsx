@@ -1,4 +1,5 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob'
 
 const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 
@@ -110,7 +111,28 @@ const getStreamingURLOfConvo = function (convoId: string): string {
     return "";
 }
 
-const getSnippetURLOfConvo = function (convoId: string, startTimestamp: number, endTimestamp: number): string {
+export const downloadConvo = async function (convoId: string){
+    const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + convoId;
+    const downloadPath = FileSystem.TemporaryDirectoryPath + "/" + Date.now() + '.aac';
+    
+    RNFetchBlob.config({
+        path: downloadPath
+    }).fetch('GET', downloadConvoEndpoint).then((res)=>{
+        const status = res.info().status;
+        if(status !== 200) throw 'Status code: ' + status + ' Text: ' + res.text();
+        else{
+            console.log("ConvosManager::downloadConvo. File saved to ", res.path());
+            return res.path();
+        }
+    }).catch((error)=>{
+        console.log("ERROR -- ConvosManager::downloadConvo: ", error)
+    })
+    //TODO
+    const filePath = "";
+    return filePath;
+}
+
+const getSnippetURLOfConvo = async function (convoId: string, startTimestamp: number, endTimestamp: number): string {
     //TODO
     return "";
 }

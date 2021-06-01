@@ -10,6 +10,7 @@ export default function SingleConvoDetails({route}: any){
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
     const [refreshing, setRefreshing] = useState(false);
+    const [audioFilePath, setAudioFilePath] = useState('');
 
     const fetchUpdatedConvoStatus = ()=>{
         setRefreshing(true);
@@ -30,6 +31,24 @@ export default function SingleConvoDetails({route}: any){
         fetchUpdatedConvoStatus();
     }, [])
 
+    useEffect(()=>{
+        setAudioFilePath('');
+    }, [convoId])
+
+    const downloadAudioFile = ()=>{
+        ConvosManager.downloadConvo(convoId).then((filePath)=>{
+            console.log("SingleConvoDetail::downloadAudioFile. File downloaded: ", filePath);
+            setAudioFilePath(filePath);
+        }).catch((error)=>{
+            console.log("ERROR -- SingleConvoDetail::downloadAudioFile: ", error);
+        })
+    }
+
+    const onPressPlay = ()=>{
+        console.log("SingleConvoDetail::onPressPlay");
+        //TODO: Nav to audioplayer
+    }
+
     if(metadata === undefined){
         console.log("ERROR -- SingleConvoDetails. Metadata is undefined. convoId: ", convoId);
         return(
@@ -47,7 +66,7 @@ export default function SingleConvoDetails({route}: any){
 
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
     
-    return(
+    return( //TODO: Put audio player when audioFilePath.length > 0
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoStatus()}}/>}>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
@@ -58,8 +77,9 @@ export default function SingleConvoDetails({route}: any){
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
             <Button title="Refresh" onPress={()=>{fetchUpdatedConvoStatus()}}></Button>
-            <Button title="Play" onPress={()=>{}} disabled={!doubleApproved}/>
+            <Button title="Download" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved && audioFilePath.length === 0}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
+            {audioFilePath.length > 0 && <Button title="Play" onPress={()=>{onPressPlay()}}/>}
             
         </ScrollView>
     )
