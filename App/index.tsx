@@ -25,6 +25,7 @@ export default function App() {
       }
       ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {        
         setConvosMetadata(metadata);
+        convoToNavToBuffer.current = (metadata[0].convoId) //TODO: Just for testing. Delete this
       })
     }
   }, [userPhoneNumber])
@@ -34,7 +35,7 @@ export default function App() {
       const bufferBuffer = convoToNavToBuffer.current;
       convoToNavToBuffer.current = '';
       setConvoToNavTo(bufferBuffer);
-    }
+    }    
   }, [convosMetadata])
 
   const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {

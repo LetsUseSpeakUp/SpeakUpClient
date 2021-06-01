@@ -10,6 +10,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
     const [refreshing, setRefreshing] = useState(false); //TODO: Actually use this
 
+    console.log("SingleConvoDetails. Route: ", route);
+
     useEffect(()=>{
         convosContext.requestFetchSingleConvoStatus(convoId); //TODO: Fetch from ConvosManager here and send it up through the context
     })
