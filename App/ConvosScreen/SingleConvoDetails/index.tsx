@@ -81,7 +81,7 @@ function areConvoStatusDifferent(convoStatus1: ConvoStatus | undefined, convoSta
     console.log("SingleConvoDetails. Convo1: ", convoStatus1, " Convo2: ", convoStatus2);
 
     if(convoStatus1.initiatorResponse !== convoStatus2.initiatorResponse) return true;
-    if(convoStatus2.receiverResponse !== convoStatus2.receiverResponse) return true;
+    if(convoStatus1.receiverResponse !== convoStatus2.receiverResponse) return true;
     return false;
 }
 
