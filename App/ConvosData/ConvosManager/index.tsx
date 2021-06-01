@@ -126,10 +126,8 @@ export const downloadConvo = async function (convoId: string){
         }
     }).catch((error)=>{
         console.log("ERROR -- ConvosManager::downloadConvo: ", error)
-    })
-    //TODO
-    const filePath = "";
-    return filePath;
+        return "";
+    })    
 }
 
 const getSnippetURLOfConvo = async function (convoId: string, startTimestamp: number, endTimestamp: number): string {
