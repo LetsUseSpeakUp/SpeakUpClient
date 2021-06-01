@@ -44,6 +44,8 @@ export default function SingleConvoDetails({route}: any){
     const convoLength = metadata.convoLength + " milliseconds"; //TODO: Get formatted time
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
+
+    const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoStatus()}}/>}>
@@ -56,6 +58,9 @@ export default function SingleConvoDetails({route}: any){
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
             <Button title="Refresh" onPress={()=>{fetchUpdatedConvoStatus()}}></Button>
+            <Button title="Play" onPress={()=>{}} disabled={!doubleApproved}/>
+            {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
+            
         </ScrollView>
     )
 }
