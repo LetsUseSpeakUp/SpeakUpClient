@@ -65,16 +65,14 @@ export default function App() {
     const newMetadata = convosMetadata.slice();
     if(amIInitiator){
       if(currentConvoVal.convoStatus === undefined){
-        console.log("ERROR -- onApproveOrDenySingleConvo. Current convo status is null.");
-        return;
+        currentConvoVal.convoStatus = {initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered}
       }
       const newConvoStatus: ConvoStatus = {initiatorResponse: approvalStatusCode, receiverResponse: currentConvoVal.convoStatus.receiverResponse};
       newMetadata[i].convoStatus = newConvoStatus;
     }
     else{
       if(currentConvoVal.convoStatus === undefined){
-        console.log("ERROR -- onApproveOrDenySingleConvo. Current convo status is null.");
-        return;
+        currentConvoVal.convoStatus = {initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered}
       }
       const newConvoStatus: ConvoStatus = {initiatorResponse: currentConvoVal.convoStatus.initiatorResponse, receiverResponse: approvalStatusCode,};
       newMetadata[i].convoStatus = newConvoStatus;
