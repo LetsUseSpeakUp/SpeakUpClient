@@ -49,7 +49,7 @@ async function initializeTrackPlayer() { //TODO: Take convo details as param
     })
     await TrackPlayer.add({ //TODO: Update this
         id: 'songID1',
-        url: 'https://en.wikipedia.org/wiki/File:Komm%27_o_Hoffnung.ogg',
+        url: 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
         type: 'default',
         title: 'songTitle1',
         album: 'album1',
