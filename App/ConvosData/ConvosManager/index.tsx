@@ -41,7 +41,7 @@ export const getUserInfo = async function (userPhoneNumber: string) {
     const formData = new FormData();
     formData.append('phoneNumber', userPhoneNumber);
     const endpoint = SERVERENDPOINT + "/users/query";
-    const response = await sendFormDataToServerEndpoint(formData, endpoint);
+    const response = await sendFormDataToEndpoint(formData, endpoint);
     return { firstName: response.firstName, lastName: response.lastName };
 }
 
@@ -102,7 +102,7 @@ const fetchAllMetadataForUserFromServer = async function (userId: string) {
     const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
     const formData = new FormData();
     formData.append('phoneNumber', userId);
-    return sendFormDataToServerEndpoint(formData, getMetadataEndpoint);
+    return sendFormDataToEndpoint(formData, getMetadataEndpoint);
 }
 
 const getStreamingURLOfConvo = function (convoId: string): string {
@@ -122,7 +122,7 @@ export const approveConvo = function (convoId: string, userId: string) {
     formData.append('phoneNumber', userId);
     formData.append('approval', '1');
 
-    sendFormDataToServerEndpoint(formData, approveConvoEndpoint);
+    sendFormDataToEndpoint(formData, approveConvoEndpoint);
 }
 
 export const denyConvo = function (convoId: string, userId: string) {
@@ -132,10 +132,21 @@ export const denyConvo = function (convoId: string, userId: string) {
     formData.append('phoneNumber', userId);
     formData.append('approval', '-1');
 
-    sendFormDataToServerEndpoint(formData, approveConvoEndpoint);
+    sendFormDataToEndpoint(formData, approveConvoEndpoint);
 }
 
-const sendFormDataToServerEndpoint = async function (formData: Formdata, serverEndpoint: string) {
+export const fetchSingleConvoStatus = async function(convoId: string){
+    const fetchStatusEndpoint = SERVERENDPOINT + "/convos/getapprovalinfo";
+    const formData = new FormData();
+    formData.append('convoId', convoId);
+
+    const response = await sendFormDataToEndpoint(formData, fetchStatusEndpoint);
+    console.log("ConvosManager::fetchSingleConvoStatus. Response: ", response);
+    const convoStatus: ConvoStatus = {initiatorResponse: response.initiatorApproval, receiverResponse: response.receiverApproval};
+    return convoStatus;
+}
+
+const sendFormDataToEndpoint = async function (formData: FormData, serverEndpoint: string) {
     const response = await fetch(serverEndpoint, {
         method: 'POST',
         body: formData

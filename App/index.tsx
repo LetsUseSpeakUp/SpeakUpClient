@@ -5,7 +5,7 @@ import ConvosScreen from './ConvosScreen'
 import CallScreen from './CallScreen'
 import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
-import {ConvoMetadata, ConvoStatus} from './ConvosData/ConvosManager'
+import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 
 const Tab = createBottomTabNavigator();
@@ -14,17 +14,17 @@ export default function App() {
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const [convoToNavTo, setConvoToNavTo] = useState('');
-  const clearConvoToNavTo = ()=>{setConvoToNavTo('')}
+  const clearConvoToNavTo = () => { setConvoToNavTo('') }
   const convoToNavToBuffer = useRef('');
   const isLogged = userPhoneNumber.length > 0;
 
   useEffect(() => {
     if (userPhoneNumber.length > 0) {
-      if(convosMetadata.length > 0){
+      if (convosMetadata.length > 0) {
         console.log("ERROR -- App. Phone number was changed after fetching convosMetadata. New number: ", userPhoneNumber);
       }
-      ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {        
-        setConvosMetadata(metadata);        
+      ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
+        setConvosMetadata(metadata);
       })
     }
   }, [userPhoneNumber])
@@ -34,7 +34,7 @@ export default function App() {
       const bufferBuffer = convoToNavToBuffer.current;
       convoToNavToBuffer.current = '';
       setConvoToNavTo(bufferBuffer);
-    }    
+    }
   }, [convosMetadata])
 
   const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {
@@ -44,40 +44,65 @@ export default function App() {
     setConvosMetadata(newConvosMetadata);
   }
 
-  const onRequestFetchSingleConvoStatus = (convoId: string) => {
+  const onRequestFetchSingleConvoStatus = (convoId: string) => { //TODO
+    return; //TODO
     console.log("App. onRequestFetchSingleConvoStatus. Convo Id: ", convoId);
-    //TODO
+    ConvosManager.fetchSingleConvoStatus(convoId).then((fetchedConvoStatus: ConvoStatus) => {
+      let updatedConvosMetadata = false;
+      const i = convosMetadata.findIndex((convo) => convo.convoId === convoId);
+      const currentConvoVal = convosMetadata[i];
+
+      if (currentConvoVal.convoStatus === undefined) {
+        currentConvoVal.convoStatus = { initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered }
+      }
+
+      if (currentConvoVal.convoStatus !== fetchedConvoStatus) {
+        updatedConvosMetadata = true;
+      }
+      if (currentConvoVal.convoStatus.receiverResponse !== fetchedConvoStatus.receiverResponse) {
+        updatedConvosMetadata = true;
+      }
+
+      if(updatedConvosMetadata){
+        const newConvosMetadata = convosMetadata.slice();
+        newConvosMetadata[i].convoStatus = fetchedConvoStatus;
+        setConvosMetadata(newConvosMetadata);
+      }
+
+    }).catch((error) => {
+      console.log("ERROR -- App. onRequestFetchSingleConvoStatus: ", error);
+    })
   }
 
   const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
     console.log("App. onApproveOrDenySingleConvo. Id: ", convoId, " Approve: ", shouldApprove);
-    if(shouldApprove)
+    if (shouldApprove)
       ConvosManager.approveConvo(convoId, userPhoneNumber);
-    else 
+    else
       ConvosManager.denyConvo(convoId, userPhoneNumber);
 
-    const approvalStatusCode = shouldApprove ? 1: -1;        
+    const approvalStatusCode = shouldApprove ? 1 : -1;
 
-    const i = convosMetadata.findIndex((convo)=>convo.convoId === convoId);
+    const i = convosMetadata.findIndex((convo) => convo.convoId === convoId);
     const currentConvoVal = convosMetadata[i];
     const amIInitiator = convosMetadata[i].initiatorFirstName === undefined;
 
     const newMetadata = convosMetadata.slice();
-    if(amIInitiator){
-      if(currentConvoVal.convoStatus === undefined){
-        currentConvoVal.convoStatus = {initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered}
+    if (amIInitiator) {
+      if (currentConvoVal.convoStatus === undefined) {
+        currentConvoVal.convoStatus = { initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered }
       }
-      const newConvoStatus: ConvoStatus = {initiatorResponse: approvalStatusCode, receiverResponse: currentConvoVal.convoStatus.receiverResponse};
+      const newConvoStatus: ConvoStatus = { initiatorResponse: approvalStatusCode, receiverResponse: currentConvoVal.convoStatus.receiverResponse };
       newMetadata[i].convoStatus = newConvoStatus;
     }
-    else{
-      if(currentConvoVal.convoStatus === undefined){
-        currentConvoVal.convoStatus = {initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered}
+    else {
+      if (currentConvoVal.convoStatus === undefined) {
+        currentConvoVal.convoStatus = { initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered }
       }
-      const newConvoStatus: ConvoStatus = {initiatorResponse: currentConvoVal.convoStatus.initiatorResponse, receiverResponse: approvalStatusCode,};
+      const newConvoStatus: ConvoStatus = { initiatorResponse: currentConvoVal.convoStatus.initiatorResponse, receiverResponse: approvalStatusCode, };
       newMetadata[i].convoStatus = newConvoStatus;
     }
-    
+
     setConvosMetadata(newMetadata);
   }
 
@@ -89,7 +114,7 @@ export default function App() {
   return (
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
-      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo, 
+      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo,
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo
     }}>
       <NavigationContainer>

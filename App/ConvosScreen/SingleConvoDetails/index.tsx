@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Button} from 'react-native'
-import {ConvoResponseType} from '../../ConvosData/ConvosManager'
+import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
+import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
 import {RefreshControl, ScrollView} from 'react-native'
 
-export default function SingleConvoDetails({route, navigation}: any){
+export default function SingleConvoDetails({route}: any){
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
-    const [refreshing, setRefreshing] = useState(false); //TODO: Actually use this
+    const [refreshing, setRefreshing] = useState(false);
 
-    console.log("SingleConvoDetails. Route: ", route);
+    const fetchUpdatedConvoStatus = ()=>{
+        setRefreshing(true);
+        ConvosManager.fetchSingleConvoStatus(convoId).then((fetchedConvoStatus)=>{
+            console.log("SingleConvoDetails. Fetched updated status: ", fetchedConvoStatus);
+            if(areConvoStatusDifferent(fetchedConvoStatus, metadata?.convoStatus)){
+                console.log("SingleConvoDetails. Convo statuses are different");
+                //TODO: pass it up to app
+            }
+        }).catch((error)=>{
+            console.log("ERROR -- SingleConvoDetails::fetchUpdatedConvoStatus. Convo Id: ", convoId , " Error: ", error);
+        }).finally(()=>{
+            setRefreshing(false);
+        })      
+    }
 
     useEffect(()=>{
-        convosContext.requestFetchSingleConvoStatus(convoId); //TODO: Fetch from ConvosManager here and send it up through the context
-    })
+        fetchUpdatedConvoStatus();
+    }, [])
 
     if(metadata === undefined){
         console.log("ERROR -- SingleConvoDetails. Metadata is undefined. convoId: ", convoId);
@@ -32,7 +46,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
     
     return(
-        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{convosContext.requestFetchSingleConvoStatus(convoId);}}/>}>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoStatus()}}/>}>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
             <Text>Time of Call: {dateTime}</Text>
@@ -41,7 +55,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             <Text>Your Approval: {convertApprovalStatusToText(myApproval)}</Text>
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
-            <Button title="Refresh" onPress={()=>{convosContext.requestFetchSingleConvoStatus(convoId)}}></Button>
+            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoStatus()}}></Button>
         </ScrollView>
     )
 }
@@ -55,6 +69,20 @@ function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefin
 
     console.log("ERROR -- SingleConvoDetails::convertApprovalStatusToText. Uknown approval status: ", approvalStatus);
     return "ERROR";
+}
+
+function areConvoStatusDifferent(convoStatus1: ConvoStatus | undefined, convoStatus2: ConvoStatus | undefined){
+    if(convoStatus1 == undefined){
+        convoStatus1 = {initiatorResponse: ConvoResponseType.Unanswered, receiverResponse: ConvoResponseType.Unanswered};
+    }
+    if(convoStatus2 == undefined){
+        convoStatus2 = {initiatorResponse: ConvoResponseType.Unanswered, receiverResponse: ConvoResponseType.Unanswered};
+    }
+    console.log("SingleConvoDetails. Convo1: ", convoStatus1, " Convo2: ", convoStatus2);
+
+    if(convoStatus1.initiatorResponse !== convoStatus2.initiatorResponse) return true;
+    if(convoStatus2.receiverResponse !== convoStatus2.receiverResponse) return true;
+    return false;
 }
 
 function getFormattedTimeFromTimestamp(timestamp: number): string{
