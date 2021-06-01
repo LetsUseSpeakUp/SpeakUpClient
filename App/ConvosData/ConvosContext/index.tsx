@@ -1,5 +1,5 @@
 import React from 'react';
-import {ConvoMetadata} from '../ConvosManager'
+import {ConvoMetadata, ConvoStatus} from '../ConvosManager'
 
 const dummyNavToNewRouteFunc = (newRoute: string)=>{}
 
@@ -16,7 +16,7 @@ const dummyNavToNewRouteFunc = (newRoute: string)=>{}
 const ConvosContext = React.createContext({
     allConvosMetadata: [] as ConvoMetadata[],
     addSingleConvoMetadata: (singleMetadata: ConvoMetadata)=>{},
-    requestFetchSingleConvoStatus: (convoId: string)=>{},
+    updateSingleConvoStatusWithFetched: (convoId: string, updatedStatus: ConvoStatus)=>{},
     convoToNavTo: '',
     approveOrDenySingleConvo: (approveOrDeny: boolean, convoId: string)=>{},
     clearConvoToNavTo: ()=>{}

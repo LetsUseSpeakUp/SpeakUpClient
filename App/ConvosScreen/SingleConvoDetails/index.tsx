@@ -17,7 +17,7 @@ export default function SingleConvoDetails({route}: any){
             console.log("SingleConvoDetails. Fetched updated status: ", fetchedConvoStatus);
             if(areConvoStatusDifferent(fetchedConvoStatus, metadata?.convoStatus)){
                 console.log("SingleConvoDetails. Convo statuses are different");
-                //TODO: pass it up to app
+                convosContext.updateSingleConvoStatusWithFetched(convoId, fetchedConvoStatus);
             }
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetails::fetchUpdatedConvoStatus. Convo Id: ", convoId , " Error: ", error);

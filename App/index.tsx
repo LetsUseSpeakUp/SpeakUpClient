@@ -44,34 +44,10 @@ export default function App() {
     setConvosMetadata(newConvosMetadata);
   }
 
-  const onRequestFetchSingleConvoStatus = (convoId: string) => { //TODO
-    return; //TODO
-    console.log("App. onRequestFetchSingleConvoStatus. Convo Id: ", convoId);
-    ConvosManager.fetchSingleConvoStatus(convoId).then((fetchedConvoStatus: ConvoStatus) => {
-      let updatedConvosMetadata = false;
-      const i = convosMetadata.findIndex((convo) => convo.convoId === convoId);
-      const currentConvoVal = convosMetadata[i];
-
-      if (currentConvoVal.convoStatus === undefined) {
-        currentConvoVal.convoStatus = { initiatorResponse: ConvosManager.ConvoResponseType.Unanswered, receiverResponse: ConvosManager.ConvoResponseType.Unanswered }
-      }
-
-      if (currentConvoVal.convoStatus !== fetchedConvoStatus) {
-        updatedConvosMetadata = true;
-      }
-      if (currentConvoVal.convoStatus.receiverResponse !== fetchedConvoStatus.receiverResponse) {
-        updatedConvosMetadata = true;
-      }
-
-      if(updatedConvosMetadata){
-        const newConvosMetadata = convosMetadata.slice();
-        newConvosMetadata[i].convoStatus = fetchedConvoStatus;
-        setConvosMetadata(newConvosMetadata);
-      }
-
-    }).catch((error) => {
-      console.log("ERROR -- App. onRequestFetchSingleConvoStatus: ", error);
-    })
+  const onUpdateSingleConvoStatusWithFetched = (convoId: string, updatedStatus: ConvoStatus) => { 
+    const updatedMetadata = convosMetadata.slice();
+    updatedMetadata[updatedMetadata.findIndex((convo)=>convo.convoId === convoId)].convoStatus = updatedStatus;
+    setConvosMetadata(updatedMetadata);
   }
 
   const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
@@ -114,7 +90,7 @@ export default function App() {
   return (
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
-      requestFetchSingleConvoStatus: onRequestFetchSingleConvoStatus, convoToNavTo: convoToNavTo,
+      updateSingleConvoStatusWithFetched: onUpdateSingleConvoStatusWithFetched, convoToNavTo: convoToNavTo,
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo
     }}>
       <NavigationContainer>
