@@ -15,10 +15,21 @@ export default function ConvoPlayer({route}: any) {
     const audioFilePath = route.params.audioFilePath;
 
     useEffect(() => {
-        initializeTrackPlayer(audioFilePath).then(() => {
-            setIsPlayerInitialized(true);
-        });
+        if(!isPlayerInitialized){
+            initializeTrackPlayer().then(() => {
+                setIsPlayerInitialized(true);
+            });
+        }        
     }, []);
+
+    useEffect(()=>{
+        if(audioFilePath.length > 0){
+            TrackPlayer.reset().then(()=>{
+                addLocalTrackToPlayer(audioFilePath);
+            })
+            
+        }        
+    }, [audioFilePath])
 
     useEffect(() => {
         if (!seekingInProgress)
@@ -71,7 +82,7 @@ export default function ConvoPlayer({route}: any) {
 }
 
 
-async function initializeTrackPlayer(filePath: string) { //TODO: Take convo details as param
+async function initializeTrackPlayer() { //TODO: Take convo details as param
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
         stopWithApp: true,
@@ -84,12 +95,14 @@ async function initializeTrackPlayer(filePath: string) { //TODO: Take convo deta
             TrackPlayer.CAPABILITY_PAUSE
         ]
     })
-    console.log("initializeTrackPlayer. File path: ", filePath);
+    console.log("initializeTrackPlayer complete. ");        
+}
+
+async function addLocalTrackToPlayer(filePath: string){
     await TrackPlayer.add({
         id: Date.now() + "",
         url: 'file:///' + filePath ,
         title: 'Convo',
         artist: 'SpeakUp'    
     });
-    console.log("ConvoPlayer::InitializeTrackPlayer. Initialized");
 }
