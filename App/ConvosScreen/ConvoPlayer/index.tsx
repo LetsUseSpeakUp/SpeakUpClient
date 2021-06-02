@@ -6,7 +6,7 @@ import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPl
 import Slider from '@react-native-community/slider';
 
 export default function ConvoPlayer({route}: any) {
-    const [isPlayerInitialized, setIsPlayerInitialized] = useState(false);
+    
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const playbackState = usePlaybackState();
@@ -14,20 +14,15 @@ export default function ConvoPlayer({route}: any) {
 
     const audioFilePath = route.params.audioFilePath;
 
-    useEffect(() => {
-        if(!isPlayerInitialized){
-            initializeTrackPlayer().then(() => {
-                setIsPlayerInitialized(true);
-            });
-        }        
-    }, []);
-
     useEffect(()=>{
         if(audioFilePath.length > 0){
             TrackPlayer.reset().then(()=>{
                 addLocalTrackToPlayer(audioFilePath);
             })
-            
+            return ()=>{
+                console.log("ConvoPlayer. audioFilePath cleanup");
+                TrackPlayer.reset();
+            }
         }        
     }, [audioFilePath])
 
@@ -75,27 +70,10 @@ export default function ConvoPlayer({route}: any) {
             />
             <Text>Track Position: {trackPlayerProgress.position}</Text>
             <Text>Track Duration: {trackPlayerProgress.duration}</Text>
-            <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} disabled={!isPlayerInitialized} />
+            <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} />
         </SafeAreaView>
 
     )
-}
-
-
-async function initializeTrackPlayer() { //TODO: Take convo details as param
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.updateOptions({
-        stopWithApp: true,
-        capabilities: [
-            TrackPlayer.CAPABILITY_PAUSE,
-            TrackPlayer.CAPABILITY_PLAY,
-        ],
-        compactCapabilities: [
-            TrackPlayer.CAPABILITY_PLAY,
-            TrackPlayer.CAPABILITY_PAUSE
-        ]
-    })
-    console.log("initializeTrackPlayer complete. ");        
 }
 
 async function addLocalTrackToPlayer(filePath: string){
