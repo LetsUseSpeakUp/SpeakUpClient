@@ -86,7 +86,7 @@ async function initializeTrackPlayer(filePath: string) { //TODO: Take convo deta
     })
     console.log("initializeTrackPlayer. File path: ", filePath);
     await TrackPlayer.add({
-        id: 'songID1',
+        id: Date.now() + "",
         url: 'file:///' + filePath ,
         title: 'Convo',
         artist: 'SpeakUp'    
