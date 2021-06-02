@@ -7,24 +7,21 @@ import Slider from '@react-native-community/slider';
 
 export default function ConvoPlayer() {
     const [isPlayerInitialized, setIsPlayerInitialized] = useState(false);
+    const [seekingInProgress, setSeekingInProgress] = useState(false);
+    const [sliderValue, setSliderValue] = useState(0);
     const playbackState = usePlaybackState();
-    const trackPlayerProgress = useTrackPlayerProgress(100);    
-    const [sliderProgress, setSliderProgress] = useState(0)
-    // const [slidingCompleteVal, setSlidingCompleteVal] = useState(0);
+    const trackPlayerProgress = useTrackPlayerProgress(100);           
 
     useEffect(() => {
         initializeTrackPlayer().then(()=>{
             setIsPlayerInitialized(true);
         });
-    }, []);
+    }, []);    
 
     useEffect(()=>{
-        console.log("Playback state updated: ", playbackState);
-    }, [playbackState]);
-
-    useEffect(()=>{
-        console.log("trackProgress updated: ", trackPlayerProgress);
-    }, [trackPlayerProgress]);
+        if(!seekingInProgress)
+            setSliderValue(trackPlayerProgress.position)
+    }, [trackPlayerProgress.position]);
 
     const onPlayPauseButtonPressed= ()=>{
         console.log("On play pause button pressed. State: ", playbackState,  " progress: ", trackPlayerProgress);
@@ -32,23 +29,25 @@ export default function ConvoPlayer() {
             TrackPlayer.pause();
         }
         else{
+            if(trackPlayerProgress.position === trackPlayerProgress.duration){
+                TrackPlayer.seekTo(0);
+            }            
             TrackPlayer.play();
         }
     }
 
     const setSlidingCompleteVal = (sliderVal: number)=>{
-        console.log("ConvoPlayer. Set sliding complete. Slider val: ", sliderVal , " playback state: ", playbackState, " Track player: ", trackPlayerProgress);
-
-        TrackPlayer.seekTo(sliderVal*trackPlayerProgress.duration);
+        TrackPlayer.seekTo(sliderVal);
+        setSeekingInProgress(false);
     }
 
     return (
         <SafeAreaView style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 20 }}>
-            <Slider
-                // value={sliderProgress}
-                // onValueChange={(value) => setSliderProgress(value)}                
-                // onSlidingComplete={setSlidingCompleteVal}
-                // style={{ height: 30, width: 10 }}  
+            <Slider   
+                onSlidingStart={()=>{setSeekingInProgress(true)}}             
+                onSlidingComplete={(val)=>{setSlidingCompleteVal(val)}}                
+                value={sliderValue}
+                maximumValue={trackPlayerProgress.duration}
             />
             <Text>Track Position: {trackPlayerProgress.position}</Text>
             <Text>Track Duration: {trackPlayerProgress.duration}</Text>
