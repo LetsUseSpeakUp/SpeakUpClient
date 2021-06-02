@@ -5,15 +5,17 @@ import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 
-export default function ConvoPlayer() {
+export default function ConvoPlayer({route}: any) {
     const [isPlayerInitialized, setIsPlayerInitialized] = useState(false);
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const playbackState = usePlaybackState();
     const trackPlayerProgress = useTrackPlayerProgress(100);
 
+    const audioFilePath = route.params.audioFilePath;
+
     useEffect(() => {
-        initializeTrackPlayer().then(() => {
+        initializeTrackPlayer(audioFilePath).then(() => {
             setIsPlayerInitialized(true);
         });
     }, []);
@@ -69,7 +71,7 @@ export default function ConvoPlayer() {
 }
 
 
-async function initializeTrackPlayer() { //TODO: Take convo details as param
+async function initializeTrackPlayer(filePath: string) { //TODO: Take convo details as param
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
         stopWithApp: true,
@@ -82,12 +84,12 @@ async function initializeTrackPlayer() { //TODO: Take convo details as param
             TrackPlayer.CAPABILITY_PAUSE
         ]
     })
-    await TrackPlayer.add({ //TODO: Update this
+    console.log("initializeTrackPlayer. File path: ", filePath);
+    await TrackPlayer.add({
         id: 'songID1',
-        url: 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
+        url: 'file:///' + filePath ,
         title: 'Convo',
-        artist: 'SpeakUp',
-        artwork: 'https://picsum.photos/300'
+        artist: 'SpeakUp'    
     });
     console.log("ConvoPlayer::InitializeTrackPlayer. Initialized");
 }

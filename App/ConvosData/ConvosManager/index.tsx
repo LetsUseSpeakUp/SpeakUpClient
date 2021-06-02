@@ -111,11 +111,11 @@ const getStreamingURLOfConvo = function (convoId: string): string {
     return "";
 }
 
-export const downloadConvo = async function (convoId: string){
+export const downloadConvo = function (convoId: string){
     const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + convoId;
-    const downloadPath = FileSystem.TemporaryDirectoryPath + "/" + Date.now() + '.aac';
+    const downloadPath = FileSystem.TemporaryDirectoryPath + Date.now() + '.aac';
     
-    RNFetchBlob.config({
+    return RNFetchBlob.config({
         path: downloadPath
     }).fetch('GET', downloadConvoEndpoint).then((res)=>{
         const status = res.info().status;
@@ -127,7 +127,7 @@ export const downloadConvo = async function (convoId: string){
     }).catch((error)=>{
         console.log("ERROR -- ConvosManager::downloadConvo: ", error)
         return "";
-    })    
+    })        
 }
 
 const getSnippetURLOfConvo = function (convoId: string, startTimestamp: number, endTimestamp: number): string {

@@ -19,8 +19,8 @@ export default function ConvosScreen({route, navigation}: any) {
     }
   }, [convosContext.convoToNavTo])
 
-  return( //TODO: Remove initial route name when done testing player
-      <Stack.Navigator initialRouteName="Convo Player">
+  return(
+      <Stack.Navigator>
         <Stack.Screen name="All Convos" component={AllConvos}/>
         <Stack.Screen name="Convo Details" component={SingleConvoDetails}/>
         <Stack.Screen name="Convo Player" component={ConvoPlayer}/>
