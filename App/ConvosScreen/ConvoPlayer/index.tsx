@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Button } from "react-native";
 import TrackPlayer from 'react-native-track-player';
-import {useTrackPlayerProgress, usePlaybackState} from 'react-native-track-player';
+import {useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents} from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 
 export default function ConvoPlayer() {
@@ -23,8 +23,15 @@ export default function ConvoPlayer() {
             setSliderValue(trackPlayerProgress.position)
     }, [trackPlayerProgress.position]);
 
+    useTrackPlayerEvents([TrackPlayerEvents.PLAYBACK_STATE], (event) => {
+        if (event.state === TrackPlayer.STATE_PLAYING) {
+          TrackPlayer.play();
+        } else {
+          TrackPlayer.pause();
+        }
+      });
+
     const onPlayPauseButtonPressed= ()=>{
-        console.log("On play pause button pressed. State: ", playbackState,  " progress: ", trackPlayerProgress);
         if(playbackState === TrackPlayer.STATE_PLAYING){
             TrackPlayer.pause();
         }
