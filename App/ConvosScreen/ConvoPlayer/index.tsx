@@ -28,12 +28,16 @@ export default function ConvoPlayer({route}: any) {
     }, [trackPlayerProgress.position]);
 
     useTrackPlayerEvents([TrackPlayerEvents.PLAYBACK_STATE], (event) => {
+        console.log("ConvoPlayer::useTrackPlayerEvents 1. Event: ", event, " Audio file: ", audioFilePath);
         if (event.state === TrackPlayer.STATE_PLAYING) {
             if (trackPlayerProgress.position >= trackPlayerProgress.duration * .99) {
+                console.log("ConvoPlayer::useTrackPlayerEvents. Seek to 0");
                 TrackPlayer.seekTo(0);
             }
+            console.log("ConvoPlayer::useTrackPlayerEvents. Play.");
             TrackPlayer.play();
         } else {
+            console.log("ConvoPlayer::useTrackPlayerEvents. Pause");
             TrackPlayer.pause();
         }
     });
