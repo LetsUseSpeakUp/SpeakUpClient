@@ -18,11 +18,7 @@ export default function ConvoPlayer({route}: any) {
         if(audioFilePath.length > 0){
             TrackPlayer.reset().then(()=>{
                 addLocalTrackToPlayer(audioFilePath);
-            })
-            return ()=>{
-                console.log("ConvoPlayer. audioFilePath cleanup");
-                TrackPlayer.reset();
-            }
+            })            
         }        
     }, [audioFilePath])
 
@@ -80,6 +76,10 @@ async function addLocalTrackToPlayer(filePath: string){
     await TrackPlayer.add({
         id: Date.now() + "",
         url: 'file:///' + filePath ,
+        // url: 'http://localhost:8080/snippet?start=0&end=10',
+        // url: 'https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav',
+        // url: 'http://localhost:3999/convos/retrieve?convoId=16225102520581',
+        // url: 'http://localhost:3999/convos/retrieve?convoId=16225102520581',
         title: 'Convo',
         artist: 'SpeakUp'    
     });
