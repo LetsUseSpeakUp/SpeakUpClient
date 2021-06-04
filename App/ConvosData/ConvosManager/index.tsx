@@ -1,7 +1,8 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
 
-const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
+// const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
+const SERVERENDPOINT = "https://backend.letsusespeakup.com";
 
 export type ConvoMetadata = {
     initiatorId: string,
