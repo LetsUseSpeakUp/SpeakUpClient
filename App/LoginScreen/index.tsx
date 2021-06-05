@@ -55,8 +55,7 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
             return response.sub;
         }).then((userId: string)=>{
             console.log("LoginScreen::addNameToUserWithToken. UserId: ", userId, " Name ref: ", nameRef.current);
-            // return auth0.users(authToken).patchUser({id: userId, metadata: nameRef.current});
-            return auth0.users(authToken).getUser({id: userId}).then((res)=>console.log("Get users test. res: ", res));
+            return auth0.users(authToken).patchUser({id: userId, metadata: nameRef.current});
         }).catch((error)=>{
             console.log("LoginScreen::addNameToUserWithToken. Error: ", error);
         })        
