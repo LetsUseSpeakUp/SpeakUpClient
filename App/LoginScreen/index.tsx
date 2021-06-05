@@ -7,16 +7,24 @@ export default function LoginScreen(props: any) {
     const [accessToken, setAccessToken] = useState(null);
 
     const login = () => {
-        console.log("LoginScreen. login pressed");
-        //TODO
+        auth0.webAuth.authorize({}).then((credentials: any)=>{
+            console.log("LoginScreen::login. Login successful");
+            setAccessToken(credentials);
+        }).catch((error)=>{
+            console.log("ERROR - LoginScreen::login: ", error);
+        })
     }
 
-    const logout = () => {
-        console.log("Login screen. logout pressed");
-        //TODO
+    const logout = () => {        
+        auth0.webAuth.clearSession().then((success)=>{
+            console.log("LoginScreen::logout. logout successful");
+            setAccessToken(null);
+        }).catch((error)=>{
+            console.log("ERROR - LoginScreen::logout: ", error);
+        })
     }
+
     return (
-
         <View style={styles.container}>
             <Text>Logged In: {accessToken != null ? "True" : "False"}</Text>
             <Button title={'Login'} onPress={login}> </Button>
