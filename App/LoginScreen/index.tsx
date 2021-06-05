@@ -10,13 +10,13 @@ const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaS
 
 export default function LoginScreen(props: any) { //TODO: Take setToken callback from App
     const phoneNumberRef = React.useRef('');
-    const nameRef = React.useRef({});
+    const nameRef = React.useRef({first_name: '', last_name: ''});
 
     const Stack = createStackNavigator();        
 
     const onNameSet = (firstName: string, lastName: string) =>{
         console.log("LoginScreen::onNameSet. First name: ", firstName, " last name: ", lastName);        
-        nameRef.current = {firstName: firstName, lastName: lastName};
+        nameRef.current = {first_name: firstName, last_name: lastName};
     }
 
     const onPhoneNumberSet = (newPhoneNumber: string) => {
@@ -36,14 +36,30 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
         if(phoneNumberRef.current.length <= 0) throw 'phone number null';
         auth0.auth.loginWithSMS({
             phoneNumber: phoneNumberRef.current,
-            code: smsCode
-        }).then((token) => {
-            console.log("LoginScreen::onSMSCodeSet. Token received: ", token)
-            //TODO: Update with name metadata
-            //TODO: callback to parent from props with token
+            code: smsCode,
+            audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
+            scope: 'read:current_user update:current_user_metadata openid profile'
+        }).then((credentials) => {
+            console.log("LoginScreen::onSMSCodeSet. Credentials received: ", credentials);
+            return addNameToUserWithToken(credentials.accessToken);                        
+        }).then(()=>{
+            //TODO: callback to parent with credentials.accessToken
         }).catch((error) => {
             console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
         })
+    }
+
+    const addNameToUserWithToken = (authToken: string) =>{
+        auth0.auth.userInfo({token: authToken}).then((response)=>{
+            console.log("LoginScreen::addNameToUserWithToken. Response: ", response);
+            return response.sub;
+        }).then((userId: string)=>{
+            console.log("LoginScreen::addNameToUserWithToken. UserId: ", userId, " Name ref: ", nameRef.current);
+            // return auth0.users(authToken).patchUser({id: userId, metadata: nameRef.current});
+            return auth0.users(authToken).getUser({id: userId}).then((res)=>console.log("Get users test. res: ", res));
+        }).catch((error)=>{
+            console.log("LoginScreen::addNameToUserWithToken. Error: ", error);
+        })        
     }
 
     return (
