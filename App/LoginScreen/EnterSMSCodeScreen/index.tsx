@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, TextInput, Text, Button, StyleSheet} from 'react-native'
 
-export default function EnterSMSCodeScreen({route}){
+export default function EnterSMSCodeScreen({route}: any){
     const [tempSMSCode, setTempSMSCode] = React.useState('')
 
     return (

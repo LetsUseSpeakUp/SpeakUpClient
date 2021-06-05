@@ -1,22 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Auth0 from 'react-native-auth0'
+import EnterNameScreen from './EnterNameScreen'
 import EnterPhoneNumberScreen from './EnterPhoneNumberScreen'
 import EnterSMSCodeScreen from './EnterSMSCodeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaSdbWJmdIj0MnR5hHFSaGHKlVfgzCT' });
 
 export default function LoginScreen(props: any) { //TODO: Take setToken callback from App
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const phoneNumberRef = React.useRef('');
+    const nameRef = React.useRef({});
 
-    const Stack = createStackNavigator();
-    //TODO: Enter first name
-    //TODO: Enter last name
+    const Stack = createStackNavigator();        
+
+    const onNameSet = (firstName: string, lastName: string) =>{
+        console.log("LoginScreen::onNameSet. First name: ", firstName, " last name: ", lastName);        
+        nameRef.current = {firstName: firstName, lastName: lastName};
+    }
 
     const onPhoneNumberSet = (newPhoneNumber: string) => {
-        console.log("LoginScreen::onPhoneNumberSet: ", newPhoneNumber)
-        setPhoneNumber(newPhoneNumber);
+        console.log("LoginScreen::onPhoneNumberSet: ", newPhoneNumber)        
+        phoneNumberRef.current = newPhoneNumber;
         auth0.auth.passwordlessWithSMS({
             phoneNumber: newPhoneNumber
         }).then(() => {
@@ -27,12 +32,14 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
     }
 
     const onSMSCodeSet = (smsCode: string) => {
-        console.log("LoginScreen::onSMSCodeSet: ", smsCode);
+        console.log("LoginScreen::onSMSCodeSet: ", smsCode, " Phone Number: ", phoneNumberRef.current);
+        if(phoneNumberRef.current.length <= 0) throw 'phone number null';
         auth0.auth.loginWithSMS({
-            phoneNumber: phoneNumber,
+            phoneNumber: phoneNumberRef.current,
             code: smsCode
         }).then((token) => {
             console.log("LoginScreen::onSMSCodeSet. Token received: ", token)
+            //TODO: Update with name metadata
             //TODO: callback to parent from props with token
         }).catch((error) => {
             console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
@@ -42,6 +49,7 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen name="Enter Name" component={EnterNameScreen} initialParams={{ setName: onNameSet }} />
                 <Stack.Screen name="Enter Phone Number" component={EnterPhoneNumberScreen} initialParams={{ setPhoneNumber: onPhoneNumberSet }} />
                 <Stack.Screen name="Enter Verification Code" component={EnterSMSCodeScreen} initialParams={{ setSMSCode: onSMSCodeSet }} />
             </Stack.Navigator>
