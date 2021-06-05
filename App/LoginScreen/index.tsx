@@ -1,9 +1,21 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
 import Auth0 from 'react-native-auth0'
+import EnterPhoneNumberScreen from './EnterPhoneNumberScreen'
 const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaSdbWJmdIj0MnR5hHFSaGHKlVfgzCT' });
 
-export default function LoginScreen(props: any) {
+export default function LoginScreen(props: any){ //TODO: Take setToken callback from App
+    //TODO: Make this a stack nav
+    const onPhoneNumberSet = (newPhoneNumber: string)=>{
+        console.log("LoginScreen::onPhoneNumberSet: ", newPhoneNumber)
+    }
+
+    return(
+        <EnterPhoneNumberScreen onSetPhoneNumber={onPhoneNumberSet}/>        
+    )
+}
+
+function OldLoginScreen(props: any) { //TODO: Delete this
     const [accessToken, setAccessToken] = useState(null);
 
     const login = () => {
@@ -32,25 +44,3 @@ export default function LoginScreen(props: any) {
         </View>
     )
 }
-
-function OldLoginScreen(props: any) {
-    const [tempPhoneNumber, setTempPhoneNumber] = useState('')
-
-    return (
-        <View style={styles.container}>
-            <Text>Please enter your phone number</Text>
-            <TextInput placeholder="My Phone Number" onChangeText={text => setTempPhoneNumber(text)}
-                autoFocus={true} style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}></TextInput>
-            <Button title={"Confirm"} onPress={() => { props.onSetPhoneNumber(tempPhoneNumber) }}></Button>
-        </View>
-    );
-}
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-})
