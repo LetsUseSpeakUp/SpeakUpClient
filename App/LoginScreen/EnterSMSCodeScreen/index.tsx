@@ -1,15 +1,15 @@
 import React from 'react'
 import {View, TextInput, Text, Button, StyleSheet} from 'react-native'
 
-export default function EnterPhoneNumberScreen(props: any){
-    const [tempPhoneNumber, setTempPhoneNumber] = React.useState('')
+export default function EnterSMSCodeScreen(props: any){
+    const [tempSMSCode, setTempSMSCode] = React.useState('')
 
     return (
         <View style={styles.container}>
-            <Text>Please enter your phone number</Text>
-            <TextInput placeholder="My Phone Number" onChangeText={text => setTempPhoneNumber(text)}
+            <Text>Please enter your verification code</Text>
+            <TextInput placeholder="Verification Code" onChangeText={text => setTempSMSCode(text)}
                 autoFocus={true} style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}></TextInput>
-            <Button title={"Confirm"} onPress={() => { props.setPhoneNumber('+1' + tempPhoneNumber) }}></Button>
+            <Button title={"Confirm"} onPress={() => {props.setSMSCode(tempSMSCode)}}></Button>
         </View>
     );
 }
