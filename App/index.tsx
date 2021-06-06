@@ -7,7 +7,7 @@ import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
 import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
-import {loginWithExistingCredentials} from './AuthLogic'
+import {loginWithExistingCredentials, deleteExistingRefreshToken, getPhoneNumber} from './AuthLogic'
 
 const Tab = createBottomTabNavigator();
 
@@ -17,13 +17,17 @@ export default function App() {
   const [convoToNavTo, setConvoToNavTo] = useState('');
   const clearConvoToNavTo = () => { setConvoToNavTo('') }
   const convoToNavToBuffer = useRef('');
-  // const isLogged = userPhoneNumber.length > 0; 
-  const[isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = userPhoneNumber.length > 0; 
 
   useEffect(()=>{
     loginWithExistingCredentials().then((success)=>{
-      if(success) setIsLoggedIn(true);
+      if(success){
+        getPhoneNumber().then((phoneNumber)=>{
+          if(phoneNumber != null) setUserPhoneNumber(phoneNumber);
+        })
+      } 
       console.log("App::loginWithExistingCredentials. Success: ", success);
+      // deleteExistingRefreshToken(); //TODO: Delete. just for testing
     })
   }, [])
 

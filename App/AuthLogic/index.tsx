@@ -1,4 +1,5 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Auth0 from 'react-native-auth0'
 const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaSdbWJmdIj0MnR5hHFSaGHKlVfgzCT' });
@@ -6,14 +7,12 @@ const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaS
 export const loginWithExistingCredentials = async ()=>{
     try{        
         const refreshToken = await getExistingRefreshToken();
-        console.log("LoginWithExistingCredentials. RefreshToken: ", refreshToken); //TODO: Delete this when done testing!!!
         if(refreshToken.length === 0){
             return false;
         }
         return await refreshAuthToken();
     }
     catch(error){
-        console.log("ERROR -- AuthLogic::loginWithExistingCredentials: ", error);
         return false;
     }
 }
@@ -33,15 +32,53 @@ const getExistingRefreshToken = async ()=>{
     return curRefreshToken;    
 }
 
-export const addNewRefreshToken = async(newRefreshToken: string)=>{
-    console.log("LoginWithExistingCredentials::Add new refresh token: ", newRefreshToken); //TODO: Delete this when done testing!!!!
+const addNewRefreshToken = async(newRefreshToken: string)=>{
     await EncryptedStorage.setItem('refreshToken', newRefreshToken);
     let curRefreshToken = newRefreshToken;
     await refreshAuthToken();
 }
 
-export const deleteExistingRefreshToken = ()=>{
-    return EncryptedStorage.removeItem('refreshToken');
+export const deleteExistingRefreshToken = async ()=>{
+    try{
+        return await EncryptedStorage.removeItem('refreshToken');
+    }
+    catch(error){
+        console.log("ERROR -- AuthLogic::deleteExistingRefreshToken: ", error);
+    }
+}
+
+export const loginWithPhoneNumber = async(phoneNumber: string)=>{
+    await AsyncStorage.setItem('phoneNumber', phoneNumber);
+    return auth0.auth.passwordlessWithSMS({
+        phoneNumber: phoneNumber
+    });
+}
+
+export const enterPhoneNumberVerification = async(phoneNumber: string, verificationCode: string)=>{
+    const credentials = await auth0.auth.loginWithSMS({
+        phoneNumber: phoneNumber,
+        code: verificationCode,
+        audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
+        scope: 'read:current_user update:current_user_metadata openid profile offline_access'
+    })
+    addNewRefreshToken(credentials.refreshToken);
+}
+
+export const setUserMetadata = async(metadata: {first_name: string, last_name: string})=>{    
+    await AsyncStorage.setItem('first_name', metadata.first_name);
+    await AsyncStorage.setItem('last_name', metadata.last_name);
+    const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
+    const userId = response.sub;
+    return await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});    
+}
+
+export const getPhoneNumber = async()=>{
+    try{
+        return await AsyncStorage.getItem('phoneNumber');
+    }
+    catch(error){
+        console.log("ERROR -- AuthLogic::getPhoneNumber: ", error);
+    }
 }
 
 /**
@@ -51,7 +88,6 @@ export const deleteExistingRefreshToken = ()=>{
 const refreshAuthToken = async()=>{
     try{
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: curRefreshToken});
-        console.log("AuthLogic::refreshAuthToken. Response: ", refreshResponse); //TODO: Delete this when done testing!!!
         curAuthToken = refreshResponse.accessToken;
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;        
         return isAuthenticationTokenValid();
