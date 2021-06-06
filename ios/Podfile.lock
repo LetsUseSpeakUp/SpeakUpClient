@@ -224,6 +224,8 @@ PODS:
     - React
   - react-native-contacts (7.0.0):
     - React-Core
+  - react-native-encrypted-storage (4.0.2):
+    - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
   - react-native-safe-area (0.5.1):
@@ -337,6 +339,8 @@ PODS:
     - Yoga
   - RNScreens (3.0.0):
     - React-Core
+  - RNSecureKeyStore (1.0.0):
+    - React
   - TcpSockets (3.3.2):
     - React
   - UMAppLoader (2.1.0)
@@ -395,6 +399,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-agora (from `../node_modules/react-native-agora`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
+  - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area (from `../node_modules/react-native-safe-area`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -418,6 +423,7 @@ DEPENDENCIES:
   - RNOS (from `../node_modules/react-native-os`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSecureKeyStore (from `../node_modules/react-native-secure-key-store/ios`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -498,6 +504,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-agora"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
+  react-native-encrypted-storage:
+    :path: "../node_modules/react-native-encrypted-storage"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area:
@@ -544,6 +552,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSecureKeyStore:
+    :path: "../node_modules/react-native-secure-key-store/ios"
   TcpSockets:
     :path: "../node_modules/react-native-tcp"
   UMAppLoader:
@@ -607,6 +617,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-agora: 8fe461c6e314fd6e4da746fabcac2b0a3b263c75
   react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
+  react-native-encrypted-storage: e78d848ce0fb663c2ce306e37921d026809322e6
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area: e8230b0017d76c00de6b01e2412dcf86b127c6a3
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
@@ -630,6 +641,7 @@ SPEC CHECKSUMS:
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 70f662b5232dd5d19ccff581e919a54ea73df51c
   RNScreens: e8e8dd0588b5da0ab57dcca76ab9b2d8987757e0
+  RNSecureKeyStore: f1ad870e53806453039f650720d2845c678d89c8
   TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   UMAppLoader: fe2708bb0ac5cd70052bc207d06aa3b7e72b9e97
   UMBarCodeScannerInterface: 79f92bea5f7af39b381a4c82298105ceb537408a
@@ -646,6 +658,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 203c11259d2699b5b3a4eda4adbc466f5cb5c561
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: a989b968ef682c8a16857f0f48d8fa5fb77bd0cf
+PODFILE CHECKSUM: 5f11be9ae21a7126d4dd1713bb316a5edb3343cf
 
 COCOAPODS: 1.10.1

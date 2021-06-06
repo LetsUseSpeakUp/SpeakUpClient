@@ -17,12 +17,13 @@ export default function App() {
   const [convoToNavTo, setConvoToNavTo] = useState('');
   const clearConvoToNavTo = () => { setConvoToNavTo('') }
   const convoToNavToBuffer = useRef('');
-  // const isLogged = userPhoneNumber.length > 0;
-  let isLoggedIn = false; //TODO: Fetch from AuthLogic
+  // const isLogged = userPhoneNumber.length > 0; 
+  const[isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(()=>{
     loginWithExistingCredentials().then((success)=>{
-      if(success) isLoggedIn = false;
+      if(success) setIsLoggedIn(true);
+      console.log("App::loginWithExistingCredentials. Success: ", success);
     })
   }, [])
 
