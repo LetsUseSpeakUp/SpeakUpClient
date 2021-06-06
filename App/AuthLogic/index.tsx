@@ -33,7 +33,6 @@ const getExistingRefreshToken = async ()=>{
 }
 
 const addNewRefreshToken = async(newRefreshToken: string)=>{
-    console.log("AddNewRefreshToken: ", newRefreshToken); //TODO: Delete this!!! just for testing
     await EncryptedStorage.setItem('refreshToken', newRefreshToken);
     let curRefreshToken = newRefreshToken;
     await refreshAuthToken(newRefreshToken);
@@ -89,7 +88,6 @@ export const getPhoneNumber = async()=>{
 const refreshAuthToken = async(refreshToken='')=>{
     if(refreshToken.length === 0) refreshToken = curRefreshToken;
     try{
-        console.log("AuthLogic::refreshAuthLogic. Refresh token: ", refreshToken); //TODO: DELETE THIS!!!
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
         curAuthToken = refreshResponse.accessToken;
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;        
