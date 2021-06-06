@@ -60,8 +60,8 @@ export const enterPhoneNumberVerification = async(phoneNumber: string, verificat
         code: verificationCode,
         audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
         scope: 'read:current_user update:current_user_metadata openid profile offline_access'
-    })
-    addNewRefreshToken(credentials.refreshToken);
+    })    
+    await addNewRefreshToken(credentials.refreshToken);
 }
 
 export const setUserMetadata = async(metadata: {first_name: string, last_name: string})=>{    
