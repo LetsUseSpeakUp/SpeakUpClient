@@ -6,9 +6,12 @@ import EnterNameScreen from './EnterNameScreen'
 import EnterPhoneNumberScreen from './EnterPhoneNumberScreen'
 import EnterSMSCodeScreen from './EnterSMSCodeScreen'
 import { NavigationContainer } from '@react-navigation/native';
+import {addNewRefreshToken} from '../AuthLogic'
 const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaSdbWJmdIj0MnR5hHFSaGHKlVfgzCT' });
 
-export default function LoginScreen(props: any) { //TODO: Take setToken callback from App
+//TODO: Handle login without account creation
+//TODO: Delete print statements so we don't leak secrets
+export default function LoginScreen(props: any) { //TODO: Take setToken callback from App. Also set phone Number
     const phoneNumberRef = React.useRef('');
     const nameRef = React.useRef({first_name: '', last_name: ''});
 
@@ -31,73 +34,45 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
         })
     }
 
-    const onSMSCodeSet = (smsCode: string) => {
+    const onSMSCodeSet = async (smsCode: string) => { 
         console.log("LoginScreen::onSMSCodeSet: ", smsCode, " Phone Number: ", phoneNumberRef.current);
         if(phoneNumberRef.current.length <= 0) throw 'phone number null';
-        auth0.auth.loginWithSMS({
-            phoneNumber: phoneNumberRef.current,
-            code: smsCode,
-            audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
-            scope: 'read:current_user update:current_user_metadata openid profile'
-        }).then((credentials) => {
-            console.log("LoginScreen::onSMSCodeSet. Credentials received: ", credentials);
-            return addNameToUserWithToken(credentials.accessToken);                        
-        }).then(()=>{
-            //TODO: callback to parent with credentials.accessToken
-        }).catch((error) => {
+
+        try{
+            const credentials = await auth0.auth.loginWithSMS({
+                phoneNumber: phoneNumberRef.current,
+                code: smsCode,
+                audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
+                scope: 'read:current_user update:current_user_metadata openid profile offline_access'
+            });
+
+            await addNameToUserWithToken(credentials.accessToken);
+            await addNewRefreshToken(credentials.refreshToken);
+        }
+        catch(error){
             console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
-        })
+        }
     }
 
-    const addNameToUserWithToken = (authToken: string) =>{
-        auth0.auth.userInfo({token: authToken}).then((response)=>{
+    const addNameToUserWithToken = async (authToken: string) =>{
+        try {
+            const response = await auth0.auth.userInfo({ token: authToken });
             console.log("LoginScreen::addNameToUserWithToken. Response: ", response);
-            return response.sub;
-        }).then((userId: string)=>{
+            const userId = response.sub;
             console.log("LoginScreen::addNameToUserWithToken. UserId: ", userId, " Name ref: ", nameRef.current);
-            return auth0.users(authToken).patchUser({id: userId, metadata: nameRef.current});
-        }).catch((error)=>{
+            return await auth0.users(authToken).patchUser({ id: userId, metadata: nameRef.current });
+        } catch (error) {
             console.log("LoginScreen::addNameToUserWithToken. Error: ", error);
-        })        
+        }        
     }
 
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Enter Name" component={EnterNameScreen} initialParams={{ setName: onNameSet }} />
-                <Stack.Screen name="Enter Phone Number" component={EnterPhoneNumberScreen} initialParams={{ setPhoneNumber: onPhoneNumberSet }} />
-                <Stack.Screen name="Enter Verification Code" component={EnterSMSCodeScreen} initialParams={{ setSMSCode: onSMSCodeSet }} />
+                <Stack.Screen name="Name" component={EnterNameScreen} initialParams={{ setName: onNameSet }} />
+                <Stack.Screen name="Phone Number" component={EnterPhoneNumberScreen} initialParams={{ setPhoneNumber: onPhoneNumberSet }} />
+                <Stack.Screen name="Verification Code" component={EnterSMSCodeScreen} initialParams={{ setSMSCode: onSMSCodeSet }} />
             </Stack.Navigator>
         </NavigationContainer>
-    )
-}
-
-function OldLoginScreen(props: any) { //TODO: Delete this
-    const [accessToken, setAccessToken] = useState(null);
-
-    const login = () => {
-        auth0.webAuth.authorize({}).then((credentials: any) => {
-            console.log("LoginScreen::login. Login successful");
-            setAccessToken(credentials);
-        }).catch((error) => {
-            console.log("ERROR - LoginScreen::login: ", error);
-        })
-    }
-
-    const logout = () => {
-        auth0.webAuth.clearSession().then((success) => {
-            console.log("LoginScreen::logout. logout successful");
-            setAccessToken(null);
-        }).catch((error) => {
-            console.log("ERROR - LoginScreen::logout: ", error);
-        })
-    }
-
-    return (
-        <View style={styles.container}>
-            <Text>Logged In: {accessToken != null ? "True" : "False"}</Text>
-            <Button title={'Login'} onPress={login}> </Button>
-            <Button title={'Logout'} onPress={logout}></Button>
-        </View>
     )
 }

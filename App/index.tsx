@@ -7,16 +7,24 @@ import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
 import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
+import {loginWithExistingCredentials} from './AuthLogic'
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [userPhoneNumber, setUserPhoneNumber] = useState('')
+  const [userPhoneNumber, setUserPhoneNumber] = useState('') //TODO: Get this data from disk 
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const [convoToNavTo, setConvoToNavTo] = useState('');
   const clearConvoToNavTo = () => { setConvoToNavTo('') }
   const convoToNavToBuffer = useRef('');
-  const isLogged = userPhoneNumber.length > 0;
+  // const isLogged = userPhoneNumber.length > 0;
+  let isLoggedIn = false; //TODO: Fetch from AuthLogic
+
+  useEffect(()=>{
+    loginWithExistingCredentials().then((success)=>{
+      if(success) isLoggedIn = false;
+    })
+  }, [])
 
   useEffect(() => {
     if (userPhoneNumber.length > 0) {
@@ -82,7 +90,7 @@ export default function App() {
     setConvosMetadata(newMetadata);
   }
 
-  if (!isLogged) {
+  if (!isLoggedIn) {
     return <LoginScreen onSetPhoneNumber={(phoneNumber: string) => setUserPhoneNumber(phoneNumber)} />
   }
 

@@ -7,7 +7,7 @@ export default function EnterNameScreen({route, navigation}: any){
 
     const confirmPressed = ()=>{
         route.params.setName(tempFirstName, tempLastName);
-        navigation.navigate('Enter Phone Number');
+        navigation.navigate('Phone Number');
     }
 
     return (

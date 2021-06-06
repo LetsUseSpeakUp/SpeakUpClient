@@ -6,7 +6,7 @@ export default function EnterPhoneNumberScreen({route, navigation}: any){
 
     const confirmPressed = ()=>{
         route.params.setPhoneNumber('+1' + tempPhoneNumber);
-        navigation.navigate('Enter Verification Code');
+        navigation.navigate('Verification Code');
     }
 
     return (
