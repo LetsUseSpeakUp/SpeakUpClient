@@ -7,7 +7,8 @@ import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
 import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
-import {loginWithExistingCredentials, deleteExistingRefreshToken, getPhoneNumber} from './AuthLogic'
+import {loginWithExistingCredentials, getPhoneNumber, deleteExistingRefreshToken} from './AuthLogic'
+import LogoutScreen from './LogoutScreen'
 
 const Tab = createBottomTabNavigator();
 
@@ -95,8 +96,15 @@ export default function App() {
         })
       } 
       console.log("App::loginWithExistingCredentials. Success: ", success);
-      // deleteExistingRefreshToken(); //TODO: Delete. just for testing
     });
+  }
+
+  const onLoggedOut = ()=>{
+    deleteExistingRefreshToken().then(()=>{
+      setUserPhoneNumber('');
+    }).catch(error=>{
+      console.log("ERROR -- App::onLoggedOut: ", error);
+    })
   }
 
   if (!isLoggedIn) {
@@ -114,6 +122,7 @@ export default function App() {
         <Tab.Navigator>
           <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
+          <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />
         </Tab.Navigator>
       </NavigationContainer>
     </ConvosContext.Provider>
