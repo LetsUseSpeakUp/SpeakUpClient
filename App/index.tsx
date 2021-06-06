@@ -20,15 +20,7 @@ export default function App() {
   const isLoggedIn = userPhoneNumber.length > 0; 
 
   useEffect(()=>{
-    loginWithExistingCredentials().then((success)=>{
-      if(success){
-        getPhoneNumber().then((phoneNumber)=>{
-          if(phoneNumber != null) setUserPhoneNumber(phoneNumber);
-        })
-      } 
-      console.log("App::loginWithExistingCredentials. Success: ", success);
-      // deleteExistingRefreshToken(); //TODO: Delete. just for testing
-    })
+    onLoggedIn();
   }, [])
 
   useEffect(() => {
@@ -63,7 +55,7 @@ export default function App() {
     setConvosMetadata(updatedMetadata);
   }
 
-  const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => {
+  const onApproveOrDenySingleConvo = (shouldApprove: boolean, convoId: string) => { //TODO: Refactor this horrible code
     console.log("App. onApproveOrDenySingleConvo. Id: ", convoId, " Approve: ", shouldApprove);
     if (shouldApprove)
       ConvosManager.approveConvo(convoId, userPhoneNumber);
@@ -95,8 +87,20 @@ export default function App() {
     setConvosMetadata(newMetadata);
   }
 
+  const onLoggedIn = ()=>{
+    loginWithExistingCredentials().then((success)=>{
+      if(success){
+        getPhoneNumber().then((phoneNumber)=>{
+          if(phoneNumber != null) setUserPhoneNumber(phoneNumber);
+        })
+      } 
+      console.log("App::loginWithExistingCredentials. Success: ", success);
+      // deleteExistingRefreshToken(); //TODO: Delete. just for testing
+    });
+  }
+
   if (!isLoggedIn) {
-    return <LoginScreen onSetPhoneNumber={(phoneNumber: string) => setUserPhoneNumber(phoneNumber)} />
+    return <LoginScreen  onLoginComplete={()=>{onLoggedIn()}}/>
   }
 
 

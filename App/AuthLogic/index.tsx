@@ -33,9 +33,10 @@ const getExistingRefreshToken = async ()=>{
 }
 
 const addNewRefreshToken = async(newRefreshToken: string)=>{
+    console.log("AddNewRefreshToken: ", newRefreshToken); //TODO: Delete this!!! just for testing
     await EncryptedStorage.setItem('refreshToken', newRefreshToken);
     let curRefreshToken = newRefreshToken;
-    await refreshAuthToken();
+    await refreshAuthToken(newRefreshToken);
 }
 
 export const deleteExistingRefreshToken = async ()=>{
@@ -85,9 +86,11 @@ export const getPhoneNumber = async()=>{
  * 
  * @returns false if the authentication token is invalid
  */
-const refreshAuthToken = async()=>{
+const refreshAuthToken = async(refreshToken='')=>{
+    if(refreshToken.length === 0) refreshToken = curRefreshToken;
     try{
-        const refreshResponse = await auth0.auth.refreshToken({refreshToken: curRefreshToken});
+        console.log("AuthLogic::refreshAuthLogic. Refresh token: ", refreshToken); //TODO: DELETE THIS!!!
+        const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
         curAuthToken = refreshResponse.accessToken;
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;        
         return isAuthenticationTokenValid();

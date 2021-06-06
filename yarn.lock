@@ -2165,6 +2165,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/slider/-/slider-3.0.3.tgz"
   "version" "3.0.3"
 
+"@react-native-picker/picker@>= 1.0":
+  "integrity" "sha512-sk07ARwL0cMXwkXsqcxyprL/KiEVD0xRFXFqznTnZs1YXqwxEqz6GiGtq2vQlK64CzXDpHX8gw1QQz47abBY1Q=="
+  "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-1.16.1.tgz"
+  "version" "1.16.1"
+
 "@react-native-windows/cli@0.64.4":
   "integrity" "sha512-4I5dJ/FFiU0oEEXMgAdLo61XS5zuIOKhREP7cCbsYIISV1I/Q9IHnujpAyqgqXlXlxc6OLhjTI3ZKAgmQyd6DQ=="
   "resolved" "https://registry.npmjs.org/@react-native-windows/cli/-/cli-0.64.4.tgz"
@@ -2397,6 +2402,14 @@
   "integrity" "sha512-qQyEnG7mV/RK3JryfgZMrxqebPFgLsTENnpZAbBgA2UiR6zwLr22gl6B/zSEzS7KsTqeFcepPUP9KkJgDbbMlg=="
   "resolved" "https://registry.npmjs.org/@types/react-native-auth0/-/react-native-auth0-2.5.6.tgz"
   "version" "2.5.6"
+
+"@types/react-native-phone-input@^0.2.1":
+  "integrity" "sha512-cOc9w0+Bqp/A/zOurAQF2Q2+C/41WU2563Nqby2V9CU4NsFYiCda1UgNYrNwC3b51re6LExoZsIZjt+14o4+Pw=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-phone-input/-/react-native-phone-input-0.2.1.tgz"
+  "version" "0.2.1"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
 
 "@types/react-native-vector-icons@^6.4.6":
   "integrity" "sha512-lAyxNfMd5L1xZvXWsGcJmNegDf61TAp40uL6ashNNWj9W3IrDJO59L9+9inh0Y2MsEZpLTdxzVU8Unb4/0FQng=="
@@ -5105,6 +5118,11 @@
     "pify" "^3.0.0"
     "slash" "^1.0.0"
 
+"google-libphonenumber@^3.2.2":
+  "integrity" "sha512-d8dMePLPIZXHGEvyGM4PTEPBxXC29mhXtqruD11iZd9KzyKb216kJuBPZq6m3BTmiI5ZiIb4epzrZsatRJ5ZaA=="
+  "resolved" "https://registry.npmjs.org/google-libphonenumber/-/google-libphonenumber-3.2.21.tgz"
+  "version" "3.2.21"
+
 "graceful-fs@^4.1.11", "graceful-fs@^4.1.15", "graceful-fs@^4.1.2", "graceful-fs@^4.1.3", "graceful-fs@^4.1.6", "graceful-fs@^4.1.9", "graceful-fs@^4.2.0", "graceful-fs@^4.2.4":
   "integrity" "sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ=="
   "resolved" "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.6.tgz"
@@ -6825,7 +6843,7 @@
   "resolved" "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz"
   "version" "4.1.1"
 
-"lodash@^4.17.13", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.3.0", "lodash@^4.5.0":
+"lodash@^4.17.13", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.4", "lodash@^4.3.0", "lodash@^4.5.0":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -8363,7 +8381,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@^15.6.0", "prop-types@^15.6.2", "prop-types@^15.7.2":
+"prop-types@^15.5.10", "prop-types@^15.6.0", "prop-types@^15.6.2", "prop-types@^15.7.2":
   "integrity" "sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   "version" "15.7.2"
@@ -8617,6 +8635,15 @@
   "resolved" "https://registry.npmjs.org/react-native-os/-/react-native-os-1.2.6.tgz"
   "version" "1.2.6"
 
+"react-native-phone-input@^1.0.9":
+  "integrity" "sha512-XjGCOy2OlFAPI1Vad5bYH39dG+7YVA+Cf6806InAgieKT0/ML6wur2/rw37H1OWhaBgJqLp2HIwoAqm2e0pgdg=="
+  "resolved" "https://registry.npmjs.org/react-native-phone-input/-/react-native-phone-input-1.0.9.tgz"
+  "version" "1.0.9"
+  dependencies:
+    "google-libphonenumber" "^3.2.2"
+    "lodash" "^4.17.4"
+    "prop-types" "^15.5.10"
+
 "react-native-randombytes@^3.6.1", "react-native-randombytes@>=2.0.0 <4.0.0":
   "integrity" "sha512-qxkwMbOZ0Hff1V7VqpaWrR6ItkA+oF6bnI79Qp9F3Tk8WBsdKDi6m1mi3dEdFWePoRLrhJ2L03rU0yabst1tVw=="
   "resolved" "https://registry.npmjs.org/react-native-randombytes/-/react-native-randombytes-3.6.1.tgz"
@@ -8793,7 +8820,7 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.64.0", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.60.0-rc.2", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.62.2 <1.0.x", "react-native@>=0.64.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@~0.63.4":
+"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.64.0", "react-native@>= 0.25", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.60.0-rc.2", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.62.2 <1.0.x", "react-native@>=0.64.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@~0.63.4":
   "integrity" "sha512-I4kM8kYO2mWEYUFITMcpRulcy4/jd+j9T6PbIzR0FuMcz/xwd+JwHoLPa1HmCesvR1RDOw9o4D+OFLwuXXfmGw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.4.tgz"
   "version" "0.63.4"
@@ -8846,7 +8873,7 @@
   "resolved" "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   "version" "0.13.4"
 
-"react@*", "react@^16.0.0", "react@^16.11.0 || ^17", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@>=16.0", "react@>=16.5.1", "react@>=16.8.6", "react@16.13.1", "react@17.0.1":
+"react@*", "react@^16.0.0", "react@^16.11.0 || ^17", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@>=16.0", "react@>=16.5.1", "react@>=16.8.6", "react@16 || 17", "react@16.13.1", "react@17.0.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"

@@ -8,7 +8,8 @@ export default function EnterSMSCodeScreen({route}: any){
         <View style={styles.container}>
             <Text>Please enter your verification code</Text>
             <TextInput placeholder="Verification Code" onChangeText={text => setTempSMSCode(text)}
-                autoFocus={true} style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}></TextInput>
+                autoFocus={true} style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}
+                keyboardType={'number-pad'}/>
             <Button title={"Confirm"} onPress={() => {route.params.setSMSCode(tempSMSCode)}}></Button>
         </View>
     );

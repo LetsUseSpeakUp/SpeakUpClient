@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
 
 //TODO: Handle login without account creation
-export default function LoginScreen(props: any) { //TODO: Take setToken callback from App. Also set phone Number
+export default function LoginScreen(props: any) {
     const phoneNumberRef = React.useRef('');
     const nameRef = React.useRef({first_name: '', last_name: ''});
 
@@ -33,9 +33,12 @@ export default function LoginScreen(props: any) { //TODO: Take setToken callback
 
         try{
             await enterPhoneNumberVerification(phoneNumberRef.current, smsCode);
-            await setUserMetadata(nameRef.current);            
+            await setUserMetadata(nameRef.current);                 
+            console.log("LoginScreen::onSMSCodeSet. Calling login complete");       
+            props.onLoginComplete();
         }
         catch(error){
+            //TODO: Go to an error page
             console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
         }
     }   
