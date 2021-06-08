@@ -76,7 +76,6 @@ export default function SingleConvoDetails({route, navigation}: any){
     )
 }
 
-
 function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefined): string{
     if(approvalStatus === ConvoResponseType.Approved) return "Approved";
     if(approvalStatus === ConvoResponseType.Disapproved) return "Disapproved";
