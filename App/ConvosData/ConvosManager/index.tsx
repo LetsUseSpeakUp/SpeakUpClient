@@ -126,13 +126,13 @@ const getStreamingURLOfConvo = function (convoId: string): string {
     return "";
 }
 
-export const downloadConvo = function (convoId: string){
+export const downloadConvo = async function (convoId: string){
     const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + convoId;
     const downloadPath = FileSystem.TemporaryDirectoryPath + Date.now() + '.aac';
     
     return RNFetchBlob.config({
         path: downloadPath
-    }).fetch('GET', downloadConvoEndpoint).then((res)=>{
+    }).fetch('GET', downloadConvoEndpoint, {Authorization: 'Bearer ' + await getAuthenticationToken()}).then((res)=>{
         const status = res.info().status;
         if(status !== 200) throw 'Status code: ' + status + ' Text: ' + res.text();
         else{
@@ -189,16 +189,21 @@ const postFormDataToEndpoint = async function (formData: FormData, serverEndpoin
         },
         body: formData
     });
-    if(response.status !== 200 && response.status !== 404 && response.status !== 400 && response.status !== 500)
-        throw 'unknown HTTP error. Status: ' + response.status;
 
-    if (response.status === 404) throw ('404 error: ' + response.statusText);
-
-    const json = await response.json();
-    if (response.status === 400 || response.status === 500)
+    if (response.status === 404){
+        throw ('404 error: ' + response.statusText);
+    } 
+    else if (response.status === 400 || response.status === 500){
+        const json = await response.json();
         throw (response.status + " error: " + json.message.message);
-
-    return json
+    }
+    else if(response.status === 200){
+        return await response.json();
+    }
+    else{
+        throw 'HTTP Error: ' + response.status;
+    }
+    
 }
 
 export const _testFileCreationAndUpload = function () {
@@ -258,7 +263,7 @@ const uploadConvoPromise = async function (filePath: string, metaData: ConvoMeta
             'convoMetadata': JSON.stringify(metaData)
         },
         headers: {
-            Authentication: 'Bearer ' + await getAuthenticationToken()
+            Authorization: 'Bearer ' + await getAuthenticationToken()
         }
     }).promise;
 }
