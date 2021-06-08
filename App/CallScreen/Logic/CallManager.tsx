@@ -148,9 +148,7 @@ class CallManager extends EventEmitter {
 
     private resetCallState = ()=>{
         this.agoraChannelName = "";
-        this.partnerPhoneNumber = "";     
-        this.partnerFirstName = "";
-        this.partnerLastName = "";
+        this.partnerPhoneNumber = "";             
         this.convoMetadata = undefined;        
     }
 
@@ -170,11 +168,7 @@ class CallManager extends EventEmitter {
     private initializeConvoMetadata = ()=>{ 
         this.convoMetadata = {
             initiatorId: this.isInitiator ? this.myPhoneNumber : this.partnerPhoneNumber,
-            receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,
-            receiverFirstName: this.isInitiator ? this.partnerFirstName : undefined,
-            receiverLastName: this.isInitiator ? this.partnerLastName: undefined,
-            initiatorFirstName: this.isInitiator ? undefined : this.partnerFirstName,
-            initiatorLastName: this.isInitiator ? undefined: this.partnerLastName,
+            receiverId: this.isInitiator ? this.partnerPhoneNumber : this.myPhoneNumber,                                    
             convoId: this.agoraChannelName,
             timestampStarted: Date.now(),
             convoLength: 0    
