@@ -88,7 +88,9 @@ export default function App() {
 
     const i = convosMetadata.findIndex((convo) => convo.convoId === convoId);
     const currentConvoVal = convosMetadata[i];
-    const amIInitiator = convosMetadata[i].initiatorFirstName === undefined;
+
+    const amIInitiator = (convosMetadata[i].initiatorId != null && convosMetadata[i].receiverId != null) ? (userPhoneNumber === convosMetadata[i].initiatorId) : 
+    convosMetadata[i].initiatorFirstName === undefined;    
 
     const newMetadata = convosMetadata.slice();
     if (amIInitiator) {
@@ -106,6 +108,7 @@ export default function App() {
       newMetadata[i].convoStatus = newConvoStatus;
     }
 
+    console.log("App::onApproveOrDenySingleConvo. Metadata: ", convosMetadata);
     setConvosMetadata(newMetadata);
   }
 
