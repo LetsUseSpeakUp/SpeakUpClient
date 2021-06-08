@@ -71,9 +71,9 @@ export default function App() {
     setConvosMetadata(newConvosMetadata);
   }
 
-  const onUpdateSingleConvoStatusWithFetched = (convoId: string, updatedStatus: ConvoStatus) => { 
+  const onUpdateSingleConvoMetadataWithFetched = (singleConvoMetadata: ConvoMetadata) => { 
     const updatedMetadata = convosMetadata.slice();
-    updatedMetadata[updatedMetadata.findIndex((convo)=>convo.convoId === convoId)].convoStatus = updatedStatus;
+    updatedMetadata[updatedMetadata.findIndex((convo)=>convo.convoId === singleConvoMetadata.convoId)] = singleConvoMetadata;
     setConvosMetadata(updatedMetadata);
   }
 
@@ -125,7 +125,7 @@ export default function App() {
   return (
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
-      updateSingleConvoStatusWithFetched: onUpdateSingleConvoStatusWithFetched, convoToNavTo: convoToNavTo,
+      updateSingleConvoMetadataWithFetched: onUpdateSingleConvoMetadataWithFetched, convoToNavTo: convoToNavTo,
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo
     }}>
       <NavigationContainer>

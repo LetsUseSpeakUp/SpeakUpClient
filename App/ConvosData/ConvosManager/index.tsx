@@ -71,30 +71,34 @@ export const fetchLatestConvosMetadataForUser = async () => {
 
 const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[]) => {
     return fetchedMetadata.map((fetched) => {
-        if (!fetched.initiator_first_name && !fetched.receiver_first_name) {
-            console.log("ERROR -- ConvosManager::convertFetchedMetadataToConvoMetadata. Missing required field. Fetched data: ", fetched);
-            return;
-        }
-
-        const convoStatus: ConvoStatus = {
-            initiatorResponse: fetched.initiator_approval,
-            receiverResponse: fetched.receiver_approval
-        };
-
-        const metadata: ConvoMetadata = {
-            initiatorId: fetched.initiator_phone_number,
-            receiverId: fetched.receiver_phone_number,
-            convoId: fetched.convo_id,
-            timestampStarted: fetched.timestamp_of_start,
-            convoLength: fetched.length,
-            convoStatus: convoStatus,
-            initiatorFirstName: fetched.initiator_first_name,
-            initiatorLastName: fetched.initiator_last_name,
-            receiverFirstName: fetched.receiver_first_name,
-            receiverLastName: fetched.receiver_last_name
-        };
-        return metadata;
+        return convertSingleFetchedMetadataToConvoMetadata(fetched);
     })
+}
+
+const convertSingleFetchedMetadataToConvoMetadata = (singleFetchedMetadata: any)=>{
+    if (!singleFetchedMetadata.initiator_first_name && !singleFetchedMetadata.receiver_first_name) {
+        console.log("ERROR -- ConvosManager::convertSingleFetchedMetadataToConvoMetadata. Missing required field. Fetched data: ", singleFetchedMetadata);
+        return;
+    }
+
+    const convoStatus: ConvoStatus = {
+        initiatorResponse: singleFetchedMetadata.initiator_approval ?? 0,
+        receiverResponse: singleFetchedMetadata.receiver_approval ?? 0
+    };
+
+    const metadata: ConvoMetadata = {
+        initiatorId: singleFetchedMetadata.initiator_phone_number,
+        receiverId: singleFetchedMetadata.receiver_phone_number,
+        convoId: singleFetchedMetadata.convo_id ?? singleFetchedMetadata.id,
+        timestampStarted: singleFetchedMetadata.timestamp_of_start,
+        convoLength: singleFetchedMetadata.length,
+        convoStatus: convoStatus,
+        initiatorFirstName: singleFetchedMetadata.initiator_first_name,
+        initiatorLastName: singleFetchedMetadata.initiator_last_name,
+        receiverFirstName: singleFetchedMetadata.receiver_first_name,
+        receiverLastName: singleFetchedMetadata.receiver_last_name
+    };
+    return metadata;
 }
 
 /**
@@ -156,15 +160,12 @@ export const denyConvo = function (convoId: string, userId: string) {
     postFormDataToEndpoint(formData, approveConvoEndpoint);
 }
 
-export const fetchSingleConvoStatus = async function(convoId: string){
-    const fetchStatusEndpoint = SERVERENDPOINT + "/convos/getapprovalinfo";
+export const fetchSingleConvoMetadata = async function(convoId: string){
+    const fetchStatusEndpoint = SERVERENDPOINT + "/convos/getmetadata/singleconvo";
     const formData = new FormData();
     formData.append('convoId', convoId);
 
-    const response = await postFormDataToEndpoint(formData, fetchStatusEndpoint);
-    console.log("ConvosManager::fetchSingleConvoStatus. Response: ", response);
-    const convoStatus: ConvoStatus = {initiatorResponse: response.initiatorApproval, receiverResponse: response.receiverApproval};
-    return convoStatus;
+    return convertSingleFetchedMetadataToConvoMetadata(await postFormDataToEndpoint(formData, fetchStatusEndpoint));
 }
 
 const postFormDataToEndpoint = async function (formData: FormData, serverEndpoint: string) {

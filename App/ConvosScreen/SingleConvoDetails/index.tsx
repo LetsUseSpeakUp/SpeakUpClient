@@ -11,13 +11,12 @@ export default function SingleConvoDetails({route, navigation}: any){
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
     const [refreshing, setRefreshing] = useState(false);
 
-    const fetchUpdatedConvoStatus = ()=>{
+    const fetchUpdatedConvoMetadata = ()=>{
         setRefreshing(true);
-        ConvosManager.fetchSingleConvoStatus(convoId).then((fetchedConvoStatus)=>{
-            console.log("SingleConvoDetails. Fetched updated status: ", fetchedConvoStatus);
-            if(areConvoStatusDifferent(fetchedConvoStatus, metadata?.convoStatus)){
-                console.log("SingleConvoDetails. Convo statuses are different");
-                convosContext.updateSingleConvoStatusWithFetched(convoId, fetchedConvoStatus);
+        ConvosManager.fetchSingleConvoMetadata(convoId).then((fetchedConvoMetadata)=>{
+            if(fetchedConvoMetadata == null) return;
+            if(metadata == null || areSingleConvoMetadatasDifferent(metadata, fetchedConvoMetadata)){
+                convosContext.updateSingleConvoMetadataWithFetched(fetchedConvoMetadata);
             }
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetails::fetchUpdatedConvoStatus. Convo Id: ", convoId , " Error: ", error);
@@ -27,7 +26,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     }
 
     useEffect(()=>{
-        fetchUpdatedConvoStatus();
+        fetchUpdatedConvoMetadata();
     }, [])
 
 
@@ -58,7 +57,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
     
     return(
-        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoStatus()}}/>}>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>}>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
             <Text>Time of Call: {dateTime}</Text>
@@ -67,7 +66,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             <Text>Your Approval: {convertApprovalStatusToText(myApproval)}</Text>
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
-            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoStatus()}}></Button>
+            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>
             <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
             
@@ -86,7 +85,21 @@ function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefin
     return "ERROR";
 }
 
-function areConvoStatusDifferent(convoStatus1: ConvoStatus | undefined, convoStatus2: ConvoStatus | undefined){
+function areSingleConvoMetadatasDifferent(metadata1: ConvosManager.ConvoMetadata, metadata2: ConvosManager.ConvoMetadata){
+    if(areConvoStatusesDifferent(metadata1.convoStatus, metadata2.convoStatus)) return true;
+    if(metadata1.convoLength !== metadata2.convoLength) return true;
+    if(metadata1.initiatorId !== metadata2.initiatorId) return true;
+    if(metadata1.initiatorFirstName !== metadata2.initiatorFirstName) return true;    
+    if(metadata1.initiatorLastName !== metadata2.initiatorLastName) return true;
+    if(metadata1.receiverId !== metadata2.receiverId) return true;
+    if(metadata1.receiverFirstName !== metadata2.receiverFirstName) return true;    
+    if(metadata1.receiverLastName !== metadata2.receiverLastName) return true;
+    if(metadata1.timestampStarted !== metadata2.timestampStarted) return true;
+
+    return false;
+}
+
+function areConvoStatusesDifferent(convoStatus1: ConvoStatus | undefined, convoStatus2: ConvoStatus | undefined){
     if(convoStatus1 == undefined){
         convoStatus1 = {initiatorResponse: ConvoResponseType.Unanswered, receiverResponse: ConvoResponseType.Unanswered};
     }
