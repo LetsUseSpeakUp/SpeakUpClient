@@ -17,9 +17,9 @@ export default function SingleConvoDetails({route, navigation}: any){
         ConvosManager.fetchSingleConvoMetadata(convoId).then((fetchedConvoMetadata)=>{            
             if(fetchedConvoMetadata == null) return;
             console.log("SingleConvoDetails. Successfully fetched latest convo");
-            if(metadata == null || areSingleConvoMetadatasDifferent(metadata, fetchedConvoMetadata)){
-                console.log("SingleConvoDetails: convos are different");
+            if(metadata == null || areSingleConvoMetadatasDifferent(metadata, fetchedConvoMetadata)){                
                 convosContext.updateSingleConvoMetadataWithFetched(fetchedConvoMetadata);
+                if(fetchedConvoMetadata.convoLength == null) setTimeout(()=>{fetchUpdatedConvoMetadata()}, 1000);
             }
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetails::fetchUpdatedConvoStatus. Convo Id: ", convoId , " Error: ", error);
@@ -57,8 +57,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const partnerName = amIInitiator ? metadata.receiverFirstName + " " + metadata.receiverLastName :
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
-    const dateTime = getFormattedTimeFromTimestamp(metadata.timestampStarted);
-    const convoLength = metadata.convoLength + " milliseconds"; //TODO: Get formatted time
+    const dateTime = metadata.timestampStarted ? getFormattedTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
+    const convoLength = metadata.convoLength ? metadata.convoLength + " milliseconds" : 'Loading'; //TODO: Get formatted time
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
 
