@@ -9,7 +9,7 @@ import RtcEngine, {
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
-import { ConvoMetadata } from '../../../ConvosData/ConvosManager';
+import { ConvoMetadata, getChannelToken } from '../../../ConvosData/ConvosManager';
 
 /**
  * Emits
@@ -59,7 +59,7 @@ export default class AgoraManager extends EventEmitter {
         }
         this.connectionState = ConnectionState.Connecting;
 
-        const channelToken = await this.getChannelToken(channelName);
+        const channelToken = await getChannelToken(channelName);
         await this.rtcEngine?.joinChannel(
             channelToken,
             channelName, null, 0
@@ -137,19 +137,6 @@ export default class AgoraManager extends EventEmitter {
 
     public generateChannelName(myPhoneNumber: string) {
         return (Date.now() + myPhoneNumber);
-    }
-
-    private async getChannelToken(channelName: string) {
-        const fetchURL = 'https://basicspeakuptokenserver.herokuapp.com/access_token?channel=' + channelName;
-        try {
-            let response = await fetch(fetchURL);
-            let data = await response.json();
-            return data.token;
-        }
-        catch (error) {
-            console.log("ERROR -- AgoraManager.tsx. Failed to fetch token");
-            throw ('failedToFetchToken: ' + error)
-        }
     }
 
     private setupListeners() {

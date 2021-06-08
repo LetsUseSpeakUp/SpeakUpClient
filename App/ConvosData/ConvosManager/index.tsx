@@ -1,5 +1,6 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
+import {getAuthenticationToken} from '../../AuthLogic'
 
 // const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 const SERVERENDPOINT = "https://backend.letsusespeakup.com";
@@ -35,6 +36,7 @@ export const uploadConvo = async function (filePath: string, metaData: ConvoMeta
 }
 
 /**
+ * TODO: Delete this and get from signal server instead
  * This will throw an error if the user is not found, so catch it
  * @param userPhoneNumber 
  * @returns 
@@ -43,8 +45,21 @@ export const getUserInfo = async function (userPhoneNumber: string) {
     const formData = new FormData();
     formData.append('phoneNumber', userPhoneNumber);
     const endpoint = SERVERENDPOINT + "/users/query";
-    const response = await sendFormDataToEndpoint(formData, endpoint);
+    const response = await postFormDataToEndpoint(formData, endpoint);
     return { firstName: response.firstName, lastName: response.lastName };
+}
+
+/**
+ * Returns token that lets user join agora channel
+ * @param channelName 
+ */
+export const getChannelToken = async function(channelName: string, isInitiator: boolean){
+    const formData = new FormData();
+    formData.append('channel', channelName);
+    formData.append('isInitiator', isInitiator.toString());
+    const endpoint = SERVERENDPOINT + '/tokens/getchanneltoken';
+    const response = await postFormDataToEndpoint(formData, endpoint);
+    return response.token;        
 }
 
 /**
@@ -104,7 +119,7 @@ const fetchAllMetadataForUserFromServer = async function (userId: string) {
     const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
     const formData = new FormData();
     formData.append('phoneNumber', userId);
-    return sendFormDataToEndpoint(formData, getMetadataEndpoint);
+    return postFormDataToEndpoint(formData, getMetadataEndpoint);
 }
 
 const getStreamingURLOfConvo = function (convoId: string): string {
@@ -143,7 +158,7 @@ export const approveConvo = function (convoId: string, userId: string) {
     formData.append('phoneNumber', userId);
     formData.append('approval', '1');
 
-    sendFormDataToEndpoint(formData, approveConvoEndpoint);
+    postFormDataToEndpoint(formData, approveConvoEndpoint);
 }
 
 export const denyConvo = function (convoId: string, userId: string) {
@@ -153,7 +168,7 @@ export const denyConvo = function (convoId: string, userId: string) {
     formData.append('phoneNumber', userId);
     formData.append('approval', '-1');
 
-    sendFormDataToEndpoint(formData, approveConvoEndpoint);
+    postFormDataToEndpoint(formData, approveConvoEndpoint);
 }
 
 export const fetchSingleConvoStatus = async function(convoId: string){
@@ -161,17 +176,20 @@ export const fetchSingleConvoStatus = async function(convoId: string){
     const formData = new FormData();
     formData.append('convoId', convoId);
 
-    const response = await sendFormDataToEndpoint(formData, fetchStatusEndpoint);
+    const response = await postFormDataToEndpoint(formData, fetchStatusEndpoint);
     console.log("ConvosManager::fetchSingleConvoStatus. Response: ", response);
     const convoStatus: ConvoStatus = {initiatorResponse: response.initiatorApproval, receiverResponse: response.receiverApproval};
     return convoStatus;
 }
 
-const sendFormDataToEndpoint = async function (formData: FormData, serverEndpoint: string) {
+const postFormDataToEndpoint = async function (formData: FormData, serverEndpoint: string) {
     const response = await fetch(serverEndpoint, {
-        method: 'POST',
+        method: 'POST',        
+        headers: {
+            Authorization: 'Bearer ' + await getAuthenticationToken()
+        },
         body: formData
-    })
+    });
     if (response.status === 404) throw ('404 error: ' + response.statusText);
 
     const json = await response.json();
@@ -229,13 +247,16 @@ const getUploadFileItem = function (filePath: string, fileName: string) {
     return uploadFileItem;
 }
 
-const uploadConvoPromise = function (filePath: string, metaData: ConvoMetadata) {
+const uploadConvoPromise = async function (filePath: string, metaData: ConvoMetadata) {
     const uploadEndpoint = SERVERENDPOINT + "/convos/upload"
     return FileSystem.uploadFiles({
         toUrl: uploadEndpoint,
         files: [getUploadFileItem(filePath, metaData.convoId + '.aac')], //TODO: Instead of .aac, get it from the file
         fields: {
             'convoMetadata': JSON.stringify(metaData)
+        },
+        headers: {
+            Authentication: 'Bearer ' + await getAuthenticationToken()
         }
     }).promise;
 }

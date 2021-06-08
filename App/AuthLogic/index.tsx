@@ -17,6 +17,10 @@ export const loginWithExistingCredentials = async ()=>{
     }
 }
 
+export const _getAuthObject = ()=>{
+    return auth0;
+}
+
 let curRefreshToken = '';
 let curAuthToken = '';
 let authTokenExpirationTime = 0;
@@ -81,17 +85,14 @@ export const getPhoneNumber = async()=>{
     }
 }
 
-/**
- * 
- * @returns false if the authentication token is invalid
- */
 const refreshAuthToken = async(refreshToken='')=>{
     if(refreshToken.length === 0) refreshToken = curRefreshToken;
     try{
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
         curAuthToken = refreshResponse.accessToken;
-        authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;        
-        return isAuthenticationTokenValid();
+        authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;     
+        console.log("WARNING -- JUST FOR TESTING!!!! Delete this after. AuthLogic::refreshToken. Auth token: ", curAuthToken); //TODO: DELETE THIS!!! JUST FOR TESTING.
+        return true;                 
     }
     catch(error){
         console.log("ERROR -- AuthLogic::refreshAuthToken: ", error);
