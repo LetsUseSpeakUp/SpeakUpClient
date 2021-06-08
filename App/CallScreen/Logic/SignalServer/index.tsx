@@ -35,11 +35,11 @@ class SignalServer extends EventEmitter{
         this.signalHub = SignalHub('speakup', [SERVERENDPOINT]);
     }
 
-    sendSignal({agoraChannel="", myPhoneNumber="", receiverPhoneNumber=""}){ //TODO: Encrypt this data
+    sendSignal({agoraChannel, myPhoneNumber, myFirstName, myLastName, receiverPhoneNumber}: {agoraChannel: string, myPhoneNumber: string, myFirstName: string, myLastName: string, receiverPhoneNumber: string}){ //TODO: Encrypt this data
         const data: SignalServerData = {
             type: MessageType.Signal,
             sender: myPhoneNumber,
-            message: agoraChannel
+            message: JSON.stringify({channel: agoraChannel, firstName: myFirstName, lastName: myLastName})
         }
 
         

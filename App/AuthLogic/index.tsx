@@ -76,9 +76,10 @@ export const setUserMetadata = async(metadata: {first_name: string, last_name: s
     return await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});    
 }
 
-export const getPhoneNumber = async()=>{
+export const getMyUserInfo = async()=>{
     try{
-        return await AsyncStorage.getItem('phoneNumber');
+        const [phoneNumber, firstName, lastName] = await Promise.all([AsyncStorage.getItem('phoneNumber'), AsyncStorage.getItem('firstName'), AsyncStorage.getItem('lastName')]);
+        return {phoneNumber: phoneNumber, firstName: firstName, lastName: lastName};
     }
     catch(error){
         console.log("ERROR -- AuthLogic::getPhoneNumber: ", error);

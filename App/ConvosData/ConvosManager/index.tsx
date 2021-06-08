@@ -36,20 +36,6 @@ export const uploadConvo = async function (filePath: string, metaData: ConvoMeta
 }
 
 /**
- * TODO: Delete this and get from signal server instead
- * This will throw an error if the user is not found, so catch it
- * @param userPhoneNumber 
- * @returns 
- */
-export const getUserInfo = async function (userPhoneNumber: string) {
-    const formData = new FormData();
-    formData.append('phoneNumber', userPhoneNumber);
-    const endpoint = SERVERENDPOINT + "/users/query";
-    const response = await postFormDataToEndpoint(formData, endpoint);
-    return { firstName: response.firstName, lastName: response.lastName };
-}
-
-/**
  * Returns token that lets user join agora channel
  * @param channelName 
  */

@@ -53,13 +53,13 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine.enableAudio();
     }
 
-    public async joinChannel(channelName: string) {
+    public async joinChannel(channelName: string, isInitiator: boolean) {
         if (this.connectionState === ConnectionState.Connected) {
             console.log("ERROR. AgoraManager::joinChannel. connection state == connected");
         }
         this.connectionState = ConnectionState.Connecting;
 
-        const channelToken = await getChannelToken(channelName);
+        const channelToken = await getChannelToken(channelName, isInitiator);
         await this.rtcEngine?.joinChannel(
             channelToken,
             channelName, null, 0
@@ -135,8 +135,8 @@ export default class AgoraManager extends EventEmitter {
         return this.connectionState === ConnectionState.Connected;
     }
 
-    public generateChannelName(myPhoneNumber: string) {
-        return (Date.now() + myPhoneNumber);
+    public generateChannelName(myPhoneNumber: string, partnerPhoneNumber: string) {
+        return (Date.now() + "_" + myPhoneNumber + "_" + partnerPhoneNumber);
     }
 
     private setupListeners() {

@@ -15,7 +15,9 @@ export default function CallScreen({route, navigation}: any) {
     const [callState, setCallState] = useState(CallState.Dialpad);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
-    const callManager = useRef(new CallManager(userPhoneNumber));
+    const userFirstName = route.params.userFirstName;
+    const userLastName = route.params.userLastName;
+    const callManager = useRef(new CallManager(userPhoneNumber, userFirstName, userLastName)); 
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const convosContext = useContext(ConvosContext);
     const _curDummyCount = useRef(0);
@@ -37,8 +39,8 @@ export default function CallScreen({route, navigation}: any) {
             console.log("ERROR -- DebuggingCallScreen.tsx -- callManager is null")
             return;
         }
-        callManager.current.on('callReceived', (callerPhoneNumber: string)=>{
-            setPartnerPhoneNumber(callerPhoneNumber);
+        callManager.current.on('callReceived', (callerPhoneNumber: string, callerFirstName: string, callerLastName: string)=>{
+            setPartnerPhoneNumber(callerPhoneNumber); //TODO: Include caller name in GUI
             setCallState(CallState.Ringing_Receiver);
         })
         callManager.current.on('disconnected', ()=>{

@@ -7,13 +7,15 @@ import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
 import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
-import {loginWithExistingCredentials, getPhoneNumber, deleteExistingRefreshToken} from './AuthLogic'
+import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [userPhoneNumber, setUserPhoneNumber] = useState('') //TODO: Get this data from disk 
+  const [userPhoneNumber, setUserPhoneNumber] = useState('');
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const [convoToNavTo, setConvoToNavTo] = useState('');
   const clearConvoToNavTo = () => { setConvoToNavTo('') }
@@ -34,6 +36,20 @@ export default function App() {
       })
     }
   }, [userPhoneNumber])
+
+  const onLoggedIn = ()=>{
+    loginWithExistingCredentials().then((success)=>{
+      if(success){
+        getMyUserInfo().then((userInfo)=>{
+          if(userInfo == null) return;
+          if(userInfo.phoneNumber != null) setUserPhoneNumber(userInfo.phoneNumber);
+          if(userInfo.firstName != null) setUserFirstName(userInfo.firstName);
+          if(userInfo.lastName != null) setUserLastName(userInfo.lastName);
+        })
+      } 
+      console.log("App::loginWithExistingCredentials. Success: ", success);
+    });
+  }
 
   useEffect(() => {
     if (convoToNavToBuffer.current.length > 0) {
@@ -88,17 +104,6 @@ export default function App() {
     setConvosMetadata(newMetadata);
   }
 
-  const onLoggedIn = ()=>{
-    loginWithExistingCredentials().then((success)=>{
-      if(success){
-        getPhoneNumber().then((phoneNumber)=>{
-          if(phoneNumber != null) setUserPhoneNumber(phoneNumber);
-        })
-      } 
-      console.log("App::loginWithExistingCredentials. Success: ", success);
-    });
-  }
-
   const onLoggedOut = ()=>{
     deleteExistingRefreshToken().then(()=>{
       setUserPhoneNumber('');
@@ -120,7 +125,7 @@ export default function App() {
     }}>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber }} />
+          <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName}} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />
         </Tab.Navigator>

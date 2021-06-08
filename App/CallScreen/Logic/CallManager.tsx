@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetadata, uploadConvo, getUserInfo} from '../../ConvosData/ConvosManager'
+import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
 
 
 /**
@@ -18,21 +18,21 @@ class CallManager extends EventEmitter {
 
     signalServer: SignalServer
     myPhoneNumber: string
-    partnerPhoneNumber: string    
-    partnerFirstName: string
-    partnerLastName: string
+    myFirstName: string
+    myLastName: string
+    partnerPhoneNumber: string        
     agoraChannelName: string
     agoraManager: AgoraManager
     isInitiator = false
     convoMetadata: ConvoMetadata | undefined
 
-    constructor(myPhoneNumber: string) {
+    constructor(myPhoneNumber: string, myFirstName: string, myLastName: string) {
         super();
 
         this.myPhoneNumber = myPhoneNumber;
-        this.partnerPhoneNumber = "";        
-        this.partnerFirstName = "";
-        this.partnerLastName = "";
+        this.myFirstName = myFirstName;
+        this.myLastName = myLastName;
+        this.partnerPhoneNumber = "";                
         this.agoraChannelName = "";
         this.signalServer = new SignalServer();
         this.setupSignalServer(myPhoneNumber);
@@ -42,16 +42,13 @@ class CallManager extends EventEmitter {
     }
 
     public async placeCall(receiverPhoneNumber: string) {
-        try{
-            const partnerInfo = await getUserInfo(receiverPhoneNumber);
-            this.partnerFirstName = partnerInfo.firstName;
-            this.partnerLastName = partnerInfo.lastName;
+        try{                        
             this.isInitiator = true;
-            this.agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber);
-            this.joinAgoraChannel(this.agoraChannelName);
+            this.agoraChannelName = this.agoraManager.generateChannelName(this.myPhoneNumber, receiverPhoneNumber);
+            this.agoraManager.joinChannel(this.agoraChannelName, this.isInitiator);
             this.partnerPhoneNumber = receiverPhoneNumber;
             this.signalServer.sendSignal({agoraChannel: this.agoraChannelName, myPhoneNumber: this.myPhoneNumber,
-                receiverPhoneNumber: this.partnerPhoneNumber});
+                myFirstName: this.myFirstName, myLastName: this.myLastName, receiverPhoneNumber: this.partnerPhoneNumber});
         }
         catch(error){
             console.log("ERROR -- CallManager::placeCall. Unable to get user info for receiver: ", 
@@ -64,8 +61,8 @@ class CallManager extends EventEmitter {
             console.log("ERROR -- CallManager.tsx. Agora Channel name is length 0");
             return;
         }
-        this.isInitiator = false;
-        this.joinAgoraChannel(this.agoraChannelName);
+        this.isInitiator = false;        
+        this.agoraManager.joinChannel(this.agoraChannelName, this.isInitiator);
     }
 
     public declineCall() {        
@@ -88,13 +85,13 @@ class CallManager extends EventEmitter {
             }
             else if(this.partnerPhoneNumber.length == 0){
                 try{
-                    const userInfo = await getUserInfo(data.sender);
-                    this.partnerFirstName = userInfo.firstName;
-                    this.partnerLastName = userInfo.lastName;
+                    const parsedUserInfo = JSON.parse(data.message);                
+                    const callerFirstName = parsedUserInfo.firstName;
+                    const callerLastName = parsedUserInfo.lastName;
                     this.partnerPhoneNumber = data.sender;
-                    this.agoraChannelName = data.message
+                    this.agoraChannelName = parsedUserInfo.channel;
                     this.isInitiator = false;
-                    this.emit("callReceived", data.sender);
+                    this.emit("callReceived", data.sender, callerFirstName, callerLastName);
                 }
                 catch(error){
                     console.log("ERROR -- CallManager.onSignalReceived. Could not find user info for signaller: ", 
@@ -143,11 +140,7 @@ class CallManager extends EventEmitter {
         this.agoraManager.on('tokenWillExpire', ()=>{
             //TODO
         })                
-    }
-
-    private joinAgoraChannel = (channelName: string)=>{
-        this.agoraManager.joinChannel(channelName);                
-    }
+    }    
 
     private leaveAgoraChannel = ()=>{        
         this.agoraManager.leaveChannel();
