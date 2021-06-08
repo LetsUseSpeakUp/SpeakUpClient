@@ -17,9 +17,10 @@ export default function CallScreen({route, navigation}: any) {
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
     const userLastName = route.params.userLastName;
-    const callManager = useRef(new CallManager(userPhoneNumber, userFirstName, userLastName)); 
+    const callManager = useRef(new CallManager(userPhoneNumber, userFirstName, userLastName));     
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const convosContext = useContext(ConvosContext);
+    const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
     const _curDummyCount = useRef(0);
     
 
@@ -28,11 +29,15 @@ export default function CallScreen({route, navigation}: any) {
         if(convoToNavTo.length > 0){            
             navigation.navigate('Convos')            
         }    
-    }, [convosContext.convoToNavTo])
+    }, [convosContext.convoToNavTo])    
 
     useEffect(()=>{
         connectCallManagerListeners();        
     }, [])    
+
+    useEffect(()=>{
+        convosContextRef.current = convosContext;
+    }, [convosContext])
 
     const connectCallManagerListeners = ()=>{
         if(callManager.current === null){
@@ -54,8 +59,8 @@ export default function CallScreen({route, navigation}: any) {
             setCallState(CallState.Dialpad);
         })        
         callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
-            console.log("CallScreen. ConvoAdded: ", convoMetadata);
-            convosContext.addSingleConvoMetadata(convoMetadata);
+            console.log("CallScreen. ConvoAdded: ", convoMetadata , " Total convoMetadata: ", convosContextRef.current.allConvosMetadata);
+            convosContextRef.current.addSingleConvoMetadata(convoMetadata);
         })
     }
 

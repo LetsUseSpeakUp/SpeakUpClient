@@ -65,6 +65,8 @@ export default function App() {
   }, [convosMetadata])
 
   const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {
+    console.log("App::onAddSingleConvoMetadata. metadata: ", convosMetadata);
+
     console.log("App. onAddSingleConvoMetadata: ", singleConvoMetadata);
     convoToNavToBuffer.current = singleConvoMetadata.convoId;
     const newConvosMetadata = convosMetadata.concat(singleConvoMetadata);
@@ -72,6 +74,7 @@ export default function App() {
   }
 
   const onUpdateSingleConvoMetadataWithFetched = (singleConvoMetadata: ConvoMetadata) => { 
+    console.log("App::onUpdateSingleConvoMetadataWithFetched. metadata: ", convosMetadata);
     const updatedMetadata = convosMetadata.slice();
     updatedMetadata[updatedMetadata.findIndex((convo)=>convo.convoId === singleConvoMetadata.convoId)] = singleConvoMetadata;
     setConvosMetadata(updatedMetadata);
