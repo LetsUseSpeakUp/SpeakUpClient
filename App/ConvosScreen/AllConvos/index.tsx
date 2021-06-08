@@ -33,8 +33,10 @@ export default function AllConvos({route, navigation}: any) {
 }
 
 const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress: any }) => { //TODO: figure out typescript of onpress
-    const partnerFirstName = metadata.initiatorFirstName ? metadata.initiatorFirstName : metadata.receiverFirstName;
-    const partnerLastName = metadata.initiatorLastName ? metadata.initiatorLastName : metadata.receiverLastName;
+    const amIInitiator = (metadata.initiatorId != null && metadata.receiverId != null) ? (React.useContext(ConvosContext).myPhoneNumber === metadata.initiatorId) : 
+        metadata.initiatorFirstName === undefined;
+    const partnerFirstName = amIInitiator ? metadata.receiverFirstName: metadata.initiatorFirstName;
+    const partnerLastName = amIInitiator ? metadata.receiverLastName: metadata.initiatorLastName;
 
     return (        
         <TouchableOpacity onPress={onPress}>
