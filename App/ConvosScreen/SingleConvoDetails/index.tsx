@@ -8,14 +8,17 @@ import {RefreshControl, ScrollView} from 'react-native'
 export default function SingleConvoDetails({route, navigation}: any){
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
-    const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
+    const latestMetadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
+    const [metadata, setMetadata] = useState(latestMetadata);
     const [refreshing, setRefreshing] = useState(false);
 
     const fetchUpdatedConvoMetadata = ()=>{
         setRefreshing(true);
-        ConvosManager.fetchSingleConvoMetadata(convoId).then((fetchedConvoMetadata)=>{
+        ConvosManager.fetchSingleConvoMetadata(convoId).then((fetchedConvoMetadata)=>{            
             if(fetchedConvoMetadata == null) return;
+            console.log("SingleConvoDetails. Successfully fetched latest convo");
             if(metadata == null || areSingleConvoMetadatasDifferent(metadata, fetchedConvoMetadata)){
+                console.log("SingleConvoDetails: convos are different");
                 convosContext.updateSingleConvoMetadataWithFetched(fetchedConvoMetadata);
             }
         }).catch((error)=>{
@@ -29,6 +32,10 @@ export default function SingleConvoDetails({route, navigation}: any){
         fetchUpdatedConvoMetadata();
     }, [])
 
+    useEffect(()=>{
+        console.log("SingleConvoDetails::latestMetadata updated");
+        setMetadata(latestMetadata);
+    }, [latestMetadata])
 
     const downloadAudioFile = ()=>{
         ConvosManager.downloadConvo(convoId).then((filePath)=>{
@@ -45,7 +52,8 @@ export default function SingleConvoDetails({route, navigation}: any){
             <View><Text>ERROR: Could not find convo with convoId {convoId}. Please contact support.</Text></View>
         );
     }
-    const amIInitiator = metadata.initiatorFirstName === undefined;
+    const amIInitiator = (metadata.initiatorId != null && metadata.receiverId != null) ? (convosContext.myPhoneNumber === metadata.initiatorId) : 
+        metadata.initiatorFirstName === undefined;
     const partnerName = amIInitiator ? metadata.receiverFirstName + " " + metadata.receiverLastName :
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
@@ -55,6 +63,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
 
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
+
+    console.log("SingleConvoDetails. AmIInitiator: ", amIInitiator, " My phone number: ", convosContext.myPhoneNumber, " metadata: ", metadata);
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>}>
@@ -106,7 +116,6 @@ function areConvoStatusesDifferent(convoStatus1: ConvoStatus | undefined, convoS
     if(convoStatus2 == undefined){
         convoStatus2 = {initiatorResponse: ConvoResponseType.Unanswered, receiverResponse: ConvoResponseType.Unanswered};
     }
-    console.log("SingleConvoDetails. Convo1: ", convoStatus1, " Convo2: ", convoStatus2);
 
     if(convoStatus1.initiatorResponse !== convoStatus2.initiatorResponse) return true;
     if(convoStatus1.receiverResponse !== convoStatus2.receiverResponse) return true;

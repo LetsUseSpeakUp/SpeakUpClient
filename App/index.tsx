@@ -126,7 +126,7 @@ export default function App() {
     <ConvosContext.Provider value={{
       allConvosMetadata: convosMetadata, addSingleConvoMetadata: onAddSingleConvoMetadata,
       updateSingleConvoMetadataWithFetched: onUpdateSingleConvoMetadataWithFetched, convoToNavTo: convoToNavTo,
-      approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo
+      approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo, myPhoneNumber: userPhoneNumber
     }}>
       <NavigationContainer>
         <Tab.Navigator>

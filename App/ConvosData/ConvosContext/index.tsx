@@ -16,7 +16,8 @@ const dummyNavToNewRouteFunc = (newRoute: string)=>{}
 const ConvosContext = React.createContext({
     allConvosMetadata: [] as ConvoMetadata[],
     addSingleConvoMetadata: (singleMetadata: ConvoMetadata)=>{},
-    updateSingleConvoMetadataWithFetched: (singleMetadata: ConvoMetadata)=>{}, //Maybe delete this
+    updateSingleConvoMetadataWithFetched: (singleMetadata: ConvoMetadata)=>{},
+    myPhoneNumber: '',
     convoToNavTo: '',
     approveOrDenySingleConvo: (approveOrDeny: boolean, convoId: string)=>{},
     clearConvoToNavTo: ()=>{}
