@@ -113,7 +113,7 @@ const getStreamingURLOfConvo = function (convoId: string): string {
 }
 
 export const downloadConvo = async function (convoId: string){
-    const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + convoId;
+    const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + encodeURIComponent(convoId);
     const downloadPath = FileSystem.TemporaryDirectoryPath + Date.now() + '.aac';
     
     return RNFetchBlob.config({
