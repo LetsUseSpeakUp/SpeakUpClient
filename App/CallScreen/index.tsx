@@ -59,7 +59,7 @@ export default function CallScreen({route, navigation}: any) {
             setCallState(CallState.Dialpad);
         })        
         callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
-            console.log("CallScreen. ConvoAdded: ", convoMetadata , " Total convoMetadata: ", convosContextRef.current.allConvosMetadata);
+            console.log("CallScreen. ConvoAdded.");
             convosContextRef.current.addSingleConvoMetadata(convoMetadata);
         })
     }

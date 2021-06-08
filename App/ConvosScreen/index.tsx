@@ -14,7 +14,6 @@ export default function ConvosScreen({route, navigation}: any) {
   useEffect(()=>{
     const convoToNavTo = convosContext.convoToNavTo;
     if(convoToNavTo.length > 0){
-      console.log("ConvosScreen: convoToNavTo. Metadata: ", convosContext.allConvosMetadata);
       convosContext.clearConvoToNavTo();      
       navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}}); 
     }

@@ -8,8 +8,7 @@ import {RefreshControl, ScrollView} from 'react-native'
 export default function SingleConvoDetails({route, navigation}: any){
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
-    const latestMetadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);
-    const [metadata, setMetadata] = useState(latestMetadata);
+    const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
     const [refreshing, setRefreshing] = useState(false);
 
     const fetchUpdatedConvoMetadata = ()=>{
@@ -31,11 +30,6 @@ export default function SingleConvoDetails({route, navigation}: any){
     useEffect(()=>{
         fetchUpdatedConvoMetadata();
     }, [])
-
-    useEffect(()=>{
-        console.log("SingleConvoDetails::latestMetadata updated");
-        setMetadata(latestMetadata);
-    }, [latestMetadata])
 
     const downloadAudioFile = ()=>{
         ConvosManager.downloadConvo(convoId).then((filePath)=>{
@@ -63,8 +57,6 @@ export default function SingleConvoDetails({route, navigation}: any){
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
 
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
-
-    console.log("SingleConvoDetails. AmIInitiator: ", amIInitiator, " My phone number: ", convosContext.myPhoneNumber, " metadata: ", metadata);
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>}>
@@ -91,7 +83,7 @@ function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefin
     if(approvalStatus === ConvoResponseType.Unanswered) return "Unanswered";
     if(approvalStatus === undefined) return "Unanswered";
 
-    console.log("ERROR -- SingleConvoDetails::convertApprovalStatusToText. Uknown approval status: ", approvalStatus);
+    console.log("ERROR -- SingleConvoDetails::convertApprovalStatusToText. Unknown approval status: ", approvalStatus);
     return "ERROR";
 }
 

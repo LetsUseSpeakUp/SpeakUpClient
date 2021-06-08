@@ -13,6 +13,7 @@ import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
   'Non-serializable values were found in the navigation state',
+  'Sending \`onAnimatedValueUpdate\` with no listeners registered.'
 ]);
 
 const Tab = createBottomTabNavigator();
@@ -65,16 +66,12 @@ export default function App() {
   }, [convosMetadata])
 
   const onAddSingleConvoMetadata = (singleConvoMetadata: ConvoMetadata) => {
-    console.log("App::onAddSingleConvoMetadata. metadata: ", convosMetadata);
-
-    console.log("App. onAddSingleConvoMetadata: ", singleConvoMetadata);
     convoToNavToBuffer.current = singleConvoMetadata.convoId;
     const newConvosMetadata = convosMetadata.concat(singleConvoMetadata);
     setConvosMetadata(newConvosMetadata);
   }
 
   const onUpdateSingleConvoMetadataWithFetched = (singleConvoMetadata: ConvoMetadata) => { 
-    console.log("App::onUpdateSingleConvoMetadataWithFetched. metadata: ", convosMetadata);
     const updatedMetadata = convosMetadata.slice();
     updatedMetadata[updatedMetadata.findIndex((convo)=>convo.convoId === singleConvoMetadata.convoId)] = singleConvoMetadata;
     setConvosMetadata(updatedMetadata);
@@ -111,7 +108,6 @@ export default function App() {
       newMetadata[i].convoStatus = newConvoStatus;
     }
 
-    console.log("App::onApproveOrDenySingleConvo. Metadata: ", convosMetadata);
     setConvosMetadata(newMetadata);
   }
 
