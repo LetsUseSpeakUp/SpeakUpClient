@@ -9,6 +9,11 @@ import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
+  'Non-serializable values were found in the navigation state',
+]);
 
 const Tab = createBottomTabNavigator();
 
