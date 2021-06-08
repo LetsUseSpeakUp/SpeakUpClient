@@ -87,8 +87,8 @@ const convertSingleFetchedMetadataToConvoMetadata = (singleFetchedMetadata: any)
     };
 
     const metadata: ConvoMetadata = {
-        initiatorId: singleFetchedMetadata.initiator_phone_number,
-        receiverId: singleFetchedMetadata.receiver_phone_number,
+        initiatorId: singleFetchedMetadata.initiator_phone_number ?? singleFetchedMetadata.initiator_number,
+        receiverId: singleFetchedMetadata.receiver_phone_number ?? singleFetchedMetadata.receiver_number,
         convoId: singleFetchedMetadata.convo_id ?? singleFetchedMetadata.id,
         timestampStarted: singleFetchedMetadata.timestamp_of_start,
         convoLength: singleFetchedMetadata.length,
@@ -163,9 +163,12 @@ export const denyConvo = function (convoId: string, userId: string) {
 export const fetchSingleConvoMetadata = async function(convoId: string){
     const fetchStatusEndpoint = SERVERENDPOINT + "/convos/getmetadata/singleconvo";
     const formData = new FormData();
-    formData.append('convoId', convoId);
+    formData.append('convoId', convoId);    
+    const rawFetchedMetadata = await postFormDataToEndpoint(formData, fetchStatusEndpoint);
+    const processedFetchedMetadata = convertSingleFetchedMetadataToConvoMetadata(rawFetchedMetadata);
+    console.log("ConvosManager::fetchSingleConvoMetadata. Raw: ", rawFetchedMetadata, "|Processed: ", processedFetchedMetadata);
 
-    return convertSingleFetchedMetadataToConvoMetadata(await postFormDataToEndpoint(formData, fetchStatusEndpoint));
+    return processedFetchedMetadata;
 }
 
 const postFormDataToEndpoint = async function (formData: FormData, serverEndpoint: string) {
