@@ -70,9 +70,9 @@ export const getChannelToken = async function(channelName: string, isInitiator: 
  * "only give me the changes since I last queried". But that's way down the line.
  * @param userId 
  */
-export const fetchLatestConvosMetadataForUser = async (userId: string) => {
+export const fetchLatestConvosMetadataForUser = async () => {
     try {
-        const metadataJson = await fetchAllMetadataForUserFromServer(userId);
+        const metadataJson = await fetchAllMetadataForUserFromServer();
         const metadataAsInitiator = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
         const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
         return metadataAsInitiator.concat(metadataAsReceiver);
@@ -115,10 +115,9 @@ const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[]) => {
  * Returns a promise of the response converted to json. Caller should handle errors
  * @param userId 
  */
-const fetchAllMetadataForUserFromServer = async function (userId: string) {
+const fetchAllMetadataForUserFromServer = async function () {
     const getMetadataEndpoint = SERVERENDPOINT + "/convos/getmetadata/allforuser";
-    const formData = new FormData();
-    formData.append('phoneNumber', userId);
+    const formData = new FormData();    
     return postFormDataToEndpoint(formData, getMetadataEndpoint);
 }
 
@@ -190,6 +189,9 @@ const postFormDataToEndpoint = async function (formData: FormData, serverEndpoin
         },
         body: formData
     });
+    if(response.status !== 200 && response.status !== 404 && response.status !== 400 && response.status !== 500)
+        throw 'unknown HTTP error. Status: ' + response.status;
+
     if (response.status === 404) throw ('404 error: ' + response.statusText);
 
     const json = await response.json();

@@ -29,7 +29,7 @@ export default function App() {
       if (convosMetadata.length > 0) {
         console.log("ERROR -- App. Phone number was changed after fetching convosMetadata. New number: ", userPhoneNumber);
       }
-      ConvosManager.fetchLatestConvosMetadataForUser(userPhoneNumber).then((metadata: any) => {
+      ConvosManager.fetchLatestConvosMetadataForUser().then((metadata: any) => {
         setConvosMetadata(metadata);
       })
     }
