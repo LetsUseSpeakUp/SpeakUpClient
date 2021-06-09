@@ -1,11 +1,13 @@
 import React from 'react';
 import { ConvoMetadata } from '../../ConvosData/ConvosManager'
+import * as ConvosManager from '../../ConvosData/ConvosManager'
 import { FlatList, StyleSheet, View, Text, TouchableOpacity, ListRenderItem } from 'react-native';
 import ConvosContext from '../../ConvosData/ConvosContext'
 
 export default function AllConvos({route, navigation}: any) {
     const convosContext = React.useContext(ConvosContext);
     const convosMetadata = convosContext.allConvosMetadata;
+    convosMetadata.sort((a, b)=> b.timestampStarted - a.timestampStarted);
 
     const onConvoPressed = (convoId: string) => {                
         navigation.navigate('Convo Details', {convoId: convoId})
@@ -42,7 +44,7 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
         <TouchableOpacity onPress={onPress}>
             <View style={styles.item}>
                 <Text style={styles.itemText}>
-                    {metadata.convoId + " with: " + partnerFirstName + " " + partnerLastName}
+                    {ConvosManager.getFormattedTimeFromTimestamp(metadata.timestampStarted) + " with " + partnerFirstName + " " + partnerLastName}
                 </Text>
             </View>
         </TouchableOpacity>

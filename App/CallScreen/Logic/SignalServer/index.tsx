@@ -42,12 +42,9 @@ class SignalServer extends EventEmitter{
             sender: myPhoneNumber,
             message: agoraChannel
             // message: JSON.stringify({channel: agoraChannel, firstName: myFirstName, lastName: myLastName})
-        }
-
-        console.log('SignalServer::sendSignal. Data: ', data);
-
+        }        
         
-        console.log("SignalServer::sendSignal. Receiver: ", receiverPhoneNumber);
+        console.log("SignalServer::sendSignal. Receiver: ", receiverPhoneNumber, " data: ", data);
         this.signalHub.broadcast(receiverPhoneNumber, data);
     }
 

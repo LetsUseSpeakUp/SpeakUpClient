@@ -51,7 +51,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const partnerName = amIInitiator ? metadata.receiverFirstName + " " + metadata.receiverLastName :
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
-    const dateTime = metadata.timestampStarted ? getFormattedTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
+    const dateTime = metadata.timestampStarted ? ConvosManager.getFormattedTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
     const convoLength = metadata.convoLength ? metadata.convoLength + " milliseconds" : 'Loading'; //TODO: Get formatted time
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
@@ -111,18 +111,6 @@ function areConvoStatusesDifferent(convoStatus1: ConvoStatus | undefined, convoS
     if(convoStatus1.initiatorResponse !== convoStatus2.initiatorResponse) return true;
     if(convoStatus1.receiverResponse !== convoStatus2.receiverResponse) return true;
     return false;
-}
-
-function getFormattedTimeFromTimestamp(timestamp: number): string{
-    const date = new Date(timestamp);
-    const hours = date.getHours();
-    const minutes = "0" + date.getMinutes();
-    const seconds = "0" + date.getSeconds();    
-    const month = date.getMonth() + 1; //0 indexed
-
-    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    const formattedDate = month + "/" + date.getDate() + "/" + date.getFullYear();
-    return formattedTime + " " + formattedDate;
 }
 
 function getFormattedTimeFromMs(timeInMs: number): string{

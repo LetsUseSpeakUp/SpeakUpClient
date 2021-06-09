@@ -5,7 +5,6 @@ import SingleConvoDetails from './SingleConvoDetails';
 import ConvosContext from '../ConvosData/ConvosContext'
 import ConvoPlayer from './ConvoPlayer'
 
-
 export default function ConvosScreen({route, navigation}: any) {  
   const Stack = createStackNavigator();
   const convosContext = React.useContext(ConvosContext);
