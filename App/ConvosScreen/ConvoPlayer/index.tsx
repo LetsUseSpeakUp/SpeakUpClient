@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, Image, TextInput, SafeAreaView, TouchableOpacity, Button } from "react-native";
 import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
+import Clipboard from '@react-native-clipboard/clipboard';
+
 
 export default function ConvoPlayer({route}: any) {
     
@@ -61,7 +63,7 @@ export default function ConvoPlayer({route}: any) {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 20 }}>
+        <SafeAreaView style={{ flex: 1, alignItems: 'stretch', paddingHorizontal: 20, marginTop: 30 }}>
             <Slider
                 onSlidingStart={() => { setSeekingInProgress(true) }}
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
@@ -71,6 +73,22 @@ export default function ConvoPlayer({route}: any) {
             <Text>Track Position: {trackPlayerProgress.position}</Text>
             <Text>Track Duration: {trackPlayerProgress.duration}</Text>
             <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} />
+            <View style={{flexDirection: 'row', paddingTop: 10, }}>
+                <Text>Snippet Start: 0</Text>
+                <Button title={'Set'}/>
+            </View>
+            <View style={{flexDirection: 'row', paddingTop: 10}}>
+                <Text>Snippet End: 0</Text>
+                <Button title={'Set'}/>
+            </View>
+            <View style={{flexDirection: 'row', paddingTop: 10}}>
+                <Text>Description:</Text>
+                <TextInput placeholder="Number to call" onChangeText={()=>{}} style={{borderWidth: 1, height: 50, width: 250}}/>
+            </View>
+            <Button title={'Generate Snippet'}/>
+            <Text>Snippet Link:</Text>
+            <Button title={'Copy'} onPress={()=>{Clipboard.setString('sample snippet link')}}/>                                    
+            
         </SafeAreaView>
 
     )
@@ -80,10 +98,6 @@ async function addLocalTrackToPlayer(filePath: string){
     await TrackPlayer.add({
         id: Date.now() + "",
         url: 'file:///' + filePath ,
-        // url: 'http://localhost:8080/snippet?start=0&end=10',
-        // url: 'https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav',
-        // url: 'http://localhost:3999/convos/retrieve?convoId=16225102520581',
-        // url: 'http://localhost:3999/convos/retrieve?convoId=16225102520581',
         title: 'Convo',
         artist: 'SpeakUp'    
     });
