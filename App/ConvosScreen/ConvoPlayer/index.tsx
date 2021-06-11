@@ -67,13 +67,17 @@ export default function ConvoPlayer({route}: any) {
     }
 
     const setSnippetStartToCurrent = ()=>{
-        console.log("setSnippetStartToCurrent. Slider val: ", sliderValue);
-        setSnippetStart(sliderValue);
-        //TODO
+        const newStart = sliderValue;
+        setSnippetStart(newStart);        
+        if(newStart > snippetEnd)
+            setSnippetEnd(trackPlayerProgress.duration);
     }
 
     const setSnippetEndToCurrent = ()=>{
-        //TODO
+        const newEnd = sliderValue;
+        setSnippetEnd(newEnd);
+        if(newEnd < snippetStart)
+            setSnippetStart(0);
     } 
 
     const generateSnippet = ()=>{ //TODO: use activityIndicator
