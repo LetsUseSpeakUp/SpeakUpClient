@@ -3,7 +3,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {getAuthenticationToken} from '../../AuthLogic'
 
 // const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
-const SERVERENDPOINT = "https://backend.letsusespeakup.com";
+const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";
 
 export type ConvoMetadata = {
     initiatorId: string,
