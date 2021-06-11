@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, SafeAreaView, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Button } from "react-native";
 import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
@@ -11,6 +11,11 @@ export default function ConvoPlayer({route}: any) {
     
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
+    const [snippetStart, setSnippetStart] = useState(0);
+    const [snippetEnd, setSnippetEnd] = useState(1);
+    const [snippetDescription, setSnippetDescription] = useState('');
+    const [snippetLink, setSnippetLink] = useState('Click generate');
+    const [loadingSnippet, setLoadingSnippet] = useState(false);
     const playbackState = usePlaybackState();
     const trackPlayerProgress = useTrackPlayerProgress(100);
 
@@ -19,10 +24,13 @@ export default function ConvoPlayer({route}: any) {
     useEffect(()=>{
         if(audioFilePath.length > 0){
             TrackPlayer.reset().then(()=>{
-                addLocalTrackToPlayer(audioFilePath);
-            })            
+                return addLocalTrackToPlayer(audioFilePath);                
+            }).then(()=>{
+                setSnippetStart(0);
+                setSnippetEnd(trackPlayerProgress.duration);
+            })   
         }        
-    }, [audioFilePath])
+    }, [audioFilePath])    
 
     useEffect(() => {
         if (!seekingInProgress)
@@ -30,16 +38,12 @@ export default function ConvoPlayer({route}: any) {
     }, [trackPlayerProgress.position]);
 
     useTrackPlayerEvents([TrackPlayerEvents.PLAYBACK_STATE], (event) => {
-        console.log("ConvoPlayer::useTrackPlayerEvents 1. Event: ", event, " Audio file: ", audioFilePath);
         if (event.state === TrackPlayer.STATE_PLAYING) {
             if (trackPlayerProgress.position >= trackPlayerProgress.duration * .99) {
-                console.log("ConvoPlayer::useTrackPlayerEvents. Seek to 0");
                 TrackPlayer.seekTo(0);
             }
-            console.log("ConvoPlayer::useTrackPlayerEvents. Play.");
             TrackPlayer.play();
         } else {
-            console.log("ConvoPlayer::useTrackPlayerEvents. Pause");
             TrackPlayer.pause();
         }
     });
@@ -49,7 +53,6 @@ export default function ConvoPlayer({route}: any) {
             TrackPlayer.pause();
         }
         else {
-            console.log("Play/pause. Position: ", trackPlayerProgress.position, " duration: ", trackPlayerProgress.duration * .99);
             if (trackPlayerProgress.position >= trackPlayerProgress.duration * .99) {
                 TrackPlayer.seekTo(0);
             }
@@ -57,9 +60,24 @@ export default function ConvoPlayer({route}: any) {
         }
     }
 
-    const setSlidingCompleteVal = (sliderVal: number) => {
-        TrackPlayer.seekTo(sliderVal);
+    const setSlidingCompleteVal = (sliderCompleteVal: number) => {
+        TrackPlayer.seekTo(sliderCompleteVal);
         setSeekingInProgress(false);
+        setSliderValue(sliderCompleteVal);
+    }
+
+    const setSnippetStartToCurrent = ()=>{
+        console.log("setSnippetStartToCurrent. Slider val: ", sliderValue);
+        setSnippetStart(sliderValue);
+        //TODO
+    }
+
+    const setSnippetEndToCurrent = ()=>{
+        //TODO
+    } 
+
+    const generateSnippet = ()=>{ //TODO: use activityIndicator
+        //TODO
     }
 
     return (
@@ -69,24 +87,26 @@ export default function ConvoPlayer({route}: any) {
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
                 value={sliderValue}
                 maximumValue={trackPlayerProgress.duration}
+                onValueChange={(newValue)=>{                    
+                    if(playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)}}
             />
-            <Text>Track Position: {trackPlayerProgress.position}</Text>
+            <Text>Track Position: {playbackState === TrackPlayer.STATE_PLAYING ? trackPlayerProgress.position : sliderValue}</Text>
             <Text>Track Duration: {trackPlayerProgress.duration}</Text>
             <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} />
             <View style={{flexDirection: 'row', paddingTop: 10, }}>
-                <Text>Snippet Start: 0</Text>
-                <Button title={'Set'}/>
+                <Text>Snippet Start: {snippetStart}</Text>
+                <Button title={'Set'} onPress={setSnippetStartToCurrent}/>
             </View>
             <View style={{flexDirection: 'row', paddingTop: 10}}>
-                <Text>Snippet End: 0</Text>
-                <Button title={'Set'}/>
+                <Text>Snippet End: {snippetEnd}</Text>
+                <Button title={'Set'} onPress={setSnippetEndToCurrent}/>
             </View>
             <View style={{flexDirection: 'row', paddingTop: 10}}>
-                <Text>Description:</Text>
-                <TextInput placeholder="Number to call" onChangeText={()=>{}} style={{borderWidth: 1, height: 50, width: 250}}/>
+                <Text>Title:</Text>
+                <TextInput placeholder="Describe this snippet" onChangeText={(text)=>{setSnippetDescription(text)}} style={{borderWidth: 1, height: 50, width: 250}}/>
             </View>
-            <Button title={'Generate Snippet'}/>
-            <Text>Snippet Link:</Text>
+            <Button title={'Generate Snippet'} onPress={generateSnippet}/>
+            <Text>Snippet Link: {snippetLink}</Text>
             <Button title={'Copy'} onPress={()=>{Clipboard.setString('sample snippet link')}}/>                                    
             
         </SafeAreaView>
