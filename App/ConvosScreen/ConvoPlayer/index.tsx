@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Button } from "react-native";
 import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
+import {getMyUserInfo} from '../../AuthLogic'
 import Slider from '@react-native-community/slider';
 import Clipboard from '@react-native-clipboard/clipboard';
+import * as ConvosManager from '../../ConvosData/ConvosManager'
 
 
 export default function ConvoPlayer({route}: any) {
@@ -14,12 +16,14 @@ export default function ConvoPlayer({route}: any) {
     const [snippetStart, setSnippetStart] = useState(0);
     const [snippetEnd, setSnippetEnd] = useState(1);
     const [snippetDescription, setSnippetDescription] = useState('');
-    const [snippetLink, setSnippetLink] = useState('Click generate');
+    const [snippetLink, setSnippetLink] = useState('Generate your snippet');
     const [loadingSnippet, setLoadingSnippet] = useState(false);
     const playbackState = usePlaybackState();
     const trackPlayerProgress = useTrackPlayerProgress(100);
 
     const audioFilePath = route.params.audioFilePath;
+    const convoId = route.params.convoId;
+    const firstName = route.params.firstName;    
 
     useEffect(()=>{
         if(audioFilePath.length > 0){
@@ -80,8 +84,10 @@ export default function ConvoPlayer({route}: any) {
             setSnippetStart(0);
     } 
 
-    const generateSnippet = ()=>{ //TODO: use activityIndicator
-        //TODO
+    const generateSnippet = ()=>{
+        setLoadingSnippet(true); 
+        //TODO 
+        // ConvosManager.generateSnippetLink(convoId)      
     }
 
     return (
@@ -107,10 +113,12 @@ export default function ConvoPlayer({route}: any) {
             </View>
             <View style={{flexDirection: 'row', paddingTop: 10}}>
                 <Text>Title:</Text>
-                <TextInput placeholder="Describe this snippet" onChangeText={(text)=>{setSnippetDescription(text)}} style={{borderWidth: 1, height: 50, width: 250}}/>
+                <TextInput placeholder="Describe this snippet" onChangeText={(text)=>{setSnippetDescription(text)}} 
+                    style={{borderWidth: 1, height: 50, width: 250}} defaultValue={'Snippet from ' + firstName}/>
             </View>
             <Button title={'Generate Snippet'} onPress={generateSnippet}/>
-            <Text>Snippet Link: {snippetLink}</Text>
+            <Text>Snippet Link: {loadingSnippet ? 'Generating...' : snippetLink}</Text>
+            {loadingSnippet && <ActivityIndicator/>}
             <Button title={'Copy'} onPress={()=>{Clipboard.setString('sample snippet link')}}/>                                    
             
         </SafeAreaView>

@@ -83,6 +83,7 @@ export const getMyUserInfo = async()=>{
     }
     catch(error){
         console.log("ERROR -- AuthLogic::getPhoneNumber: ", error);
+        return {firstName: 'Speakup User', lastName: '', phoneNumber: ''};
     }
 }
 

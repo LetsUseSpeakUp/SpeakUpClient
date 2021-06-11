@@ -135,7 +135,15 @@ export const downloadConvo = async function (convoId: string){
     })        
 }
 
-const getSnippetURLOfConvo = function (convoId: string, startTimestamp: number, endTimestamp: number): string {
+/**
+ * Returns a URL
+ * @param convoId 
+ * @param startTimestamp 
+ * @param endTimestamp 
+ * @param description 
+ * @returns 
+ */
+export const generateSnippetLink = async function (convoId: string, startTimestamp: number, endTimestamp: number, description: string): string {
     //TODO
     return "";
 }

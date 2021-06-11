@@ -34,7 +34,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const downloadAudioFile = ()=>{
         ConvosManager.downloadConvo(convoId).then((filePath)=>{
             console.log("SingleConvoDetail::downloadAudioFile. File downloaded: ", filePath);
-            navigation.navigate('Convo Player', {audioFilePath: filePath});
+            const firstName = amIInitiator ? metadata?.initiatorFirstName : metadata?.receiverFirstName;
+            navigation.navigate('Convo Player', {audioFilePath: filePath, convoId: convoId, firstName: firstName});
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetail::downloadAudioFile: ", error);
         })
