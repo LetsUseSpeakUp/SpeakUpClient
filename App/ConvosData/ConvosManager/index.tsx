@@ -143,9 +143,21 @@ export const downloadConvo = async function (convoId: string){
  * @param description 
  * @returns 
  */
-export const generateSnippetLink = async function (convoId: string, startTimestamp: number, endTimestamp: number, description: string): string {
-    //TODO
-    return "";
+export const generateSnippetLink = async function (convoId: string, startTimestamp: number, endTimestamp: number, description: string): Promise<string> {
+    const generateSnippetEndpoint = SERVERENDPOINT + '/convos/addsnippet';
+    const formData = new FormData();
+    formData.append('convoId', convoId);
+    formData.append('snippetStart', startTimestamp.toString());
+    formData.append('snippetEnd', endTimestamp.toString());
+    formData.append('snippetDescription', description);
+
+    const response = await postFormDataToEndpoint(formData, generateSnippetEndpoint);
+    if(!response.snippetLink){
+        throw 'bad response'
+    }
+    else{
+        return  response.snippetLink;
+    }
 }
 
 export const approveConvo = function (convoId: string, userId: string) {

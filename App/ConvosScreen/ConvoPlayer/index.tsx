@@ -86,8 +86,17 @@ export default function ConvoPlayer({route}: any) {
 
     const generateSnippet = ()=>{
         setLoadingSnippet(true); 
-        //TODO 
-        // ConvosManager.generateSnippetLink(convoId)      
+        ConvosManager.generateSnippetLink(convoId, snippetStart, snippetEnd, snippetDescription)
+            .then((snippetUrl)=>{
+                setSnippetLink(snippetUrl);
+            })
+            .catch((error)=>{
+                console.log("")
+                setSnippetLink('Error - unable to generate snippet');
+            })
+            .finally(()=>{
+                setLoadingSnippet(false);
+            });        
     }
 
     return (
@@ -119,7 +128,7 @@ export default function ConvoPlayer({route}: any) {
             <Button title={'Generate Snippet'} onPress={generateSnippet}/>
             <Text>Snippet Link: {loadingSnippet ? 'Generating...' : snippetLink}</Text>
             {loadingSnippet && <ActivityIndicator/>}
-            <Button title={'Copy'} onPress={()=>{Clipboard.setString('sample snippet link')}}/>                                    
+            <Button title={'Copy'} onPress={()=>{Clipboard.setString(snippetLink)}}/>                                    
             
         </SafeAreaView>
 
