@@ -144,6 +144,9 @@ export const downloadConvo = async function (convoId: string){
  * @returns 
  */
 export const generateSnippetLink = async function (convoId: string, startTimestamp: number, endTimestamp: number, description: string): Promise<string> {
+    startTimestamp = parseFloat(startTimestamp.toFixed(1));
+    endTimestamp = parseFloat(endTimestamp.toFixed(1));
+    
     const generateSnippetEndpoint = SERVERENDPOINT + '/convos/addsnippet';
     const formData = new FormData();
     formData.append('convoId', convoId);
