@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { SignalServer, MessageType, SignalServerData } from './SignalServer'
+import { SignalServer, SignalServerInstance, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
 import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
 
@@ -17,28 +17,32 @@ import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
 class CallManager extends EventEmitter {
 
     signalServer: SignalServer
-    myPhoneNumber: string
-    myFirstName: string
-    myLastName: string
-    partnerPhoneNumber: string        
-    agoraChannelName: string
+    myPhoneNumber: string = ''
+    myFirstName: string = ''
+    myLastName: string = ''
+    partnerPhoneNumber: string = ''
+    agoraChannelName: string = ''
     agoraManager: AgoraManager
     isInitiator = false
     convoMetadata: ConvoMetadata | undefined
 
-    constructor(myPhoneNumber: string, myFirstName: string, myLastName: string) {
+    constructor(){
         super();
+        console.log("CallManager::constructor");
+        this.agoraManager = new AgoraManager();
+        this.signalServer = SignalServerInstance;
+        this.setupAgoraManagerListeners();
+    }
 
+    initialize(myPhoneNumber: string, myFirstName: string, myLastName: string) {        
+        console.log("CallManager::initialize");
         this.myPhoneNumber = myPhoneNumber;
         this.myFirstName = myFirstName;
         this.myLastName = myLastName;
         this.partnerPhoneNumber = "";                
         this.agoraChannelName = "";
-        this.signalServer = new SignalServer();
-        this.setupSignalServer(myPhoneNumber);
-        this.agoraManager = new AgoraManager();
-        this.setupAgoraManagerListeners();
-
+        
+        this.setupSignalServer(myPhoneNumber);                
     }
 
     public async placeCall(receiverPhoneNumber: string) {
@@ -199,4 +203,4 @@ class CallManager extends EventEmitter {
     }
 }
 
-export { CallManager }
+export const CallManagerInstance = new CallManager();

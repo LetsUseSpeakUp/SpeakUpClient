@@ -27,10 +27,12 @@ const APPID = 'cf3e232f50ad4d608ff97081a9ce8b72';
 
 class SignalServer extends EventEmitter{
     private readonly client: RtmEngine;
+    initialized = false;
 
     
     constructor(){
         super();
+        console.log("SignalServer constructor");
         this.client = new RtmEngine();
     }    
 
@@ -59,6 +61,11 @@ class SignalServer extends EventEmitter{
     }
 
     async listenForMyPhoneNumber(myPhoneNumber: string){
+        if(this.initialized){
+            console.log("SignalServer::listenForMyPhoneNumber. Already initialized. Doing nothing");
+            return;
+        }
+        this.initialized = true;
         this.setupRtmListeners();
         await this.client.createClient(APPID);
         try{
@@ -72,17 +79,16 @@ class SignalServer extends EventEmitter{
         catch(error){
             console.log("SignalServer::listenForMyPhoneNumber: ", error);
         }
-        
     }    
 
     private setupRtmListeners(){
-        this.client.on('connectionStateChanged', ()=>{
-            console.log("Connection state changed: ");
+        this.client.on('connectionStateChanged', (event)=>{
+            console.log("SignalServer -- Connection state changed: ", event);
         })
-        // this.client.on('messageReceived', (event)=>{
-        //     const {text} = event;
-        //     console.log("SignalServer received Message: ", text); 
-        // })
+        this.client.on('messageReceived', (event)=>{
+            const {text} = event;
+            console.log("SignalServer received Message: ", text); 
+        })
         //TODO
         // console.log("SignalServer::listenForMyPhoneNumber. My phone number: ", myPhoneNumber);
         // this.signalHub.subscribe(myPhoneNumber)
@@ -94,5 +100,7 @@ class SignalServer extends EventEmitter{
     }
 }
 
-export { SignalServer, MessageType };
+export const SignalServerInstance = new SignalServer();
+
+export {SignalServer, MessageType };
 export type { SignalServerData };
