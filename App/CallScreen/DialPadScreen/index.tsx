@@ -6,9 +6,10 @@ export default function DialPadScreen(props: any){
 
     return(
         <View style={styles.container}>            
-            <Text>Your phone number: {props.userPhoneNumber}</Text>
+            {/* <Text>Your phone number: {props.userPhoneNumber}</Text> */}
             <Text>Enter number to call</Text>
-            <TextInput placeholder="Number to call" onChangeText={text=>setReceiverPhoneNumber(text)} style={{borderWidth: 1, height: 50, width: 200}}></TextInput>            
+            <TextInput placeholder="Number to call" onChangeText={text=>setReceiverPhoneNumber('+1'+text)} 
+                style={{borderWidth: 1, height: 50, width: 200}} keyboardType='number-pad'></TextInput>            
             <Button title={"Call"} onPress={()=>{props.onCallPlaced(receiverPhoneNumber)}}></Button>               
         </View>
         )
