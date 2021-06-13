@@ -66,7 +66,7 @@ class SignalServer extends EventEmitter{
             return;
         }
         this.initialized = true;
-        this.setupRtmListeners();
+        this.setupRtm();
         await this.client.createClient(APPID);
         try{
             const rtmToken = await getRtmToken();
@@ -81,7 +81,7 @@ class SignalServer extends EventEmitter{
         }
     }    
 
-    private setupRtmListeners(){
+    private setupRtm(){
         this.client.on('connectionStateChanged', (event)=>{
             console.log("SignalServer -- Connection state changed: ", event);
         })
@@ -97,6 +97,11 @@ class SignalServer extends EventEmitter{
             console.log("SignalServer received Message: ", signalServerData); 
             this.emit(signalServerData.type, signalServerData);
         })
+
+        const RTMRENEWALTIME = 1000*60*60;
+        setInterval(async ()=>{            
+            this.client.renewToken(await getRtmToken()).then(()=>{console.log("SignalServer. Renewed rtm token.")});
+        }, RTMRENEWALTIME)
     }
 }
 
