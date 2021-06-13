@@ -48,6 +48,18 @@ export const getChannelToken = async function(channelName: string, isInitiator: 
     return response.token;        
 }
 
+export const getRtmToken = async function(){
+    const rtmEndpoint = SERVERENDPOINT + '/tokens/getrtmtoken'
+    const serverResponse = await fetch(rtmEndpoint, {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + await getAuthenticationToken()
+        }
+    });
+    const responseJson = await serverResponse.json();
+    return responseJson.token;  
+}
+
 /**
  * The reason we fetch from the server instead of from disk
  * is because partner may change the approval status. Then the 
@@ -120,7 +132,7 @@ export const downloadConvo = async function (convoId: string){
     const downloadConvoEndpoint = SERVERENDPOINT + '/convos/retrieve?convoId=' + encodeURIComponent(convoId);
     const downloadPath = FileSystem.TemporaryDirectoryPath + Date.now() + '.aac';
     
-    return RNFetchBlob.config({
+    return RNFetchBlob.config({ //TODO: Refactor into its own method
         path: downloadPath
     }).fetch('GET', downloadConvoEndpoint, {Authorization: 'Bearer ' + await getAuthenticationToken()}).then((res)=>{
         const status = res.info().status;
@@ -145,7 +157,7 @@ export const downloadConvo = async function (convoId: string){
  */
 export const generateSnippetLink = async function (convoId: string, startTimestamp: number, endTimestamp: number, description: string): Promise<string> {
     startTimestamp = parseFloat(startTimestamp.toFixed(1));
-    endTimestamp = parseFloat(endTimestamp.toFixed(1));
+    endTimestamp = parseFloat(endTimestamp.toFixed(1));    
     
     const generateSnippetEndpoint = SERVERENDPOINT + '/convos/addsnippet';
     const formData = new FormData();

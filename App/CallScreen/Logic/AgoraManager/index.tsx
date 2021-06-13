@@ -53,7 +53,7 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine.enableAudio();
     }
 
-    public async joinChannel(channelName: string, isInitiator: boolean) {
+    public async joinChannel(channelName: string, isInitiator: boolean) {        
         if (this.connectionState === ConnectionState.Connected) {
             console.log("ERROR. AgoraManager::joinChannel. connection state == connected");
         }
