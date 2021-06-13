@@ -27,8 +27,13 @@ class CallManager extends EventEmitter {
     convoMetadata: ConvoMetadata | undefined
 
     constructor(){
-        super();
+        super();        
         console.log("CallManager::constructor");
+        this.myPhoneNumber = "";
+        this.myFirstName = "";
+        this.myLastName = "";
+        this.partnerPhoneNumber = "";                
+        this.agoraChannelName = "";
         this.agoraManager = new AgoraManager();
         this.signalServer = SignalServerInstance;
         this.setupAgoraManagerListeners();
@@ -60,8 +65,8 @@ class CallManager extends EventEmitter {
         }
     }
 
-    public acceptCall() {
-        if(this.agoraChannelName.length == 0){
+    public acceptCall() {        
+        if(this.agoraChannelName.length === 0){
             console.log("ERROR -- CallManager.tsx. Agora Channel name is length 0");
             return;
         }
@@ -90,11 +95,16 @@ class CallManager extends EventEmitter {
             else if(this.partnerPhoneNumber.length == 0){
                 try{
                     const parsedUserInfo = JSON.parse(data.message);                
+                    if(parsedUserInfo.channel == null){
+                        console.log("ERROR -- CallManager. Signal received in wrong format. Data: ", data);
+                        return;
+                    }
+
                     const callerFirstName = parsedUserInfo.firstName;
                     const callerLastName = parsedUserInfo.lastName;
                     this.partnerPhoneNumber = data.sender;
                     this.agoraChannelName = parsedUserInfo.channel;
-                    this.isInitiator = false;
+                    this.isInitiator = false;                    
                     this.emit("callReceived", data.sender, callerFirstName, callerLastName);
                 }
                 catch(error){
