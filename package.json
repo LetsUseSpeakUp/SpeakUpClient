@@ -16,6 +16,7 @@
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "@tradle/react-native-http": "^2.0.1",
+    "agora-react-native-rtm": "*",
     "assert": "^1.5.0",
     "browserify-zlib": "^0.1.4",
     "buffer": "^4.9.2",

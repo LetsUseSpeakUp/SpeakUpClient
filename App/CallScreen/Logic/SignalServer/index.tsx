@@ -1,5 +1,7 @@
 import {EventEmitter} from 'events'
-const SignalHub = require('./signalhub')
+import RtmEngine from 'agora-react-native-rtm'
+import {getRtmToken} from '../../../ConvosData/ConvosManager'
+import { RTMEventCallback } from 'agora-react-native-rtm/lib/types';
 
 /**
  * Emits Signals and allows you to send Signals
@@ -21,19 +23,18 @@ enum MessageType{
     Decline = "decline"
 }
 
+const APPID = 'cf3e232f50ad4d608ff97081a9ce8b72';
+
 class SignalServer extends EventEmitter{
-    signalHub: any
+    private readonly client: RtmEngine;
+    initialized = false;
 
     
     constructor(){
         super();
-        this.initialize();                
-    }
-
-    initialize(){
-        const SERVERENDPOINT = 'https://browsercoin.herokuapp.com/';
-        this.signalHub = SignalHub('speakup', [SERVERENDPOINT]);
-    }
+        console.log("SignalServer constructor");
+        this.client = new RtmEngine();
+    }    
 
     sendSignal({agoraChannel, myPhoneNumber, myFirstName, myLastName, receiverPhoneNumber}: {agoraChannel: string, myPhoneNumber: string, myFirstName: string, myLastName: string, receiverPhoneNumber: string}){ //TODO: Encrypt this data
         
@@ -45,7 +46,7 @@ class SignalServer extends EventEmitter{
         }        
         
         console.log("SignalServer::sendSignal. Receiver: ", receiverPhoneNumber, " data: ", data);
-        this.signalHub.broadcast(receiverPhoneNumber, data);
+        this.client.sendMessageToPeer({peerId: receiverPhoneNumber, offline: false, text: JSON.stringify(data)});
     }
 
     sendDecline(myPhoneNumber: string, receiverPhoneNumber: string){
@@ -56,19 +57,56 @@ class SignalServer extends EventEmitter{
         }    
         
         console.log("SignalServer::sendDecline. Receiver: ", receiverPhoneNumber);
-        this.signalHub.broadcast(receiverPhoneNumber, data);
+        this.client.sendMessageToPeer({peerId: receiverPhoneNumber, offline: false, text: JSON.stringify(data)});
     }
 
-    listenForMyPhoneNumber(myPhoneNumber: string){
-        console.log("SignalServer::listenForMyPhoneNumber. My phone number: ", myPhoneNumber);
-        this.signalHub.subscribe(myPhoneNumber)
-        .on('data', (data: SignalServerData)=>{
-            console.log("SignalServer.tsx::My Phone Number Received a message. My Phone number: ", myPhoneNumber
-            , "|Message: ", data);
-            this.emit(data.type, data);
-        })
+    async listenForMyPhoneNumber(myPhoneNumber: string){
+        if(this.initialized){
+            console.log("SignalServer::listenForMyPhoneNumber. Already initialized. Doing nothing");
+            return;
+        }
+        this.initialized = true;
+        this.setupRtm();
+        await this.client.createClient(APPID);
+        try{
+            const rtmToken = await getRtmToken();
+            console.log("SignalServer::listenForMyPhoneNumber. RtmToken: ", rtmToken, " phone number: ", myPhoneNumber);
+            await this.client.login({
+                uid: myPhoneNumber,
+                token: rtmToken
+            });
+        }
+        catch(error){
+            console.log("SignalServer::listenForMyPhoneNumber: ", error);
+        }
     }    
+
+    private setupRtm(){
+        this.client.on('connectionStateChanged', (event)=>{
+            console.log("SignalServer -- Connection state changed: ", event);
+        })
+        this.client.on('messageReceived', (event)=>{
+            const {text, peerId} = event;
+            const parsedText = JSON.parse(text);
+            const signalServerData: SignalServerData = {
+                sender: peerId,
+                type: parsedText.type,
+                message: parsedText.message
+            }
+            
+            console.log("SignalServer received Message: ", signalServerData); 
+            this.emit(signalServerData.type, signalServerData);
+        })
+
+        const RTMRENEWALTIME = 1000*60*60;
+        setInterval(async ()=>{            
+            this.client.renewToken(await getRtmToken())
+                .then(()=>{console.log("SignalServer. Renewed rtm token.")})
+        }, RTMRENEWALTIME)
+    }
 }
 
-export { SignalServer, MessageType };
+export const SignalServerInstance = new SignalServer();
+
+export {SignalServer, MessageType };
 export type { SignalServerData };

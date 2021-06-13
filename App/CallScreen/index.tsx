@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react'
 
 import { View, StyleSheet, Text} from 'react-native';
-import {CallManager} from './Logic/CallManager'
+import {CallManagerInstance} from './Logic/CallManager'
 import RingingScreen from './RingingScreen'
 import DialPadScreen from './DialPadScreen'
 import ConnectingScreen from './ConnectingScreen'
@@ -17,7 +17,7 @@ export default function CallScreen({route, navigation}: any) {
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
     const userLastName = route.params.userLastName;
-    const callManager = useRef(new CallManager(userPhoneNumber, userFirstName, userLastName));     
+    const callManager = useRef(CallManagerInstance);     
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const convosContext = useContext(ConvosContext);
     const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
@@ -32,6 +32,7 @@ export default function CallScreen({route, navigation}: any) {
     }, [convosContext.convoToNavTo])    
 
     useEffect(()=>{
+        callManager.current.initialize(userPhoneNumber, userFirstName, userLastName);
         connectCallManagerListeners();        
     }, [])    
 

@@ -34,7 +34,13 @@ export default function ConvoPlayer({route}: any) {
                 setSnippetEnd(trackPlayerProgress.duration);
             })   
         }        
-    }, [audioFilePath])    
+    }, [audioFilePath])  
+    
+    useEffect(()=>{
+        if(trackPlayerProgress.duration > 0 && snippetEnd === 0){
+            setSnippetEnd(trackPlayerProgress.duration);
+        }
+    }, [trackPlayerProgress.duration])
 
     useEffect(() => {
         if (!seekingInProgress)
