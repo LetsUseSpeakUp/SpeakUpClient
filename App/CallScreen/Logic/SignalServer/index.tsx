@@ -76,6 +76,9 @@ class SignalServer extends EventEmitter{
     }    
 
     private setupRtmListeners(){
+        this.client.on('connectionStateChanged', ()=>{
+            console.log("Connection state changed: ");
+        })
         // this.client.on('messageReceived', (event)=>{
         //     const {text} = event;
         //     console.log("SignalServer received Message: ", text); 
