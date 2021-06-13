@@ -86,17 +86,17 @@ class SignalServer extends EventEmitter{
             console.log("SignalServer -- Connection state changed: ", event);
         })
         this.client.on('messageReceived', (event)=>{
-            const {text} = event;
-            console.log("SignalServer received Message: ", text); 
+            const {text, peerId} = event;
+            const parsedText = JSON.parse(text);
+            const signalServerData: SignalServerData = {
+                sender: peerId,
+                type: parsedText.type,
+                message: parsedText.message
+            }
+            
+            console.log("SignalServer received Message: ", signalServerData); 
+            this.emit(signalServerData.type, signalServerData);
         })
-        //TODO
-        // console.log("SignalServer::listenForMyPhoneNumber. My phone number: ", myPhoneNumber);
-        // this.signalHub.subscribe(myPhoneNumber)
-        // .on('data', (data: SignalServerData)=>{
-        //     console.log("SignalServer.tsx::My Phone Number Received a message. My Phone number: ", myPhoneNumber
-        //     , "|Message: ", data);
-        //     this.emit(data.type, data);
-        // })
     }
 }
 
