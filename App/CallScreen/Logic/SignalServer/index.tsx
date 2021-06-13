@@ -100,7 +100,8 @@ class SignalServer extends EventEmitter{
 
         const RTMRENEWALTIME = 1000*60*60;
         setInterval(async ()=>{            
-            this.client.renewToken(await getRtmToken()).then(()=>{console.log("SignalServer. Renewed rtm token.")});
+            this.client.renewToken(await getRtmToken())
+                .then(()=>{console.log("SignalServer. Renewed rtm token.")})
         }, RTMRENEWALTIME)
     }
 }
