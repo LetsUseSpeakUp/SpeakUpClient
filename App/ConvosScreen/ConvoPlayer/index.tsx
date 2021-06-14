@@ -15,7 +15,7 @@ export default function ConvoPlayer({route}: any) {
     const [sliderValue, setSliderValue] = useState(0);
     const [snippetStart, setSnippetStart] = useState(0);
     const [snippetEnd, setSnippetEnd] = useState(1);
-    const [snippetDescription, setSnippetDescription] = useState('');
+    const [snippetDescription, setSnippetDescription] = useState('Snippet from ' + route.params.firstName);
     const [snippetLink, setSnippetLink] = useState('Generate your snippet');
     const [loadingSnippet, setLoadingSnippet] = useState(false);
     const playbackState = usePlaybackState();

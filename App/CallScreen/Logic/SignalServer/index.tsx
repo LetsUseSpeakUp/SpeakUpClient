@@ -77,7 +77,7 @@ class SignalServer extends EventEmitter{
             });
         }
         catch(error){
-            console.log("SignalServer::listenForMyPhoneNumber: ", error);
+            console.log("ERROR -- SignalServer::listenForMyPhoneNumber -- getRTMToken: ", error);
         }
     }    
 

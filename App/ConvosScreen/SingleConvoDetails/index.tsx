@@ -61,6 +61,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>}>
+            <Text>ConvoID: {convoId}</Text>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
             <Text>Time of Call: {dateTime}</Text>
