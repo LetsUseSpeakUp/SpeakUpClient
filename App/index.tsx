@@ -9,6 +9,8 @@ import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
 import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
+import SplashScreen from './SplashScreen'
+import OnboardingScreen from './OnboardingScreen';
 import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
@@ -19,6 +21,7 @@ LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
   const [userPhoneNumber, setUserPhoneNumber] = useState('');
   const [userFirstName, setUserFirstName] = useState('');
   const [userLastName, setUserLastName] = useState('');
@@ -52,8 +55,11 @@ export default function App() {
           if(userInfo.firstName != null) setUserFirstName(userInfo.firstName);
           if(userInfo.lastName != null) setUserLastName(userInfo.lastName);
         })
-      } 
-      console.log("App::loginWithExistingCredentials. Success: ", success);
+      }
+      else{
+        //TODO: Go to onboarding screen
+      }
+      // setShowSplashScreen(false);
     });
   }
 
@@ -117,6 +123,10 @@ export default function App() {
     }).catch(error=>{
       console.log("ERROR -- App::onLoggedOut: ", error);
     })
+  }
+
+  if(showSplashScreen){
+    return <SplashScreen></SplashScreen>
   }
 
   if (!isLoggedIn) {
