@@ -317,8 +317,8 @@ const _getDummyConvoMetadata = function (): ConvoMetadata {
     const dummyData: ConvoMetadata = {
         initiatorId: "+14089167684",
         receiverId: "+1001",
-        // convoId: "DUMMYCONVOUID" + Date.now(),
-        convoId: '1623639798647_+14089167684_+1001',
+        convoId: "DUMMYCONVOUID" + Date.now(),
+        // convoId: '1623639798647_+14089167684_+1001',
         timestampStarted: 123456,
         convoLength: 100
     };
