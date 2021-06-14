@@ -48,7 +48,7 @@ export const getChannelToken = async function(channelName: string, isInitiator: 
     return response.token;        
 }
 
-export const getRtmToken = async function(){
+export const getRtmToken = async function(){    
     const rtmEndpoint = SERVERENDPOINT + '/tokens/getrtmtoken'
     const serverResponse = await fetch(rtmEndpoint, {
         method: 'GET',
@@ -251,7 +251,7 @@ export const _testFileCreationAndUpload = function () {
 
 export const _testExistingFileUpload = function () {
     console.log("ConvosManager::_testExistingFileUpload")
-    const existingFilePath = FileSystem.DocumentDirectoryPath + "/1622059006151Phone.aac";
+    const existingFilePath = FileSystem.DocumentDirectoryPath + "/1623639798647_+14089167684_+1001.aac";
 
     FileSystem.readDir(FileSystem.DocumentDirectoryPath).then((result) => {
         const fileNames = result.map((singleFile) => singleFile.name).join();
@@ -260,7 +260,10 @@ export const _testExistingFileUpload = function () {
         return FileSystem.exists(existingFilePath)
     }).then((doesExist) => {
         if (!doesExist) throw ("File doesn't exist: " + existingFilePath)
-        return uploadConvoPromise(existingFilePath, _getDummyConvoMetadata());
+        return FileSystem.stat(existingFilePath);
+    }).then((statResult)=>{
+        console.log("ConvosManager::_testExistingFileUpload. Stat result: ", statResult);
+        return uploadConvoPromise(existingFilePath, _getDummyConvoMetadata());      
     }).then((response) => {
         console.log("ConvosManager::_testExistingFileUpload. Upload response: ", response);
     }).catch((error) => {
@@ -296,6 +299,8 @@ const getUploadFileItem = function (filePath: string, fileName: string) {
 
 const uploadConvoPromise = async function (filePath: string, metaData: ConvoMetadata) {
     const uploadEndpoint = SERVERENDPOINT + "/convos/upload"
+    const fileStats = await FileSystem.stat(filePath);
+    console.log("ConvosManager::uploadConvoPromise. Filestats: ", fileStats);
     return FileSystem.uploadFiles({
         toUrl: uploadEndpoint,
         files: [getUploadFileItem(filePath, metaData.convoId + '.aac')], //TODO: Instead of .aac, get it from the file
@@ -310,9 +315,10 @@ const uploadConvoPromise = async function (filePath: string, metaData: ConvoMeta
 
 const _getDummyConvoMetadata = function (): ConvoMetadata {
     const dummyData: ConvoMetadata = {
-        initiatorId: "DUMMYINITIATORUID",
-        receiverId: "DUMMYRECEIVERUID",
-        convoId: "DUMMYCONVOUID" + Date.now(),
+        initiatorId: "+14089167684",
+        receiverId: "+1001",
+        // convoId: "DUMMYCONVOUID" + Date.now(),
+        convoId: '1623639798647_+14089167684_+1001',
         timestampStarted: 123456,
         convoLength: 100
     };
