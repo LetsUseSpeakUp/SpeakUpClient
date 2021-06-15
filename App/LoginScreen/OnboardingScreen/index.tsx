@@ -40,9 +40,14 @@ export default function OnboardingScreen(props: {onOnboardingComplete: ()=>void}
         return <PrimaryButtonView text={'Next'}/>
     }
 
+    const renderDoneButton = ()=>{
+        return <PrimaryButtonView text={'Done'}/>
+    }
+
     return(
         <AppIntroSlider renderItem={renderItem} data={slides} keyExtractor={item=>item.key.toString()}
-        activeDotStyle={{backgroundColor: Colors.emphasizedTextColor}} renderNextButton={renderNextButton}/>
+        activeDotStyle={{backgroundColor: Colors.emphasizedTextColor}} renderNextButton={renderNextButton}
+        renderDoneButton={renderDoneButton} onDone={()=>{props.onOnboardingComplete()}}/>
     )
 }
 
