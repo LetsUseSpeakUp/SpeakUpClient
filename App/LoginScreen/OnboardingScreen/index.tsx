@@ -1,8 +1,9 @@
 import ImageAndTextBlurbScreen from './ImageAndTextBlurbScreen'
 import DoubleBlurbScreen from './DoubleBlurbScreen';
-import React, {useState } from 'react'
+import React from 'react'
+import {Text} from 'react-native'
 import AppIntroSlider from 'react-native-app-intro-slider'
-
+import {Colors, PrimaryButtonView} from '../../Graphics'
 
 
 
@@ -33,10 +34,15 @@ export default function OnboardingScreen(props: {onOnboardingComplete: ()=>void}
             const topText = item.topText as string;
             return <DoubleBlurbScreen topBlurbText={topText} bottomBlurbText={item.bottomText}/>
         }
-    } 
+    }
+    
+    const renderNextButton = ()=>{
+        return <PrimaryButtonView text={'Next'}/>
+    }
 
     return(
-        <AppIntroSlider renderItem={renderItem} data={slides} keyExtractor={item=>item.key.toString()}/>
+        <AppIntroSlider renderItem={renderItem} data={slides} keyExtractor={item=>item.key.toString()}
+        activeDotStyle={{backgroundColor: Colors.emphasizedTextColor}} renderNextButton={renderNextButton}/>
     )
 }
 
