@@ -1,17 +1,18 @@
 import React, {useRef} from 'react'
-import {SafeAreaView, View, StyleSheet, Text, Image, Animated} from 'react-native';
+import {SafeAreaView, View, StyleSheet, Text, Image, Animated, Button} from 'react-native';
 import {Constants} from '../../../Graphics/index'
 
-export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbText: string, onNextPressed: ()=>void, onBackPressed?: ()=>{}}){
-    const fadeAnim = useRef(new Animated.Value(0)).current
+export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbText: string, onNextPressed: ()=>void, onBackPressed?: ()=>void}){
+    const blurbTextAnimation = useRef(new Animated.Value(0)).current
     React.useEffect(() => {
         Animated.timing(
-          fadeAnim, {
+          blurbTextAnimation, {
             toValue: 1,
             duration: 2000,
             useNativeDriver: true
           }).start();
-      }, [fadeAnim])
+      }, [blurbTextAnimation])
+      
 
     return(
         <SafeAreaView style={styles.flexContainer}>
@@ -21,9 +22,13 @@ export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbT
             </View>
             <View style={{borderBottomWidth: 2, width: '60%'}}/>
             <Animated.View style={{display: 'flex', flex: 1, width: '100%', 
-                paddingHorizontal: Constants.paddingHorizontal, opacity: fadeAnim}}>
+                paddingHorizontal: Constants.paddingHorizontal, opacity: blurbTextAnimation}}>
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20}}>{props.blurbText}</Text>
             </Animated.View>
+            <View style={styles.buttonContainer}>
+                {(props.onBackPressed != null) && <Button title='Back' onPress={props.onBackPressed}/>}
+                <Button title='Next' onPress={props.onNextPressed}/>
+            </View>
         </SafeAreaView>
     )
 }
@@ -46,5 +51,13 @@ const styles = StyleSheet.create({
         flex: 1,    
         width: '100%',
         paddingHorizontal: Constants.paddingHorizontal       
+    },
+    buttonContainer: {
+       display: 'flex',
+       flexDirection: 'row',
+       alignItems: 'flex-start',
+       justifyContent: 'space-between',
+       paddingHorizontal: Constants.paddingHorizontal,
+       width: '100%'
     }
 })
