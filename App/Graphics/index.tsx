@@ -6,6 +6,6 @@ export const Colors = {
 export const Constants = {
     paddingHorizontal: 20,
     paddingVertical: 20,
-    blurbFontSize: 40,
+    blurbFontSize: 36,
     fontFamily: 'Futura'
 }
