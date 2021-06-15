@@ -6,14 +6,21 @@ import EnterPhoneNumberScreen from './EnterPhoneNumberScreen'
 import EnterSMSCodeScreen from './EnterSMSCodeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
-import WelcomeScreen from './Onboarding/WelcomeScreen'
+import OnboardingScreen from './OnboardingScreen'
 
 //TODO: Handle login without account creation
 export default function LoginScreen(props: any) {
     const phoneNumberRef = React.useRef('');
     const nameRef = React.useRef({first_name: '', last_name: ''});
+    const [isOnboarded, setIsOnboarded] = React.useState(false);
 
-    const Stack = createStackNavigator();        
+    const Stack = createStackNavigator();     
+    
+    if(!isOnboarded){
+        return(
+            <OnboardingScreen onOnboardingComplete={()=>{setIsOnboarded(true)}}/>
+        )
+    }
 
     const onNameSet = (firstName: string, lastName: string) =>{        
         nameRef.current = {first_name: firstName, last_name: lastName};
@@ -47,7 +54,6 @@ export default function LoginScreen(props: any) {
     return (
         <NavigationContainer>
             <Stack.Navigator>     
-                <Stack.Screen name='Welcome' component={WelcomeScreen} />
                 <Stack.Screen name="Name" component={EnterNameScreen} initialParams={{ setName: onNameSet }} />
                 <Stack.Screen name="Phone Number" component={EnterPhoneNumberScreen} initialParams={{ setPhoneNumber: onPhoneNumberSet }} />
                 <Stack.Screen name="Verification Code" component={EnterSMSCodeScreen} initialParams={{ setSMSCode: onSMSCodeSet }} />

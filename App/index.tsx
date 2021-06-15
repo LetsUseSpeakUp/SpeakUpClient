@@ -55,11 +55,8 @@ export default function App() {
           if(userInfo.firstName != null) setUserFirstName(userInfo.firstName);
           if(userInfo.lastName != null) setUserLastName(userInfo.lastName);
         })
-      }
-      else{
-        //TODO: Go to onboarding screen
-      }
-      setShowSplashScreen(false); //TODO: uncomment when it's ready
+      }      
+      setShowSplashScreen(false);
     });
   }
 

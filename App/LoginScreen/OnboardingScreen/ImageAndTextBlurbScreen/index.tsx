@@ -2,7 +2,7 @@ import React, {useRef} from 'react'
 import {SafeAreaView, View, StyleSheet, Text, Image, Animated} from 'react-native';
 import {Constants} from '../../../Graphics/index'
 
-export default function WelcomeScreen(){
+export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbText: string, onNextPressed: ()=>void, onBackPressed?: ()=>{}}){
     const fadeAnim = useRef(new Animated.Value(0)).current
     React.useEffect(() => {
         Animated.timing(
@@ -16,13 +16,13 @@ export default function WelcomeScreen(){
     return(
         <SafeAreaView style={styles.flexContainer}>
             <View style={styles.imageHolder}>
-                <Image source={require('../../../Graphics/streamline-being-a-vip-social-media-1000x1000.png')}
+                <Image source={props.imageSource}
                     resizeMode='contain' style={{height: '70%', marginTop: '20%'}}/>
             </View>
             <View style={{borderBottomWidth: 2, width: '60%'}}/>
             <Animated.View style={{display: 'flex', flex: 1, width: '100%', 
                 paddingHorizontal: Constants.paddingHorizontal, opacity: fadeAnim}}>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20}}>Welcome to Speakup.</Text>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20}}>{props.blurbText}</Text>
             </Animated.View>
         </SafeAreaView>
     )
