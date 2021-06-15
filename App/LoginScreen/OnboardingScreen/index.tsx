@@ -10,10 +10,12 @@ export default function OnboardingScreen(props: {onOnboardingComplete: ()=>void}
     const [currentScreen, setCurrentScreen] = useState(Screens.Welcome);
 
     const onNextPressed = ()=>{
+        console.log("OnboardingScreen.onNextPressed. Screen: ", currentScreen);
         if(currentScreen === Screens.InAlpha){
             props.onOnboardingComplete();            
         }
         else{
+            console.log("OnboardingScreen.onNextPressed. Screen: ", (currentScreen+1));
             setCurrentScreen(currentScreen + 1);
         }        
     }
@@ -48,10 +50,10 @@ export default function OnboardingScreen(props: {onOnboardingComplete: ()=>void}
         }
         case Screens.UnplayableSnippets: {
             return <ImageAndTextBlurbScreen imageSource={unplayableSnippetsImage} blurbText={unplayableSnippetsText}
-            onNextPressed={onNextPressed} onBackPressed={onBackPressed}/> 
+            onNextPressed={onNextPressed} onBackPressed={onBackPressed} dontFadeOut={true}/> 
         }        
         default: return <ImageAndTextBlurbScreen imageSource={inAlphaImage} blurbText={inAlphaText}
-        onNextPressed={onNextPressed} onBackPressed={onBackPressed}/>
+        onNextPressed={onNextPressed} onBackPressed={onBackPressed} dontFadeOut={true}/>
     }    
 }
 
