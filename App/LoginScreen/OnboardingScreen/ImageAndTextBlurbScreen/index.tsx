@@ -25,7 +25,7 @@ export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbT
                 paddingHorizontal: Constants.paddingHorizontal, opacity: blurbTextAnimation}}>
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20}}>{props.blurbText}</Text>
             </Animated.View>
-            <View style={styles.buttonContainer}>
+            <View style={(props.onBackPressed == null) ? styles.oneButtonContainer: styles.twoButtonContainer}>
                 {(props.onBackPressed != null) && <Button title='Back' onPress={props.onBackPressed}/>}
                 <Button title='Next' onPress={props.onNextPressed}/>
             </View>
@@ -52,12 +52,18 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: Constants.paddingHorizontal       
     },
-    buttonContainer: {
+    twoButtonContainer: {
        display: 'flex',
        flexDirection: 'row',
        alignItems: 'flex-start',
        justifyContent: 'space-between',
        paddingHorizontal: Constants.paddingHorizontal,
        width: '100%'
+    },
+    oneButtonContainer: {
+        display: 'flex',       
+       alignItems: 'flex-end',
+       paddingHorizontal: Constants.paddingHorizontal,
+       width: '100%',       
     }
 })

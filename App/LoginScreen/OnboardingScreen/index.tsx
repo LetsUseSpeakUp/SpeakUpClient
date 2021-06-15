@@ -8,7 +8,7 @@ export default function OnboardingScreen(props: any){
 
     return(
         <ImageAndTextBlurbScreen imageSource={welcomeScreenImage} blurbText={welcomeScreenText}
-            onNextPressed={()=>{console.log("next pressed")}} onBackPressed={()=>{console.log("back pressed")}}/>         //TODO
+            onNextPressed={()=>{console.log("next pressed")}}/>         //TODO
     )
 }
 
