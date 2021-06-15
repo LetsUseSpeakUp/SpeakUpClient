@@ -65,7 +65,7 @@ const startAConvoImage = require('../../Graphics/streamline-profile--social-medi
 const startAConvoText = 'Start a Convo by calling a friend through Speakup.';
 
 const endOfConvoTopText = `At the end of the call, Speakup will ask you if you'd like to approve the Convo for playback.`;
-const endOfConvoBottomText = 'You can change your mind at any time';
+const endOfConvoBottomText = 'You can change your mind at any time.';
 
 const bothParticipantsImage = require('../../Graphics/streamline-icon-make-peace-with-someone@1000x1000.png');
 const bothParticipantsText = 'Playback will not be available unless both participants approve.';

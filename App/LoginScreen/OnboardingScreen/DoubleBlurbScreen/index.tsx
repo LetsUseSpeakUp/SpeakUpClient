@@ -8,7 +8,7 @@ export default function DoubleBlurbScreen(props: {topBlurbText: string, bottomBl
         Animated.timing(
           blurbTextAnimation, {
             toValue: 1,
-            duration: 2000,
+            duration: 1000,
             useNativeDriver: true
           }).start();
       }, [blurbTextAnimation])
