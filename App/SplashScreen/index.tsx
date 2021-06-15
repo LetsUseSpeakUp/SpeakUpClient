@@ -3,28 +3,18 @@ import { View, StyleSheet, Text, SafeAreaView, Button} from 'react-native';
 
 export default function SplashScreen(){
     return (
-        <SafeAreaView style={styles.flexContainer}>
-            <View style={styles.buttonRow}>
-                <Text style={{marginRight: 30, marginVertical: 'auto'}}>Splash Screen</Text>
-                <Button title='hi'></Button>
-            </View>
-            
+        <SafeAreaView style={styles.splashImageContainer}>     
+            <Text>box 1</Text>
         </SafeAreaView>
         
     );
 }
 
 const styles = StyleSheet.create({
-    flexContainer: {
+    splashImageContainer: {
         display: 'flex',
-        flexDirection: 'column'
-    },
-    buttonRow: {
-        display: 'flex',
-        flexDirection: 'row',
-        borderWidth: 2,
+        justifyContent: 'center',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingRight: 40
+        flex: 1  
     }
 })
