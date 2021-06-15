@@ -1,61 +1,45 @@
 import ImageAndTextBlurbScreen from './ImageAndTextBlurbScreen'
 import DoubleBlurbScreen from './DoubleBlurbScreen';
 import React, {useState } from 'react'
-import {Text} from 'react-native'
+import AppIntroSlider from 'react-native-app-intro-slider'
 
 
-enum Screens{Welcome = 1, SpeakupIsAnApp = 2, StartAConvo = 3, EndOfConvo = 4,
-    BothParticipants = 5, ShareSnippets = 6, UnplayableSnippets = 7, InAlpha = 8};
+
+
+type ImageTextSlideItem = {
+    key: number,
+    topImage: string,  
+    topText: undefined,  
+    bottomText: string,
+}
+
+type DoubleTextSlideItem = {
+    key: number,
+    topImage: undefined,
+    topText: string,
+    bottomText: string
+}
+
+type SlideItem = ImageTextSlideItem | DoubleTextSlideItem;
+
 export default function OnboardingScreen(props: {onOnboardingComplete: ()=>void}){
-    const [currentScreen, setCurrentScreen] = useState(Screens.Welcome);
-
-    const onNextPressed = ()=>{
-        console.log("OnboardingScreen.onNextPressed. Screen: ", currentScreen);
-        if(currentScreen === Screens.InAlpha){
-            props.onOnboardingComplete();            
+    
+        
+    const renderItem = ({item} : {item: SlideItem}) =>{
+        if(item.topImage){
+            return <ImageAndTextBlurbScreen imageSource={item.topImage} blurbText={item.bottomText}/>
         }
         else{
-            console.log("OnboardingScreen.onNextPressed. Screen: ", (currentScreen+1));
-            setCurrentScreen(currentScreen + 1);
-        }        
-    }
-    const onBackPressed = ()=>{
-        setCurrentScreen(currentScreen -1);
-    }
+            const topText = item.topText as string;
+            return <DoubleBlurbScreen topBlurbText={topText} bottomBlurbText={item.bottomText}/>
+        }
+    } 
 
-    switch(currentScreen){
-        case Screens.Welcome: {
-            return <ImageAndTextBlurbScreen imageSource={welcomeScreenImage} blurbText={welcomeScreenText}
-                onNextPressed={onNextPressed}/>         
-        }
-        case Screens.SpeakupIsAnApp: {
-            return <DoubleBlurbScreen topBlurbText={speakupIsAnAppTopText} bottomBlurbText={speakupIsAnAppBottomText}
-                onNextPressed={onNextPressed} onBackPressed={onBackPressed}/>
-        }
-        case Screens.StartAConvo: {
-            return <ImageAndTextBlurbScreen imageSource={startAConvoImage} blurbText={startAConvoText}
-            onNextPressed={onNextPressed} onBackPressed={onBackPressed}/>   
-        }        
-        case Screens.EndOfConvo: {
-            return <DoubleBlurbScreen topBlurbText={endOfConvoTopText} bottomBlurbText={endOfConvoBottomText}
-                onNextPressed={onNextPressed} onBackPressed={onBackPressed}/>
-        }
-        case Screens.BothParticipants: {
-            return <ImageAndTextBlurbScreen imageSource={bothParticipantsImage} blurbText={bothParticipantsText}
-            onNextPressed={onNextPressed} onBackPressed={onBackPressed}/> 
-        }
-        case Screens.ShareSnippets : {
-            return <DoubleBlurbScreen topBlurbText={shareSnippetsTopText} bottomBlurbText={shareSnippetsBottomText}
-                onNextPressed={onNextPressed} onBackPressed={onBackPressed}/>
-        }
-        case Screens.UnplayableSnippets: {
-            return <ImageAndTextBlurbScreen imageSource={unplayableSnippetsImage} blurbText={unplayableSnippetsText}
-            onNextPressed={onNextPressed} onBackPressed={onBackPressed} dontFadeOut={true}/> 
-        }        
-        default: return <ImageAndTextBlurbScreen imageSource={inAlphaImage} blurbText={inAlphaText}
-        onNextPressed={onNextPressed} onBackPressed={onBackPressed} dontFadeOut={true}/>
-    }    
+    return(
+        <AppIntroSlider renderItem={renderItem} data={slides} keyExtractor={item=>item.key.toString()}/>
+    )
 }
+
 
 const welcomeScreenImage = require('../../Graphics/streamline-being-a-vip-social-media-1000x1000.png');
 const welcomeScreenText = 'Welcome to Speakup.';
@@ -80,3 +64,54 @@ const unplayableSnippetsText = 'If you or your partner deny a Convo for playback
 
 const inAlphaImage = require('../../Graphics/streamline-change-settings--interface--1000x1000.png');
 const inAlphaText = 'Speakup is currently in alpha. If you encounter any bugs, please let us know.';
+
+const slides: SlideItem[] = [
+    {
+        key: 1,
+        topImage: welcomeScreenImage,
+        bottomText: welcomeScreenText,
+        topText: undefined
+    },
+    {
+        key: 2,
+        topText: speakupIsAnAppTopText,
+        bottomText: speakupIsAnAppBottomText,
+        topImage: undefined
+    },
+    {
+        key: 3,
+        topImage: startAConvoImage,
+        bottomText: startAConvoText,
+        topText: undefined
+    },
+    {
+        key: 4,
+        topText: endOfConvoTopText,
+        bottomText: endOfConvoBottomText,
+        topImage: undefined
+    },
+    {
+        key: 5,
+        topImage: bothParticipantsImage,
+        bottomText: bothParticipantsText,
+        topText: undefined
+    },
+    {
+        key: 6,
+        topText: shareSnippetsTopText,
+        bottomText: shareSnippetsBottomText,
+        topImage: undefined
+    },
+    {
+        key: 7,
+        topImage: unplayableSnippetsImage,
+        bottomText: unplayableSnippetsText,
+        topText: undefined
+    },
+    {
+        key: 8,
+        topImage: inAlphaImage,
+        bottomText: inAlphaText,
+        topText: undefined
+    }
+]

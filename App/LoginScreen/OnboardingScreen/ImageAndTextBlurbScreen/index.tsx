@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { SafeAreaView, View, StyleSheet, Text, Image, Animated, Button } from 'react-native';
 import { Constants } from '../../../Graphics/index'
 
-export default function ImageAndTextBlurbScreen(props: { imageSource: any, blurbText: string, dontFadeOut?: boolean, onNextPressed: () => void, onBackPressed?: () => void }) {
+export default function ImageAndTextBlurbScreen(props: { imageSource: any, blurbText: string, dontFadeOut?: boolean}) {
     const blurbFadeInAnimation = useRef(new Animated.Value(0)).current
     const fadeoutAnimation = useRef(new Animated.Value(1)).current;
     React.useEffect(() => {
@@ -48,10 +48,6 @@ export default function ImageAndTextBlurbScreen(props: { imageSource: any, blurb
                 }}>
                     <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20 }}>{props.blurbText}</Text>
                 </Animated.View>
-                <View style={(props.onBackPressed == null) ? styles.oneButtonContainer : styles.twoButtonContainer}>
-                    {(props.onBackPressed != null) && <Button title='Back' onPress={() => { if (props.onBackPressed) fadeoutThenCallback(props.onBackPressed) }} />}
-                    <Button title='Next' onPress={() => { fadeoutThenCallback(props.onNextPressed) }} />
-                </View>
             </Animated.View>
         </SafeAreaView>
     )

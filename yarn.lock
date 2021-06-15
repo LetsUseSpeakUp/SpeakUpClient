@@ -8550,6 +8550,11 @@
   "resolved" "https://registry.npmjs.org/react-native-agora/-/react-native-agora-3.4.2.tgz"
   "version" "3.4.2"
 
+"react-native-app-intro-slider@^4.0.4":
+  "integrity" "sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w=="
+  "resolved" "https://registry.npmjs.org/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz"
+  "version" "4.0.4"
+
 "react-native-auth0@^2.8.3":
   "integrity" "sha512-sej8MbYtXTWAcxNS7WN3n5IoQsjNFgs6BrC9FPUFKBMT7W7cSz67hde0VzaQjg2R+0e3SVKLfLv1GFabBPC8Ug=="
   "resolved" "https://registry.npmjs.org/react-native-auth0/-/react-native-auth0-2.8.3.tgz"
