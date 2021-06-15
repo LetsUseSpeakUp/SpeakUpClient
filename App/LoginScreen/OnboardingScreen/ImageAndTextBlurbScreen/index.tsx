@@ -16,10 +16,10 @@ export default function ImageAndTextBlurbScreen(props: {imageSource: any, blurbT
 
     return(
         <SafeAreaView style={styles.flexContainer}>
-            <View style={styles.imageHolder}>
+            <Animated.View style={{...styles.imageHolder, opacity: blurbTextAnimation}}>
                 <Image source={props.imageSource}
                     resizeMode='contain' style={{height: '70%', marginTop: '20%'}}/>
-            </View>
+            </Animated.View>
             <View style={{borderBottomWidth: 2, width: '60%'}}/>
             <Animated.View style={{display: 'flex', flex: 1, width: '100%', 
                 paddingHorizontal: Constants.paddingHorizontal, opacity: blurbTextAnimation}}>
