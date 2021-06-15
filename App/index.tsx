@@ -59,7 +59,7 @@ export default function App() {
       else{
         //TODO: Go to onboarding screen
       }
-      // setShowSplashScreen(false);
+      setShowSplashScreen(false); //TODO: uncomment when it's ready
     });
   }
 
