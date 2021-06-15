@@ -1,5 +1,6 @@
 import React from 'react'
-import {View, TextInput, Text, Button, StyleSheet} from 'react-native'
+import {View, TextInput, Text, Button, StyleSheet, SafeAreaView} from 'react-native'
+import { Constants, Colors } from '../../Graphics';
 
 export default function EnterNameScreen({route, navigation}: any){
     const [tempFirstName, setTempFirstName] = React.useState('')
@@ -11,23 +12,26 @@ export default function EnterNameScreen({route, navigation}: any){
     }
 
     return (
-        <View style={styles.container}>
-            <Text>Please enter your name</Text>
-            <Text>First Name</Text>
-            <TextInput placeholder="First name" onChangeText={text => setTempFirstName(text)}
-                autoFocus={true} style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}></TextInput>
-            <Text>Last Name</Text>
-            <TextInput placeholder="Last name" onChangeText={text => setTempLastName(text)}
-                style={{ borderWidth: 1, height: 50, width: 200 }} maxLength={15}></TextInput>
-            <Button title={"Confirm"} onPress={() => {confirmPressed()}}></Button>
-        </View>
+        <SafeAreaView style={styles.flexContainer}>
+            <View style={styles.titleTextContainer}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
+                    color: Colors.headingTextColor}}>What is your name?</Text>
+            </View>            
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    flexContainer: {
+        display: 'flex',
+        backgroundColor: Colors.backgroundColor,
+        flex: 1
+    },
+    titleTextContainer: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        paddingTop: Constants.paddingTop
     }
 })

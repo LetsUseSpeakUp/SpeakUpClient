@@ -15,10 +15,13 @@ export const Colors = {
 
 export const Constants = {
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
     blurbFontSize: 32,
     buttonFontSize: 14,
     fontFamily: 'Futura',
+    majorTitleFontSize: 22,
+    minorTitleFontSize: 18
 }
 
 export const PrimaryButtonView = (props: { text: string }) => {

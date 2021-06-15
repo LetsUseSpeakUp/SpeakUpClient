@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: Constants.paddingHorizontal,
         justifyContent: 'flex-end',
-        paddingBottom: Constants.paddingVertical
+        paddingBottom: Constants.paddingBottom
     },
     twoButtonContainer: {
         display: 'flex',
