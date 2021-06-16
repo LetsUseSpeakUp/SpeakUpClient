@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, TextInput, StyleSheet} from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, StyleSheet, Button} from 'react-native'
 
 export const Colors = {
     backgroundColor: '#fff',
@@ -18,7 +18,7 @@ export const Constants = {
     paddingTop: 20,
     paddingBottom: 20,
     blurbFontSize: 32,
-    buttonFontSize: 14,
+    buttonFontSize: 16,
     fontFamily: 'Futura',
     majorTitleFontSize: 22,
     minorTitleFontSize: 18,
@@ -33,10 +33,21 @@ export const PrimaryButtonView = (props: { text: string, opacity?: number}) => {
     )
 }
 
-export const PrimaryButton = (props: { text: string, onPress?: () => void, disabled?: boolean}) => {
+export const PrimaryButton = (props: { text: string, onPress: () => void, disabled?: boolean}) => {
     return (
         <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
             <PrimaryButtonView text={props.text} opacity={props.disabled ? .5 : 1}/>
+        </TouchableOpacity>
+    )
+}
+
+export const SecondaryButton = (props: {title: string, onPress: ()=> void, disabled?: boolean})=>{
+    const opacity = props.disabled ? .5: 1;
+    return(
+        <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
+            <View style={{ borderRadius: 30, paddingVertical: 10, paddingHorizontal: 30, opacity: opacity}}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.secondaryButtonColor}}>{props.title}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
