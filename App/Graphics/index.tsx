@@ -24,9 +24,10 @@ export const Constants = {
     minorTitleFontSize: 18,
 }
 
-export const PrimaryButtonView = (props: { text: string, opacity: number}) => {
+export const PrimaryButtonView = (props: { text: string, opacity?: number}) => {
+    const opacity = props.opacity ?? 1;
     return (
-        <View style={{ borderRadius: 30, backgroundColor: Colors.primaryButtonBackgroundColor, paddingVertical: 10, paddingHorizontal: 30, opacity: props.opacity}}>
+        <View style={{ borderRadius: 30, backgroundColor: Colors.primaryButtonBackgroundColor, paddingVertical: 10, paddingHorizontal: 30, opacity: opacity}}>
             <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.primaryButtonTextColor }}>{props.text}</Text>
         </View>
     )
@@ -40,8 +41,16 @@ export const PrimaryButton = (props: { text: string, onPress?: () => void, disab
     )
 }
 
-export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean})=>{
+export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
+    setRefCallback?: (ref: any)=>void, onSubmitEditing?: ()=>void})=>{
     const [isFocused, setIsFocused] = React.useState(false);
+    
+    const ref: any = React.useRef(null);    
+    React.useEffect(()=>{
+        if(ref != null && props.setRefCallback){
+            props.setRefCallback(ref);
+        }
+    }, [ref])
 
     const styles = StyleSheet.create({
         focused: {
@@ -65,11 +74,9 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
     })
     return(
         <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
-        style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}/>
+        style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}
+        onSubmitEditing={props.onSubmitEditing} ref={ref}/>
     )
 }
 
-
-
-//TODO: Create customTextField class
 //TODO: Create dividerline class
