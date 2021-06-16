@@ -60,7 +60,7 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
         unfocused: {
             borderBottomWidth: 2,
             height: 40,
-            color: Colors.unemphasizedTextColor,
+            color: Colors.emphasizedTextColor,
             borderColor: Colors.unemphasizedTextColor,            
             fontFamily: Constants.fontFamily,
             fontSize: Constants.minorTitleFontSize,
@@ -73,5 +73,3 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
         onSubmitEditing={props.onSubmitEditing}/>
     )
 }
-
-//TODO: Create dividerline class

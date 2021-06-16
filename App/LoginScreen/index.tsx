@@ -19,6 +19,7 @@ export default function LoginScreen(props: any) {
 
     const onNameSet = (firstName: string, lastName: string) =>{        
         nameRef.current = {first_name: firstName, last_name: lastName};
+        setCurrentScreen(Screens.PhoneNumber);
     }
 
     const onPhoneNumberSet = (newPhoneNumber: string) => {
@@ -48,16 +49,9 @@ export default function LoginScreen(props: any) {
     
     switch(currentScreen){
         case Screens.Onboarding: return <OnboardingScreen onOnboardingComplete={()=>{setCurrentScreen(Screens.EnterName)}}/>;
-        default: return <EnterNameScreen onNameSet={onNameSet}/>
+        case Screens.EnterName: return <EnterNameScreen onNameSet={onNameSet}/>;
+        case Screens.PhoneNumber: return <EnterPhoneNumberScreen onPhoneNumberSet={onPhoneNumberSet} onBackPressed={()=>{setCurrentScreen(Screens.EnterName)}}/>;
+        case Screens.Verification: return <EnterSMSCodeScreen onSMSCodeSet={onSMSCodeSet} onBackPressed={()=>{setCurrentScreen(Screens.PhoneNumber)}}/>;
+        default: return <OnboardingScreen onOnboardingComplete={()=>{setCurrentScreen(Screens.EnterName)}}/>;
     }
-
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>     
-                <Stack.Screen name="Name" component={EnterNameScreen} initialParams={{ setName: onNameSet }} />
-                <Stack.Screen name="Phone Number" component={EnterPhoneNumberScreen} initialParams={{ setPhoneNumber: onPhoneNumberSet }} />
-                <Stack.Screen name="Verification Code" component={EnterSMSCodeScreen} initialParams={{ setSMSCode: onSMSCodeSet }} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
 }
