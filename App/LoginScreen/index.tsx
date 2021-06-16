@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import EnterNameScreen from './EnterNameScreen'
 import EnterPhoneNumberScreen from './EnterPhoneNumberScreen'
-import EnterSMSCodeScreen from './EnterSMSCodeScreen'
+import EnterVerificationCodeScreen from './EnterVerificationCodeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
 import OnboardingScreen from './OnboardingScreen'
@@ -33,19 +33,19 @@ export default function LoginScreen(props: any) {
         })
     }
 
-    const onSMSCodeSet = async (smsCode: string) => { 
-        console.log("LoginScreen::onSMSCodeSet.");
+    const onVerificationCodeSet = async (verificationCode: string) => { 
+        console.log("LoginScreen::onVerificationCodeSet.");
         if(phoneNumberRef.current.length <= 0) throw 'phone number null';
 
         try{
-            await enterPhoneNumberVerification(phoneNumberRef.current, smsCode);
+            await enterPhoneNumberVerification(phoneNumberRef.current, verificationCode);
             await setUserMetadata(nameRef.current);                 
-            console.log("LoginScreen::onSMSCodeSet. Calling login complete");       
+            console.log("LoginScreen::onVerificationCodeSet. Calling login complete");       
             props.onLoginComplete();
         }
         catch(error){
             //TODO: Go to an error page
-            console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
+            console.log("ERROR -- LoginScreen::onSMonVerificationCodeSetSCodeSet: ", error);
         }
     }
     
@@ -53,7 +53,7 @@ export default function LoginScreen(props: any) {
         case Screens.Onboarding: return <OnboardingScreen onOnboardingComplete={()=>{setCurrentScreen(Screens.EnterName)}}/>;
         case Screens.EnterName: return <EnterNameScreen onNameSet={onNameSet}/>;
         case Screens.PhoneNumber: return <EnterPhoneNumberScreen onPhoneNumberSet={onPhoneNumberSet} onBackPressed={()=>{setCurrentScreen(Screens.EnterName)}}/>;
-        case Screens.Verification: return <EnterSMSCodeScreen onSMSCodeSet={onSMSCodeSet} onBackPressed={()=>{setCurrentScreen(Screens.PhoneNumber)}}/>;
+        case Screens.Verification: return <EnterVerificationCodeScreen onVerificationCodeSet={onVerificationCodeSet} onBackPressed={()=>{setCurrentScreen(Screens.PhoneNumber)}}/>;
         default: return <OnboardingScreen onOnboardingComplete={()=>{setCurrentScreen(Screens.EnterName)}}/>;
     }
 }
