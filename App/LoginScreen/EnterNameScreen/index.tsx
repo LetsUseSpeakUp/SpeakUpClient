@@ -10,6 +10,8 @@ export default function EnterNameScreen(props: { onNameSet: (firstName: string, 
         props.onNameSet(firstName, lastName);
     }
 
+    const nextEnabled = (firstName.length > 0 && lastName.length > 0);
+
     return (
         <SafeAreaView style={styles.flexContainer}>
             <View style = {styles.contentContainer}>
@@ -21,17 +23,16 @@ export default function EnterNameScreen(props: { onNameSet: (firstName: string, 
                 </View>
                 <View style={styles.nameFieldsContainer}>
                     <View style={styles.firstNameContainer}>
-                        <SpeakupTextInput placeholderText={'Your First Name'} onChangeText={()=>{}} autoFocus={true}/>
+                        <SpeakupTextInput placeholderText={'Your First Name'} onChangeText={(text)=>{setFirstName(text)}} autoFocus={true}/>
                     </View>
                     <View>
-                        <SpeakupTextInput placeholderText={'Your Last Name'} onChangeText={()=>{}}/>
+                        <SpeakupTextInput placeholderText={'Your Last Name'} onChangeText={(text)=>{setLastName(text)}}/>
                     </View>                                        
                 </View>
                 <View style={styles.buttonContainer}>
-                    <PrimaryButton text={'Next'} disabled={true}/>
+                    <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={confirmPressed}/>
                 </View>
             </View>
-
         </SafeAreaView>
     );
 }
@@ -59,8 +60,7 @@ const styles = StyleSheet.create({
         width: '60%',
         display: 'flex',
         flex: .5,
-        justifyContent: 'space-between',
- 
+        justifyContent: 'space-between', 
     },
     firstNameContainer: {
         paddingBottom: Constants.paddingBottom

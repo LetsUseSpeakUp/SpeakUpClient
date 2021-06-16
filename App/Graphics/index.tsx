@@ -24,18 +24,18 @@ export const Constants = {
     minorTitleFontSize: 18,
 }
 
-export const PrimaryButtonView = (props: { text: string }) => {
+export const PrimaryButtonView = (props: { text: string, opacity: number}) => {
     return (
-        <View style={{ borderRadius: 30, backgroundColor: Colors.primaryButtonBackgroundColor, paddingVertical: 10, paddingHorizontal: 30 }}>
+        <View style={{ borderRadius: 30, backgroundColor: Colors.primaryButtonBackgroundColor, paddingVertical: 10, paddingHorizontal: 30, opacity: props.opacity}}>
             <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.primaryButtonTextColor }}>{props.text}</Text>
         </View>
     )
 }
 
-export const PrimaryButton = (props: { text: string, onPress?: () => void, disabled?: boolean}) => { //TODO: Deal with disabled color
+export const PrimaryButton = (props: { text: string, onPress?: () => void, disabled?: boolean}) => {
     return (
         <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
-            <PrimaryButtonView text={props.text} />
+            <PrimaryButtonView text={props.text} opacity={props.disabled ? .5 : 1}/>
         </TouchableOpacity>
     )
 }
