@@ -1,22 +1,37 @@
 import React from 'react'
-import {View, TextInput, Text, Button, StyleSheet, SafeAreaView} from 'react-native'
-import { Constants, Colors } from '../../Graphics';
+import { View, TextInput, Text, Button, StyleSheet, SafeAreaView } from 'react-native'
+import { Constants, Colors, PrimaryButton, SpeakupTextInput} from '../../Graphics';
 
-export default function EnterNameScreen({route, navigation}: any){
-    const [tempFirstName, setTempFirstName] = React.useState('')
-    const [tempLastName, setTempLastName] = React.useState('');
+export default function EnterNameScreen(props: { onNameSet: (firstName: string, lastName: string) => void }) {
+    const [firstName, setFirstName] = React.useState('')
+    const [lastName, setLastName] = React.useState('');
 
-    const confirmPressed = ()=>{
-        route.params.setName(tempFirstName, tempLastName);
-        navigation.navigate('Phone Number');
+    const confirmPressed = () => {
+        props.onNameSet(firstName, lastName);
     }
 
     return (
         <SafeAreaView style={styles.flexContainer}>
-            <View style={styles.titleTextContainer}>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
-                    color: Colors.headingTextColor}}>What is your name?</Text>
-            </View>            
+            <View style = {styles.contentContainer}>
+                <View style={styles.titleTextContainer}>
+                    <Text style={{
+                        fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
+                        color: Colors.headingTextColor
+                    }}>What is your name?</Text>                    
+                </View>
+                <View style={styles.nameFieldsContainer}>
+                    <View style={styles.firstNameContainer}>
+                        <SpeakupTextInput placeholderText={'Your First Name'} onChangeText={()=>{}} autoFocus={true}/>
+                    </View>
+                    <View>
+                        <SpeakupTextInput placeholderText={'Your Last Name'} onChangeText={()=>{}}/>
+                    </View>                                        
+                </View>
+                <View style={styles.buttonContainer}>
+                    <PrimaryButton text={'Next'} disabled={true}/>
+                </View>
+            </View>
+
         </SafeAreaView>
     );
 }
@@ -27,11 +42,37 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.backgroundColor,
         flex: 1
     },
+    contentContainer: {
+        display: 'flex',
+        flex: .4,        
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     titleTextContainer: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingTop: Constants.paddingTop
+        paddingTop: Constants.paddingTop,
+    },    
+    nameFieldsContainer: {
+        width: '60%',
+        display: 'flex',
+        flex: .5,
+        justifyContent: 'space-between',
+ 
+    },
+    firstNameContainer: {
+        paddingBottom: Constants.paddingBottom
+    },
+    lastNameContainer: {
+        paddingVertical: Constants.paddingBottom
+    },
+    buttonContainer: {
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'row-reverse',
+        paddingBottom: Constants.paddingBottom,
+        paddingHorizontal: Constants.paddingHorizontal,
     }
 })

@@ -8,19 +8,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
 import OnboardingScreen from './OnboardingScreen'
 
+enum Screens {Onboarding, EnterName, PhoneNumber, Verification}
 //TODO: Handle login without account creation
 export default function LoginScreen(props: any) {
     const phoneNumberRef = React.useRef('');
     const nameRef = React.useRef({first_name: '', last_name: ''});
-    const [isOnboarded, setIsOnboarded] = React.useState(false);
+    const [currentScreen, setCurrentScreen] = useState(Screens.Onboarding)
 
-    const Stack = createStackNavigator();     
-    
-    if(!isOnboarded){
-        return(
-            <OnboardingScreen onOnboardingComplete={()=>{setIsOnboarded(true)}}/>
-        )
-    }
+    const Stack = createStackNavigator();         
 
     const onNameSet = (firstName: string, lastName: string) =>{        
         nameRef.current = {first_name: firstName, last_name: lastName};
@@ -49,7 +44,12 @@ export default function LoginScreen(props: any) {
             //TODO: Go to an error page
             console.log("ERROR -- LoginScreen::onSMSCodeSet: ", error);
         }
-    }   
+    }
+    
+    switch(currentScreen){
+        case Screens.Onboarding: return <OnboardingScreen onOnboardingComplete={()=>{setCurrentScreen(Screens.EnterName)}}/>;
+        default: return <EnterNameScreen onNameSet={onNameSet}/>
+    }
 
     return (
         <NavigationContainer>

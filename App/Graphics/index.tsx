@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, StyleSheet} from 'react-native'
 
 export const Colors = {
     backgroundColor: '#fff',
@@ -21,7 +21,7 @@ export const Constants = {
     buttonFontSize: 14,
     fontFamily: 'Futura',
     majorTitleFontSize: 22,
-    minorTitleFontSize: 18
+    minorTitleFontSize: 18,
 }
 
 export const PrimaryButtonView = (props: { text: string }) => {
@@ -32,11 +32,40 @@ export const PrimaryButtonView = (props: { text: string }) => {
     )
 }
 
-export const PrimaryButton = (props: { text: string, onPress?: () => void }) => {
+export const PrimaryButton = (props: { text: string, onPress?: () => void, disabled?: boolean}) => { //TODO: Deal with disabled color
     return (
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
             <PrimaryButtonView text={props.text} />
         </TouchableOpacity>
+    )
+}
+
+export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean})=>{
+    const [isFocused, setIsFocused] = React.useState(false);
+
+    const styles = StyleSheet.create({
+        focused: {
+            borderBottomWidth: 3,
+            height: 40,
+            borderColor: Colors.primaryButtonBackgroundColor,
+            color: Colors.primaryButtonBackgroundColor,
+            fontFamily: Constants.fontFamily,
+            fontSize: Constants.minorTitleFontSize,
+            textAlign: 'center'
+        },
+        unfocused: {
+            borderBottomWidth: 2,
+            height: 40,
+            color: Colors.unemphasizedTextColor,
+            borderColor: Colors.unemphasizedTextColor,            
+            fontFamily: Constants.fontFamily,
+            fontSize: Constants.minorTitleFontSize,
+            textAlign: 'center'
+        }
+    })
+    return(
+        <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
+        style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}/>
     )
 }
 
