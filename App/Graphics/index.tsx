@@ -64,12 +64,12 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
             borderColor: Colors.unemphasizedTextColor,            
             fontFamily: Constants.fontFamily,
             fontSize: Constants.minorTitleFontSize,
-            textAlign: 'center'
+            textAlign: 'center'            
         }
     })
     return(
         <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
         style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}
-        onSubmitEditing={props.onSubmitEditing}/>
+        onSubmitEditing={props.onSubmitEditing} placeholderTextColor={Colors.unemphasizedTextColor}/>
     )
 }

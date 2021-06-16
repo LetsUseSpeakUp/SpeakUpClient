@@ -50,7 +50,6 @@
     "react-native-gesture-handler": "~1.10.2",
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.6",
-    "react-native-phone-input": "^1.0.9",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area": "^0.5.1",

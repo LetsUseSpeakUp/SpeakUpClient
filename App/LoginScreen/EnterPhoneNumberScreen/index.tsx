@@ -1,6 +1,5 @@
 import React from 'react'
 import {View, TextInput, Text, Button, StyleSheet} from 'react-native'
-import PhoneInput from 'react-native-phone-input';
 
 export default function EnterPhoneNumberScreen({route, navigation}: any){
     const [tempPhoneNumber, setTempPhoneNumber] = React.useState('')
