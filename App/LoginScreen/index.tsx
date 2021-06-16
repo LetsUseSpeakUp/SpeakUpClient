@@ -26,8 +26,10 @@ export default function LoginScreen(props: any) {
         phoneNumberRef.current = newPhoneNumber;
         loginWithPhoneNumber(newPhoneNumber).then(() => {
             console.log("LoginScreen::onPhoneNumberSet. Sent SMS");
+            setCurrentScreen(Screens.Verification);
         }).catch((error) => {
-            console.log("ERROR -- LoginScreen::onPhoneNumberSet: ", error);
+            //TODO: Go to an error page
+            console.log("ERROR -- LoginScreen::onPhoneNumberSet: ", error);            
         })
     }
 

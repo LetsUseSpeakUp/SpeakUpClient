@@ -7,7 +7,7 @@ export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phone
     const nextEnabled = isPhoneNumberValid(phoneNumber);
 
     const nextPressed = () => {
-        props.onPhoneNumberSet(phoneNumber);
+        props.onPhoneNumberSet('+1' + phoneNumber);
     }
 
     return (
