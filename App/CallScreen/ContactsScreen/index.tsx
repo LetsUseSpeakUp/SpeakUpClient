@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import EmptyContactScreen from './EmptyContactScreen'
 import {useContactData, requestContacts} from './Logic/useContacts'
-import {Text, View, SectionList, StyleSheet} from 'react-native';
+import {Text, View, SectionList, StyleSheet, TouchableOpacity} from 'react-native';
 
 export default function ContactsScreen(){
     let contactsData = useContactData(); 
@@ -26,12 +26,12 @@ export default function ContactsScreen(){
     )
 }
 
-function ContactsFlatList({contactsData} : any){
+function ContactsFlatList({contactsData} : {contactsData: Array<any>}){
     const sectionListData = [];
-    for(let currentLetterIndex = 0; currentLetterIndex++; currentLetterIndex < 26){
+    for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
         const curLetter = String.fromCharCode(currentLetterIndex + 65);
         const curLetterData: any = [];
-        contactsData.foreach((contact: any)=>{
+        contactsData.forEach((contact: any)=>{
             const lastName: string = contact.familyName;
             if(lastName.length === 0){
                 const firstName = contact.givenName;
@@ -49,12 +49,10 @@ function ContactsFlatList({contactsData} : any){
         sectionListData.push({title: curLetter, data: curLetterData});
     }
 
-    // if(contactsData.length > 0)
-        // flatListData = contactsData.map((c: any)=>{return {key: c.recordID, value: c}})    
-    const testSectionListData = [{title: 'A', data: ['Faraz Abidi, Vasmi Abidi']}, {title: 'B', data: ['Hossein Bassir']}];
+
     return(
         <SectionList 
-            sections={testSectionListData}
+            sections={sectionListData}
             keyExtractor={(item, index)=> index+ item}
             renderSectionHeader={({section})=>{
                 return <Text>{section.title}</Text>
@@ -64,18 +62,15 @@ function ContactsFlatList({contactsData} : any){
     )
 }
 
-function SingleContactItem({contact}: {contact: string}){
+function SingleContactItem({contact}: {contact: any}){
     return(
-        <View style={styles.item}>
-            <Text style={styles.itemText}>
-                {contact}
-                {/* {`${contact.givenName} ${contact.familyName}`} */}
+        <TouchableOpacity style={styles.item}>
+            <Text style={styles.itemText}>                
+                {`${contact.givenName} ${contact.familyName}`}
             </Text>
-        </View>
+        </TouchableOpacity>
     )
 }
-
-function SectionHeader()
 
 const styles = StyleSheet.create({
     container: {
