@@ -20,7 +20,7 @@ export default function DialPadScreen(props: { onCallPlaced: (receiverNumber: st
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backgroundColor}}>
             <ScrollView scrollEnabled={false} style={{ ...styles.flexContainer}} keyboardShouldPersistTaps='handled'>
                 <View style={styles.contentContainer}>
                     <View style={styles.titleTextContainer}>
