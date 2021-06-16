@@ -1,10 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, Animated} from 'react-native'
 import { Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton } from '../../Graphics';
 
 export default function EnterVerificationCodeScreen(props: { onVerificationCodeSet: (verificationCode: string) => void, onBackPressed: () => void }) {
     const [verificationCode, setVerificationCode] = React.useState('');
     const nextEnabled = verificationCode.length > 0;
+    const fadeInAnimation = React.useRef(new Animated.Value(0)).current
+    React.useEffect(() => {
+        Animated.timing(
+            fadeInAnimation, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true
+        }).start();
+    }, [fadeInAnimation])
 
     const nextPressed = () => {
         props.onVerificationCodeSet(verificationCode);
@@ -17,14 +26,14 @@ export default function EnterVerificationCodeScreen(props: { onVerificationCodeS
                     <Text style={{
                         fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
                         color: Colors.headingTextColor
-                    }}>Enter the text message verification code</Text>
+                    }}>We just texted you a verification code. Please enter it below.</Text>
                 </View>
-                <View style={styles.verificationCodeContainer}>
+                <Animated.View style={{...styles.verificationCodeContainer, opacity: fadeInAnimation}}>
                     <SpeakupTextInput placeholderText={'Verification Code'} onChangeText={(text) => { setVerificationCode(text) }} autoFocus={true}
                         keyboardType='number-pad' onSubmitEditing={() => {
                             if (nextEnabled) nextPressed();
                         }} />
-                </View>
+                </Animated.View>
                 <View style={styles.buttonContainer}>
                     <SecondaryButton title={'Back'} onPress={props.onBackPressed} />
                     <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed} />

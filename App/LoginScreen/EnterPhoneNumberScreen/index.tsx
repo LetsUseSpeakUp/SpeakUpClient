@@ -1,10 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, Animated} from 'react-native'
 import { Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton } from '../../Graphics';
 
 export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phoneNumber: string) => void, onBackPressed: () => void }) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
     const nextEnabled = isPhoneNumberValid(phoneNumber);
+    const fadeInAnimation = React.useRef(new Animated.Value(0)).current
+    React.useEffect(() => {
+        Animated.timing(
+            fadeInAnimation, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true
+        }).start();
+    }, [fadeInAnimation])
 
     const nextPressed = () => {
         props.onPhoneNumberSet('+1' + phoneNumber);
@@ -19,12 +28,12 @@ export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phone
                         color: Colors.headingTextColor
                     }}>What is your phone number?</Text>
                 </View>
-                <View style={styles.phoneNumberContainer}>
+                <Animated.View style={{...styles.phoneNumberContainer, opacity: fadeInAnimation}}>
                     <SpeakupTextInput placeholderText={'Your Phone Number'} onChangeText={(text) => { setPhoneNumber(text) }} autoFocus={true}
                         keyboardType='number-pad' onSubmitEditing={() => {
                             if (nextEnabled) nextPressed();
                         }} />
-                </View>
+                </Animated.View>
                 <View style={styles.buttonContainer}>
                     <SecondaryButton title={'Back'} onPress={props.onBackPressed} />
                     <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed} />
