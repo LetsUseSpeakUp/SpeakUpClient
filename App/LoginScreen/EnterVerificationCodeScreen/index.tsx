@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, Animated} from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, Animated, ActivityIndicator} from 'react-native'
 import { Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton } from '../../Graphics';
 
 export default function EnterVerificationCodeScreen(props: { onVerificationCodeSet: (verificationCode: string) => void, onBackPressed: () => void }) {
     const [verificationCode, setVerificationCode] = React.useState('');
+    const [loading, setLoading] = React.useState(false)
     const nextEnabled = verificationCode.length > 0;
     const fadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
@@ -16,6 +17,7 @@ export default function EnterVerificationCodeScreen(props: { onVerificationCodeS
     }, [fadeInAnimation])
 
     const nextPressed = () => {
+        setLoading(true);
         props.onVerificationCodeSet(verificationCode);
     }
 
@@ -26,7 +28,7 @@ export default function EnterVerificationCodeScreen(props: { onVerificationCodeS
                     <Text style={{
                         fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
                         color: Colors.headingTextColor
-                    }}>We just texted you a verification code. Please enter it below.</Text>
+                    }}>We've texted you a verification code. Please enter it below.</Text>
                 </View>
                 <Animated.View style={{...styles.verificationCodeContainer, opacity: fadeInAnimation}}>
                     <SpeakupTextInput placeholderText={'Verification Code'} onChangeText={(text) => { setVerificationCode(text) }} autoFocus={true}
@@ -37,6 +39,9 @@ export default function EnterVerificationCodeScreen(props: { onVerificationCodeS
                 <View style={styles.buttonContainer}>
                     <SecondaryButton title={'Back'} onPress={props.onBackPressed} />
                     <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed} />
+                </View>
+                <View>
+                    <ActivityIndicator animating= {loading}/>
                 </View>
             </View>
         </SafeAreaView>

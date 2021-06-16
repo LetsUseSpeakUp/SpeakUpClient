@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, Animated} from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, Animated, ActivityIndicator} from 'react-native'
 import { Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton } from '../../Graphics';
 
 export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phoneNumber: string) => void, onBackPressed: () => void }) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
+    const [loading, setIsLoading] = React.useState(false);
     const nextEnabled = isPhoneNumberValid(phoneNumber);
     const fadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
@@ -16,7 +17,8 @@ export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phone
     }, [fadeInAnimation])
 
     const nextPressed = () => {
-        props.onPhoneNumberSet('+1' + phoneNumber);
+        setIsLoading(true);
+        props.onPhoneNumberSet('+1' + phoneNumber);        
     }
 
     return (
@@ -37,6 +39,9 @@ export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phone
                 <View style={styles.buttonContainer}>
                     <SecondaryButton title={'Back'} onPress={props.onBackPressed} />
                     <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed} />
+                </View>
+                <View>
+                    <ActivityIndicator animating= {loading}/>
                 </View>
             </View>
         </SafeAreaView>
