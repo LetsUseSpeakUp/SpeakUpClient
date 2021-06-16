@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef, useContext} from 'react'
 import { View, StyleSheet, Text} from 'react-native';
 import {CallManagerInstance} from './Logic/CallManager'
 import RingingScreen from './RingingScreen'
-import DialPadScreen from './DialPadScreen'
+import ContactsScreen from './ContactsScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
@@ -11,8 +11,8 @@ import ConvosContext from '../ConvosData/ConvosContext'
 
 export default function CallScreen({route, navigation}: any) {    
 
-    enum CallState {Dialpad, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.Dialpad);    
+    enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
+    const [callState, setCallState] = useState(CallState.Contacts);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
@@ -51,13 +51,13 @@ export default function CallScreen({route, navigation}: any) {
         })
         callManager.current.on('disconnected', ()=>{
             console.log("CallScreen::Callmanager emitted disconnected");
-            setCallState(CallState.Dialpad)
+            setCallState(CallState.Contacts)
         })
         callManager.current.on('connected', ()=>{
             setCallState(CallState.OnCall)
         })
         callManager.current.on('callDeclined', ()=>{
-            setCallState(CallState.Dialpad);
+            setCallState(CallState.Contacts);
         })        
         callManager.current.on('convoAdded', (convoMetadata: ConvoMetadata)=>{
             console.log("CallScreen. ConvoAdded.");
@@ -77,7 +77,7 @@ export default function CallScreen({route, navigation}: any) {
             else if(callState == CallState.Ringing_Sender){
                 callManager.current.endCall();
             }
-            setCallState(CallState.Dialpad);
+            setCallState(CallState.Contacts);
         }
     }
 
@@ -110,7 +110,7 @@ export default function CallScreen({route, navigation}: any) {
     }
 
     switch(callState){
-        case CallState.Dialpad: return (<DialPadScreen userPhoneNumber={userPhoneNumber} onCallPlaced={onCallPlaced}/>)
+        case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
         case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
         case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
         case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)

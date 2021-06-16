@@ -6,7 +6,7 @@ import React, {useState, useEffect} from 'react'
  * @returns Contact data from iOS/Android
  * This will probably have errors on Web ?
  */
-function useContactData(){
+export function useContactData(){
     const [contactData, setContactData] = useState([]);
 
     React.useEffect(()=>{
@@ -32,4 +32,4 @@ function useContactData(){
     return contactData;
 }
 
-export {useContactData}
+export const requestContacts = Contacts.requestPermission();

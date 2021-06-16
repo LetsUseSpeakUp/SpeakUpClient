@@ -5,28 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>SpeakUpClient</string>
+	<string>Speakup</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-    	<dict>
-        	<key>CFBundleTypeRole</key>
-        	<string>None</string>
-        	<key>CFBundleURLName</key>
-        		<string>auth0</string>
-        	<key>CFBundleURLSchemes</key>
-        		<array>
-            		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-        		</array>
-    	</dict>
-	</array>
-	<key>NSHumanReadableCopyright</key>
-	<string></string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -37,6 +22,19 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>auth0</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
@@ -58,6 +56,8 @@
 	</dict>
 	<key>NSContactsUsageDescription</key>
 	<string>SpeakUp uses your contacts list to let you call your friends</string>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>

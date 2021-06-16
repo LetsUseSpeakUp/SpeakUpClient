@@ -10,7 +10,6 @@ import ConvosContext from './ConvosData/ConvosContext'
 import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
 import SplashScreen from './SplashScreen'
-import OnboardingScreen from './OnboardingScreen';
 import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning

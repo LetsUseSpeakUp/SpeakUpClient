@@ -16,7 +16,7 @@ export default function DialPadScreen(props: { onCallPlaced: (receiverNumber: st
     }, [fadeInAnimation])
 
     const nextPressed = () => {
-        // props.onCallPlaced('+1' + receiverNumber);
+        props.onCallPlaced('+1' + receiverNumber);
     }
 
     return (
