@@ -1,43 +1,47 @@
 import React from 'react'
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native'
-import {Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton} from '../../Graphics';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
+import { Constants, Colors, SpeakupTextInput, PrimaryButton, SecondaryButton } from '../../Graphics';
 
-export default function EnterPhoneNumberScreen(props: {onPhoneNumberSet: (phoneNumber: string)=>void, onBackPressed: ()=>void}){
-    const [phoneNumber, setPhoneNumber] = React.useState('');   
+export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phoneNumber: string) => void, onBackPressed: () => void }) {
+    const [phoneNumber, setPhoneNumber] = React.useState('');
     const nextEnabled = isPhoneNumberValid(phoneNumber);
-    
-    const nextPressed = ()=>{
+
+    const nextPressed = () => {
         props.onPhoneNumberSet(phoneNumber);
     }
 
     return (
         <SafeAreaView style={styles.flexContainer}>
-            <View style = {styles.contentContainer}>
+            <View style={styles.contentContainer}>
                 <View style={styles.titleTextContainer}>
                     <Text style={{
                         fontFamily: Constants.fontFamily, fontSize: Constants.majorTitleFontSize,
                         color: Colors.headingTextColor
-                    }}>What is your phone number?</Text>                    
+                    }}>What is your phone number?</Text>
                 </View>
-                <View style={styles.nameFieldsContainer}>
-                    <View style={styles.firstNameContainer}>
-                        <SpeakupTextInput placeholderText={'Your Phone Number'} onChangeText={(text)=>{setPhoneNumber(text)}} autoFocus={true}                             
-                            onSubmitEditing={()=>{
-                                if(nextEnabled) nextPressed();
-                            }}/>
-                    </View>                                          
+                <View style={styles.phoneNumberContainer}>
+                    <SpeakupTextInput placeholderText={'Your Phone Number'} onChangeText={(text) => { setPhoneNumber(text) }} autoFocus={true}
+                        keyboardType='number-pad' onSubmitEditing={() => {
+                            if (nextEnabled) nextPressed();
+                        }} />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <SecondaryButton title={'Back'} onPress={props.onBackPressed}/>
-                    <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed}/>
+                    <SecondaryButton title={'Back'} onPress={props.onBackPressed} />
+                    <PrimaryButton text={'Next'} disabled={!nextEnabled} onPress={nextPressed} />
                 </View>
             </View>
         </SafeAreaView>
     );
 }
 
-const isPhoneNumberValid = (phoneNumber: string)=>{
-    //TODO
+const isPhoneNumberValid = (phoneNumber: string) => {
+    if(phoneNumber.length !== 10) return false;
+    for(let i = 0; i < phoneNumber.length; i++){
+        const parsedFloat = parseFloat(phoneNumber[i]);
+        if(isNaN(parsedFloat)) return false;
+        if(!isFinite(parsedFloat)) return false;
+        if(parsedFloat < 0) return false;        
+    }
     return true;
 }
 
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         display: 'flex',
-        flex: .4,        
+        flex: .4,
         justifyContent: 'space-between',
         alignItems: 'center',
     },
@@ -59,18 +63,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         paddingTop: Constants.paddingTop,
-    },    
-    nameFieldsContainer: {
-        width: '60%',
-        display: 'flex',
-        flex: .5,
-        justifyContent: 'space-between', 
     },
-    firstNameContainer: {
-        paddingBottom: Constants.paddingBottom
-    },
-    lastNameContainer: {
-        paddingVertical: Constants.paddingBottom
+    phoneNumberContainer: {
+        width: '50%'
     },
     buttonContainer: {
         display: 'flex',

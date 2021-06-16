@@ -1,4 +1,5 @@
 import React from 'react'
+import { KeyboardTypeOptions } from 'react-native'
 import { TouchableOpacity, View, Text, TextInput, StyleSheet, Button} from 'react-native'
 
 export const Colors = {
@@ -53,7 +54,7 @@ export const SecondaryButton = (props: {title: string, onPress: ()=> void, disab
 }
 
 export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
-    onSubmitEditing?: ()=>void})=>{
+    keyboardType?: KeyboardTypeOptions, defaultValue?: string, onSubmitEditing?: ()=>void})=>{
     const [isFocused, setIsFocused] = React.useState(false);
     
 
@@ -81,6 +82,7 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
     return(
         <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
         style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}
-        onSubmitEditing={props.onSubmitEditing} placeholderTextColor={Colors.unemphasizedTextColor}/>
+        onSubmitEditing={props.onSubmitEditing} placeholderTextColor={Colors.unemphasizedTextColor} defaultValue={props.defaultValue}
+        keyboardType={props.keyboardType}/>
     )
 }
