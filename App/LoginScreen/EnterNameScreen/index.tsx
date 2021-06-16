@@ -6,9 +6,6 @@ export default function EnterNameScreen(props: { onNameSet: (firstName: string, 
     const [firstName, setFirstName] = React.useState('')
     const [lastName, setLastName] = React.useState('');
 
-    let firstNameInputRef: any = React.useRef();
-    let lastNameInputRef: any = React.useRef();
-
     const nextPressed = () => {
         props.onNameSet(firstName, lastName);
     }
@@ -26,19 +23,15 @@ export default function EnterNameScreen(props: { onNameSet: (firstName: string, 
                 </View>
                 <View style={styles.nameFieldsContainer}>
                     <View style={styles.firstNameContainer}>
-                        <SpeakupTextInput placeholderText={'Your First Name'} onChangeText={(text)=>{setFirstName(text)}} autoFocus={true} 
-                            setRefCallback={(ref)=>{if(ref)firstNameInputRef = ref}}
+                        <SpeakupTextInput placeholderText={'Your First Name'} onChangeText={(text)=>{setFirstName(text)}} autoFocus={true}                             
                             onSubmitEditing={()=>{
                                 if(nextEnabled) nextPressed();
-                                else lastNameInputRef.current.focus();
                             }}/>
                     </View>
                     <View>
-                        <SpeakupTextInput placeholderText={'Your Last Name'} onChangeText={(text)=>{setLastName(text)}}
-                        setRefCallback={(ref)=>{if(ref)lastNameInputRef = ref}}
-                            onSubmitEditing={()=>{
-                                if(nextEnabled) nextPressed();
-                                else firstNameInputRef.current.focus();
+                        <SpeakupTextInput placeholderText={'Your Last Name'} onChangeText={(text)=>{setLastName(text)}}                        
+                            onSubmitEditing={()=>{                                
+                                if(nextEnabled) nextPressed();                                
                             }}/>
                     </View>                                        
                 </View>

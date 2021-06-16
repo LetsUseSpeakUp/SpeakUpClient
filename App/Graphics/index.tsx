@@ -42,15 +42,10 @@ export const PrimaryButton = (props: { text: string, onPress?: () => void, disab
 }
 
 export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
-    setRefCallback?: (ref: any)=>void, onSubmitEditing?: ()=>void})=>{
+    onSubmitEditing?: ()=>void})=>{
     const [isFocused, setIsFocused] = React.useState(false);
     
-    const ref: any = React.useRef(null);    
-    React.useEffect(()=>{
-        if(ref != null && props.setRefCallback){
-            props.setRefCallback(ref);
-        }
-    }, [ref])
+
 
     const styles = StyleSheet.create({
         focused: {
@@ -75,7 +70,7 @@ export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: 
     return(
         <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
         style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}
-        onSubmitEditing={props.onSubmitEditing} ref={ref}/>
+        onSubmitEditing={props.onSubmitEditing}/>
     )
 }
 
