@@ -21,8 +21,8 @@ export function useContactData(){
                 const name2 = b.familyName || b.givenName;
                 return name1.localeCompare(name2);
             })
-            console.log("ContactsLogic.js::received contacts data. Now updating");
-            setContactData(fetchedContacts)
+            console.log("ContactsLogic.js::received contacts data. Now updating");            
+            setContactData(convertToSectionListData(fetchedContacts));
         }).catch(()=>{        
             console.log("ContactsLogic::Phone didn't allow contacts") 
             //TODO: Set contactData to an error state and handle that on caller. Just using length == 0 is fine for now though
@@ -30,6 +30,31 @@ export function useContactData(){
     }
 
     return contactData;
+}
+
+function convertToSectionListData(contactData: any): any{
+    const sectionListData= [];
+    for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
+        const curLetter = String.fromCharCode(currentLetterIndex + 65);
+        const curLetterData: any = [];
+        contactData.forEach((contact: any)=>{
+            const lastName: string = contact.familyName;
+            if(lastName.length === 0){
+                const firstName = contact.givenName;
+                if(firstName.length > 0 && firstName[0].toUpperCase() === curLetter){
+                    curLetterData.push(contact);
+                }
+            }
+            else{
+                if(lastName[0].toUpperCase() === curLetter){
+                    curLetterData.push(contact);
+                }
+            }
+            
+        })
+        sectionListData.push({title: curLetter, data: curLetterData});
+    }
+    return sectionListData;
 }
 
 export const requestContacts = Contacts.requestPermission();

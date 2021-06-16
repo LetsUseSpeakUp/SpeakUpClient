@@ -26,33 +26,11 @@ export default function ContactsScreen(){
     )
 }
 
-function ContactsFlatList({contactsData} : {contactsData: Array<any>}){
-    const sectionListData = [];
-    for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
-        const curLetter = String.fromCharCode(currentLetterIndex + 65);
-        const curLetterData: any = [];
-        contactsData.forEach((contact: any)=>{
-            const lastName: string = contact.familyName;
-            if(lastName.length === 0){
-                const firstName = contact.givenName;
-                if(firstName.length > 0 && firstName[0].toUpperCase() === curLetter){
-                    curLetterData.push(contact);
-                }
-            }
-            else{
-                if(lastName[0].toUpperCase() === curLetter){
-                    curLetterData.push(contact);
-                }
-            }
-            
-        })
-        sectionListData.push({title: curLetter, data: curLetterData});
-    }
-
+function ContactsFlatList({contactsData} : {contactsData: Array<any>}){     
 
     return(
         <SectionList 
-            sections={sectionListData}
+            sections={contactsData}
             keyExtractor={(item, index)=> index+ item}
             renderSectionHeader={({section})=>{
                 return <Text>{section.title}</Text>
