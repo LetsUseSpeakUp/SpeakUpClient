@@ -3,7 +3,7 @@ import { KeyboardTypeOptions } from 'react-native'
 import { TouchableOpacity, View, Text, TextInput, StyleSheet, Button} from 'react-native'
 
 export const Colors = {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff',    
     blurbTextColor: '#000',
     headingTextColor: '#000',
     dividerLineColor: '#000',
@@ -12,6 +12,7 @@ export const Colors = {
     primaryButtonBackgroundColor: '#D67E81',
     primaryButtonTextColor: '#fff',
     secondaryButtonColor: '#555555',
+    tabBackgroundColor: '#e5e5ea'
 }
 
 export const Constants = {

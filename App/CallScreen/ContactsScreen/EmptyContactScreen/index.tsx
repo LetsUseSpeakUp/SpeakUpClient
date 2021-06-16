@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { SafeAreaView, View, StyleSheet, Text, Image, Animated, Button } from 'react-native';
-import { Constants, PrimaryButton} from '../../../Graphics/index'
+import { Constants, PrimaryButton, Colors} from '../../../Graphics/index'
 
 export default function ImageAndTextBlurbScreen(props: {onRetryPressed: ()=>void}) {
 
