@@ -1,24 +1,24 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Image, Button, Animated, useWindowDimensions} from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Image, Button, Animated, useWindowDimensions } from "react-native";
 import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
-import {Constants, Colors, PrimaryButton} from '../../Graphics'
+import { Constants, Colors, PrimaryButton } from '../../Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
-export default function ConvoPlayer({route}: any) {
+export default function ConvoPlayer({ route }: any) {
     const windowDimensions = useWindowDimensions();
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const [snippetStart, setSnippetStart] = useState(0);
     const [snippetEnd, setSnippetEnd] = useState(1);
     const [snippetDescription, setSnippetDescription] = useState('Snippet from ' + route.params.firstName);
-    
+
     const [snippetLink, setSnippetLink] = useState('Generate your snippet');
     const [loadingSnippet, setLoadingSnippet] = useState(false);
     const playbackState = usePlaybackState();
@@ -27,8 +27,8 @@ export default function ConvoPlayer({route}: any) {
     const audioFilePath = route.params.audioFilePath;
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
-    const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
-    const userFirstName = route.params.userFirstName;    
+    const metadata = convosContext.allConvosMetadata.find((curMetadata) => curMetadata.convoId === convoId);
+    const userFirstName = route.params.userFirstName;
 
     const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
@@ -40,19 +40,19 @@ export default function ConvoPlayer({route}: any) {
         }).start();
     }, [blurbFadeInAnimation])
 
-    useEffect(()=>{
-        if(audioFilePath.length > 0){
-            TrackPlayer.reset().then(()=>{
-                return addLocalTrackToPlayer(audioFilePath);                
-            }).then(()=>{
+    useEffect(() => {
+        if (audioFilePath.length > 0) {
+            TrackPlayer.reset().then(() => {
+                return addLocalTrackToPlayer(audioFilePath);
+            }).then(() => {
                 setSnippetStart(0);
                 setSnippetEnd(trackPlayerProgress.duration);
-            })   
-        }        
-    }, [audioFilePath])  
-    
-    useEffect(()=>{
-        if(trackPlayerProgress.duration > 0 && snippetEnd === 0){
+            })
+        }
+    }, [audioFilePath])
+
+    useEffect(() => {
+        if (trackPlayerProgress.duration > 0 && snippetEnd === 0) {
             setSnippetEnd(trackPlayerProgress.duration);
         }
     }, [trackPlayerProgress.duration])
@@ -91,39 +91,39 @@ export default function ConvoPlayer({route}: any) {
         setSliderValue(sliderCompleteVal);
     }
 
-    const setSnippetStartToCurrent = ()=>{
+    const setSnippetStartToCurrent = () => {
         const newStart = sliderValue;
-        setSnippetStart(newStart);        
-        if(newStart > snippetEnd)
+        setSnippetStart(newStart);
+        if (newStart > snippetEnd)
             setSnippetEnd(trackPlayerProgress.duration);
     }
 
-    const setSnippetEndToCurrent = ()=>{
+    const setSnippetEndToCurrent = () => {
         const newEnd = sliderValue;
         setSnippetEnd(newEnd);
-        if(newEnd < snippetStart)
+        if (newEnd < snippetStart)
             setSnippetStart(0);
-    } 
+    }
 
-    const generateSnippet = ()=>{
-        setLoadingSnippet(true); 
+    const generateSnippet = () => {
+        setLoadingSnippet(true);
         ConvosManager.generateSnippetLink(convoId, snippetStart, snippetEnd, snippetDescription)
-            .then((snippetUrl)=>{
+            .then((snippetUrl) => {
                 setSnippetLink(snippetUrl);
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log("")
                 setSnippetLink('Error - unable to generate snippet');
             })
-            .finally(()=>{
+            .finally(() => {
                 setLoadingSnippet(false);
-            });        
+            });
     }
 
-    const amIInitiator = (metadata?.initiatorId != null && metadata?.receiverId != null) ? (convosContext.myPhoneNumber === metadata?.initiatorId) : 
+    const amIInitiator = (metadata?.initiatorId != null && metadata?.receiverId != null) ? (convosContext.myPhoneNumber === metadata?.initiatorId) :
         metadata?.initiatorFirstName === undefined;
-    const partnerFirstName = amIInitiator ? metadata?.receiverFirstName: metadata?.initiatorFirstName;
-    const partnerLastName = amIInitiator ? metadata?.receiverLastName: metadata?.initiatorLastName;
+    const partnerFirstName = amIInitiator ? metadata?.receiverFirstName : metadata?.initiatorFirstName;
+    const partnerLastName = amIInitiator ? metadata?.receiverLastName : metadata?.initiatorLastName;
     const partnerName = (partnerFirstName ?? '') + ' ' + (partnerLastName ?? '');
     const partnerPhoneNumber = amIInitiator ? metadata?.receiverId : metadata?.initiatorId;
     const dateTime = metadata?.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata?.timestampStarted) : 'Loading';
@@ -132,99 +132,94 @@ export default function ConvoPlayer({route}: any) {
     return (
         <SafeAreaView style={styles.flexContainer}>
             <View style={styles.headingContainer}>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor, fontWeight: 'bold'}}>
+                <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor, fontWeight: 'bold' }}>
                     Convo with {partnerName}
                 </Text>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.unemphasizedTextColor}}>
+                <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.unemphasizedTextColor }}>
                     {dateTime}
                 </Text>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.emphasizedTextColor}}>
+                <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.emphasizedTextColor }}>
                     {getTitleFormattedTimeFromMs(convoLength)}
                 </Text>
             </View>
-            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop, height: windowDimensions.height*.3}}>
-                    <Image source={require('../../Graphics/streamline-entertain--content-media--1000x1000.png')}
-                        resizeMode='contain' style={{ width: '100%', height: '100%'}} />
+            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop, height: windowDimensions.height * .3 }}>
+                <Image source={require('../../Graphics/streamline-entertain--content-media--1000x1000.png')}
+                    resizeMode='contain' style={{ width: '100%', height: '100%' }} />
             </Animated.View>
-            <Slider                
+            <Slider
                 onSlidingStart={() => { setSeekingInProgress(true) }}
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
                 value={sliderValue}
-                maximumValue={trackPlayerProgress.duration}                
+                maximumValue={trackPlayerProgress.duration}
                 minimumTrackTintColor={Colors.emphasizedTextColor}
                 maximumTrackTintColor={Colors.lightTint}
-                onValueChange={(newValue)=>{                    
-                    if(playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)}}
+                onValueChange={(newValue) => {
+                    if (playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)
+                }}
             />
             <View style={styles.durationAndCurrentTimeContainer}>
-                    <Text style={styles.trackTimeText}>
-                        {playbackState === TrackPlayer.STATE_PLAYING ? getTrackFormattedTimeFromSeconds(trackPlayerProgress.position)  : getTrackFormattedTimeFromSeconds(sliderValue)}
-                    </Text>
-                    <Text style={styles.trackTimeText}>
-                        {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
-                    </Text>
-            </View>            
-            <PlayPauseButton isPlaying={playbackState === TrackPlayer.STATE_PLAYING} onPress={onPlayPauseButtonPressed}/>
-            <View style={{flexDirection: 'row', paddingTop: 10, }}>
+                <Text style={styles.trackTimeText}>
+                    {playbackState === TrackPlayer.STATE_PLAYING ? getTrackFormattedTimeFromSeconds(trackPlayerProgress.position) : getTrackFormattedTimeFromSeconds(sliderValue)}
+                </Text>
+                <Text style={styles.trackTimeText}>
+                    {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
+                </Text>
+            </View>
+            <PlayPauseButton isPlaying={playbackState === TrackPlayer.STATE_PLAYING} onPress={onPlayPauseButtonPressed} />
+            <View style={{ flexDirection: 'row', paddingTop: 10, }}>
                 <Text>Snippet Start: {snippetStart}</Text>
-                <Button title={'Set'} onPress={setSnippetStartToCurrent}/>
+                <Button title={'Set'} onPress={setSnippetStartToCurrent} />
             </View>
-            <View style={{flexDirection: 'row', paddingTop: 10}}>
+            <View style={{ flexDirection: 'row', paddingTop: 10 }}>
                 <Text>Snippet End: {snippetEnd}</Text>
-                <Button title={'Set'} onPress={setSnippetEndToCurrent}/>
+                <Button title={'Set'} onPress={setSnippetEndToCurrent} />
             </View>
-            <View style={{flexDirection: 'row', paddingTop: 10}}>
+            <View style={{ flexDirection: 'row', paddingTop: 10 }}>
                 <Text>Title:</Text>
-                <TextInput placeholder="Describe this snippet" onChangeText={(text)=>{setSnippetDescription(text)}} 
-                    style={{borderWidth: 1, height: 50, width: 250}} defaultValue={'Snippet from ' + userFirstName}/>
+                <TextInput placeholder="Describe this snippet" onChangeText={(text) => { setSnippetDescription(text) }}
+                    style={{ borderWidth: 1, height: 50, width: 250 }} defaultValue={'Snippet from ' + userFirstName} />
             </View>
-            <Button title={'Generate Snippet'} onPress={generateSnippet}/>
+            <Button title={'Generate Snippet'} onPress={generateSnippet} />
             <Text>Snippet Link: {loadingSnippet ? 'Generating...' : snippetLink}</Text>
-            {loadingSnippet && <ActivityIndicator/>}
-            <Button title={'Copy'} onPress={()=>{Clipboard.setString(snippetLink)}}/>                                    
-            
+            {loadingSnippet && <ActivityIndicator />}
+            <Button title={'Copy'} onPress={() => { Clipboard.setString(snippetLink) }} />
+
         </SafeAreaView>
 
     )
 }
 
-function PlayPauseButton({isPlaying, onPress}: {isPlaying: boolean, onPress: ()=>void}){    
+function PlayPauseButton({ isPlaying, onPress }: { isPlaying: boolean, onPress: () => void }) {
     const iconName = isPlaying ? 'pause-circle-filled' : 'play-circle-filled';
-    return(
-        <View style={{display: 'flex', alignItems: 'center'}}>
-<TouchableOpacity onPress={onPress} style={{width: Constants.playPauseIconSize}}>
-            <View style={{display: 'flex', alignItems: 'center'}}>
-                <Icon name={iconName} size={Constants.playPauseIconSize} color={Colors.primaryButtonBackgroundColor} style={{}}/>
-            </View>            
-        </TouchableOpacity>
+    return (
+        <View style={{ display: 'flex', alignItems: 'center', marginTop: -Constants.paddingTop }}>
+            <TouchableOpacity onPress={onPress} style={{ width: Constants.playPauseIconSize }}>
+                <View style={{ display: 'flex', alignItems: 'center' }}>
+                    <Icon name={iconName} size={Constants.playPauseIconSize} color={Colors.emphasizedTextColor} style={{}} />
+                </View>
+            </TouchableOpacity>
         </View>
-        
-    )    
+
+    )
 }
-/*
-<TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
-            <View style={{ borderRadius: 30, paddingVertical: 10, paddingHorizontal: 30, opacity: opacity}}>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.secondaryButtonColor}}>{props.title}</Text>
-            </View>
-        </TouchableOpacity>
-*/
+
 const styles = StyleSheet.create({
     flexContainer: {
         backgroundColor: Colors.backgroundColor,
-        display: 'flex',        
-        paddingHorizontal: Constants.paddingHorizontal,        
+        display: 'flex',
+        paddingHorizontal: Constants.paddingHorizontal,
         flex: 1,
-        
+
     },
     headingContainer: {
-        paddingTop: Constants.paddingTop/2,
-        display: 'flex',        
-        alignItems: 'center',        
+        paddingTop: Constants.paddingTop / 2,
+        display: 'flex',
+        alignItems: 'center',
     },
     imageHolder: {
-        display: 'flex',        
+        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',        
+        justifyContent: 'center',
     },
     durationAndCurrentTimeContainer: {
         display: 'flex',
@@ -247,7 +242,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
     },
-    dividerLine: {        
+    dividerLine: {
         borderColor: Colors.dividerLineColor,
         borderWidth: 1,
         width: '80%',
@@ -255,8 +250,8 @@ const styles = StyleSheet.create({
     },
     setApprovalContainer: {
         display: 'flex',
-        alignItems: 'center',  
-        paddingBottom: Constants.paddingTop/2         
+        alignItems: 'center',
+        paddingBottom: Constants.paddingTop / 2
     },
     playButtonContainer: {
         paddingTop: Constants.paddingTop,
@@ -265,30 +260,30 @@ const styles = StyleSheet.create({
     }
 })
 
-async function addLocalTrackToPlayer(filePath: string){
+async function addLocalTrackToPlayer(filePath: string) {
     await TrackPlayer.add({
         id: Date.now() + "",
-        url: 'file:///' + filePath ,
+        url: 'file:///' + filePath,
         title: 'Convo',
-        artist: 'SpeakUp'    
+        artist: 'SpeakUp'
     });
 }
 
-function getTitleFormattedTimeFromMs(timeInMs: number |undefined): string{
-    if(timeInMs == null) return '';
+function getTitleFormattedTimeFromMs(timeInMs: number | undefined): string {
+    if (timeInMs == null) return '';
 
-    const minutes = Math.floor(timeInMs/60000);
-    const seconds = ((timeInMs % 60000)/1000).toFixed(0);
+    const minutes = Math.floor(timeInMs / 60000);
+    const seconds = ((timeInMs % 60000) / 1000).toFixed(0);
 
-    if(minutes > 1) return minutes + ' minutes';
+    if (minutes > 1) return minutes + ' minutes';
     else if (minutes === 1) return '1 minute';
     else return seconds + ' seconds';
 }
 
-function getTrackFormattedTimeFromSeconds(timeInSeconds: number): string{
-    const minutes = Math.floor(timeInSeconds/60);
+function getTrackFormattedTimeFromSeconds(timeInSeconds: number): string {
+    const minutes = Math.floor(timeInSeconds / 60);
     let seconds = ((timeInSeconds % 60)).toFixed(0);
-    if(seconds.length === 1) seconds = '0' + seconds;
+    if (seconds.length === 1) seconds = '0' + seconds;
 
     return minutes + ":" + seconds;
 }
