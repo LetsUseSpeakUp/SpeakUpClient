@@ -51,10 +51,7 @@ export default function EnterPhoneNumberScreen(props: { onPhoneNumberSet: (phone
 const isPhoneNumberValid = (phoneNumber: string) => {
     if(phoneNumber.length !== 10) return false;
     for(let i = 0; i < phoneNumber.length; i++){
-        const parsedFloat = parseFloat(phoneNumber[i]);
-        if(isNaN(parsedFloat)) return false;
-        if(!isFinite(parsedFloat)) return false;
-        if(parsedFloat < 0) return false;        
+        if(!phoneNumber[i].match(/^\d+/)) return false;             
     }
     return true;
 }

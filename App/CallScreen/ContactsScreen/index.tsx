@@ -17,7 +17,7 @@ export default function ContactsScreen() {
     }
 
     const onContactPressed= (contactNumber: string)=>{
-        console.log("Contacts::Contact pressed: ", contactNumber) //TODO
+        console.log("Contacts::Contact pressed: ", convertPhoneNumberToSpeakupFormat(contactNumber)) //TODO
     }
 
 
@@ -40,7 +40,7 @@ export default function ContactsScreen() {
 
 function SingleContactItem({ contact, onPress }: { contact: any, onPress: (contactNumber: string)=>void }) {
     return (
-        <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{onPress(contact.phoneNumbers[0])}}>
+        <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{onPress(contact.phoneNumbers[0]?.number)}}>
             <View style={styles.contactNameContainer}>
                 <Text style={styles.contactText}>{contact.givenName} </Text>
                 <Text style={{...styles.contactText, fontWeight: 'bold'}}>{contact.familyName}</Text>
@@ -55,6 +55,20 @@ function ContactSectionHeader({ title }: { title: string }) {
             <Text style={styles.sectionText}>{title}</Text>
         </View>
     )
+}
+
+const convertPhoneNumberToSpeakupFormat = (rawPhoneNumber: string): string=>{
+    if(rawPhoneNumber.length < 2) return '';
+    if(rawPhoneNumber.substring(0, 2)!=='+1'){
+        rawPhoneNumber = '1' + rawPhoneNumber;
+    }
+    let convertedNumber = '';
+    for(let i = 0; i < rawPhoneNumber.length; i++){
+        if(rawPhoneNumber[i].match(/^\d+/)) convertedNumber += (rawPhoneNumber[i]);
+    }
+
+    convertedNumber = '+' + convertedNumber;
+    return convertedNumber;
 }
 
 const styles = StyleSheet.create({
@@ -74,7 +88,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     contactText: {
-        fontFamily: Constants.fontFamily,
+        fontFamily: Constants.listViewFontFamily,
         fontSize: Constants.listItemFontSize,
         color: Colors.headingTextColor,        
     },
@@ -84,7 +98,7 @@ const styles = StyleSheet.create({
         paddingVertical: 2
     },
     sectionText: {
-        fontFamily: Constants.fontFamily,
+        fontFamily: Constants.listViewFontFamily,
         fontSize: Constants.detailsFontSize,
         fontWeight: 'bold'
     }
