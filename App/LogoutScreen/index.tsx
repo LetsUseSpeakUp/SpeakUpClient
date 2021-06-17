@@ -7,7 +7,6 @@ export default function EnterSMSCodeScreen({ route }: any) {
 
     return (
         <View style={styles.container}>
-            {/* <Button title={"Logout"} onPress={() => { route.params.logout() }}></Button> */}
             <PrimaryButton text={'Logout'} onPress={() => { route.params.logout() }}/>
         </View>
     );

@@ -3,7 +3,8 @@ import { View, Text, Button} from 'react-native'
 import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
-import {RefreshControl, ScrollView} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet} from 'react-native'
+import {Colors, Constants, PrimaryButton} from '../../Graphics'
 
 export default function SingleConvoDetails({route, navigation}: any){
     const convosContext = React.useContext(ConvosContext);
@@ -53,14 +54,25 @@ export default function SingleConvoDetails({route, navigation}: any){
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
     const dateTime = metadata.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
-    const convoLength = metadata.convoLength ? metadata.convoLength + " milliseconds" : 'Loading'; //TODO: Get formatted time
+    const convoLength = metadata.convoLength;
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
 
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
     
     return(
-        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>}>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>} style={styles.flexContainer}>
+            <View style={styles.headingContainer}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor}}>
+                    Convo with {partnerName}
+                </Text>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.unemphasizedTextColor}}>
+                    {dateTime}
+                </Text>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.emphasizedTextColor}}>
+                    {getFormattedTimeFromMs(convoLength)}
+                </Text>
+            </View>
             <Text>ConvoID: {convoId}</Text>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
@@ -77,6 +89,16 @@ export default function SingleConvoDetails({route, navigation}: any){
         </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    flexContainer: {
+        backgroundColor: Colors.backgroundColor
+    },
+    headingContainer: {
+        display: 'flex',        
+        alignItems: 'center',        
+    }
+})
 
 function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefined): string{
     if(approvalStatus === ConvoResponseType.Approved) return "Approved";
@@ -116,5 +138,10 @@ function areConvoStatusesDifferent(convoStatus1: ConvoStatus | undefined, convoS
 }
 
 function getFormattedTimeFromMs(timeInMs: number): string{
-    return ''; //TODO
+    const minutes = Math.floor(timeInMs/60000);
+    const seconds = ((timeInMs % 60000)/1000).toFixed(0);
+
+    if(minutes > 1) return minutes + ' minutes';
+    else if (minutes === 1) return '1 minute';
+    else return seconds + ' seconds';
 }
