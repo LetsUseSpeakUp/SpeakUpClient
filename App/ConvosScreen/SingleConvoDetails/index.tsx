@@ -144,9 +144,11 @@ export default function SingleConvoDetails({route, navigation}: any){
             }
             <ConfettiCannon
                 count={200}
-                origin={{x: -10, y: 0}}
+                origin={{x: 0, y: 0}}
                 autoStart={true}
                 fadeOut={true}
+                explosionSpeed={500}
+                fallSpeed={5000}
                 ref={ref => (confettiRef = ref)}
             />
         </ScrollView>
