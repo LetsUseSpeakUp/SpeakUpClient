@@ -12,7 +12,7 @@ export const Colors = {
     primaryButtonBackgroundColor: '#D67E81',
     primaryButtonTextColor: '#fff',
     secondaryButtonColor: '#555555',
-    tabBackgroundColor: '#e5e5ea',
+    tabBackgroundColor: '#f2f2f7',
     mediumTint: '#dfdfec',
     lightTint: '#f2f2f7'
 }

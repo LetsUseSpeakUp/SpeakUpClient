@@ -11,6 +11,7 @@ import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken}
 import LogoutScreen from './LogoutScreen'
 import SplashScreen from './SplashScreen'
 import { LogBox } from 'react-native';
+import {Colors} from './Graphics'
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
   'Non-serializable values were found in the navigation state',
@@ -137,7 +138,7 @@ export default function App() {
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo, myPhoneNumber: userPhoneNumber
     }}>
       <NavigationContainer>
-        <Tab.Navigator>
+        <Tab.Navigator tabBarOptions={{style: {backgroundColor: Colors.tabBackgroundColor}}}>
           <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName}} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />

@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import SingleConvoDetails from './SingleConvoDetails';
 import ConvosContext from '../ConvosData/ConvosContext'
 import ConvoPlayer from './ConvoPlayer'
+import {Colors} from '../Graphics'
 
 export default function ConvosScreen({route, navigation}: any) {  
   const Stack = createStackNavigator();
@@ -20,9 +21,11 @@ export default function ConvosScreen({route, navigation}: any) {
 
   return(
       <Stack.Navigator>
-        <Stack.Screen name="All Convos" component={AllConvos}/>
-        <Stack.Screen name="Convo Details" component={SingleConvoDetails}/>
-        <Stack.Screen name="Convo Player" component={ConvoPlayer}/>
+        <Stack.Screen name="All Convos" component={AllConvos} options={{...stackScreenOptions}}/>
+        <Stack.Screen name="Convo Details" component={SingleConvoDetails} options={{...stackScreenOptions}}/>
+        <Stack.Screen name="Convo Player" component={ConvoPlayer} options={{...stackScreenOptions}}/>
       </Stack.Navigator>    
   )
 }
+
+const stackScreenOptions = {headerStyle: {backgroundColor: Colors.tabBackgroundColor}};
