@@ -32,6 +32,7 @@ export const Constants = {
     minorTitleFontSize: 18,
     chevronFontSize: 24,
     propertyFontSize: 16,
+    propertySpacing: 2
 }
 
 export const PrimaryButtonView = (props: { text: string, opacity?: number}) => {

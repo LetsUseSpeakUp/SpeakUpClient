@@ -5,8 +5,11 @@ import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
 import {RefreshControl, ScrollView, StyleSheet, Image, Animated} from 'react-native'
 import {Colors, Constants, PrimaryButton} from '../../Graphics'
+import { useWindowDimensions } from 'react-native';
+
 
 export default function SingleConvoDetails({route, navigation}: any){
+    const windowDimensions = useWindowDimensions();
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
@@ -83,13 +86,13 @@ export default function SingleConvoDetails({route, navigation}: any){
                     {getFormattedTimeFromMs(convoLength)}
                 </Text>
             </View>
-            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop}}>
+            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop, height: windowDimensions.height*.3}}>
                     <Image source={doubleApproved ? require('../../Graphics/streamline-success--interface--1000x1000.png'): 
                         require('../../Graphics/streamline-protect-privacy--user-people--1000x1000.png')}
                         resizeMode='contain' style={{ width: '100%', height: '100%'}} />
             </Animated.View>
             <Text style={{...styles.propertyText, fontWeight: 'bold'}}>{doubleApproved ? 'Approved': 'Unapproved'}</Text>
-            <View style={styles.approvalStatusHolder}>
+            <View style={{...styles.approvalStatusHolder, paddingTop: 1}}>
                 <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor}}>
                     {partnerFirstName + ': '}
                 </Text>
@@ -109,6 +112,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
             <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
+            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
             <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
             
@@ -119,22 +123,19 @@ export default function SingleConvoDetails({route, navigation}: any){
 const styles = StyleSheet.create({
     flexContainer: {
         backgroundColor: Colors.backgroundColor,
-        display: 'flex',
-        borderWidth: 1,
-        paddingHorizontal: Constants.paddingHorizontal,
+        display: 'flex',        
+        paddingHorizontal: Constants.paddingHorizontal,        
         flex: 1
     },
     headingContainer: {
+        paddingTop: Constants.paddingTop/2,
         display: 'flex',        
         alignItems: 'center',        
     },
     imageHolder: {
         display: 'flex',        
         alignItems: 'center',
-        justifyContent: 'center',
-        height: 300, //TODO: Make % of device dimensions
-        // height: '70%',
-        // flex: 1
+        justifyContent: 'center',        
     },
     propertyText: {
         fontSize: Constants.propertyFontSize,
