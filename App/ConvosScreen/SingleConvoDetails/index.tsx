@@ -115,7 +115,9 @@ export default function SingleConvoDetails({route, navigation}: any){
                 <View style={styles.dividerLine}/>
             </View>      
             <View style={styles.setApprovalContainer}>
-                <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>Set Approval</Text>
+                <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>
+                    Set Approval
+                </Text>
                 <SecondaryButton title={'Approve'} onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}/>
                 <SecondaryButton title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}/>
             </View>   
@@ -173,7 +175,8 @@ const styles = StyleSheet.create({
     },
     setApprovalContainer: {
         display: 'flex',
-        alignItems: 'center',        
+        alignItems: 'center',  
+        paddingBottom: Constants.paddingTop/2         
     },
     playButtonContainer: {
         paddingTop: Constants.paddingTop,
