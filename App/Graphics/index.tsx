@@ -27,7 +27,7 @@ export const Constants = {
     detailsFontSize: 14,
     fontFamily: 'Futura',
     listViewFontFamily: 'System',
-    listViewPaddingVertical: 15,
+    listViewPaddingVertical: 10,
     majorTitleFontSize: 22,
     minorTitleFontSize: 18,
 }
