@@ -78,9 +78,14 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
         <TouchableOpacity onPress={onPress}>
             <View style={styles.singleConvoContainer}>
                 <View style={styles.contactNameDateContainer}>
-                    <Text style={styles.convoNameText}>
-                        {partnerFirstName + " " + partnerLastName}
-                    </Text>
+                    <View style={styles.contactNameContainer}>
+                        <Text style={styles.convoNameText}>
+                            {partnerFirstName + " "}
+                        </Text>
+                        <Text style={{...styles.convoNameText}}>
+                            {partnerLastName}
+                        </Text>
+                    </View>                    
                     <Text style={styles.convoDateText}>
                         {ConvosManager.getFormattedDateFromTimestamp(metadata.timestampStarted)}
                     </Text>
@@ -97,12 +102,12 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
 const styles = StyleSheet.create({
     convoNameText: {
         fontSize: Constants.minorTitleFontSize,
-        fontFamily: Constants.fontFamily,
+        fontFamily: Constants.listViewFontFamily,
         color: Colors.headingTextColor,
     },
     convoDateText: {
         fontSize: Constants.detailsFontSize,
-        fontFamily: Constants.fontFamily,
+        fontFamily: Constants.listViewFontFamily,
         color: Colors.unemphasizedTextColor
     },
     container: {
@@ -122,7 +127,10 @@ const styles = StyleSheet.create({
         display: 'flex',        
         flex: 0,
         justifyContent: 'center'
-
+    },
+    contactNameContainer: {
+        display: 'flex',
+        flexDirection: 'row'
     },
     nextIconImageContainer: {
         flex: 1,

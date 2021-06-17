@@ -4,7 +4,7 @@ import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
 import {RefreshControl, ScrollView, StyleSheet, Image, Animated} from 'react-native'
-import {Colors, Constants, PrimaryButton} from '../../Graphics'
+import {Colors, Constants, PrimaryButton, SecondaryButton} from '../../Graphics'
 import { useWindowDimensions } from 'react-native';
 
 
@@ -76,7 +76,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>} style={styles.flexContainer}>
             <View style={styles.headingContainer}>
-                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor}}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor, fontWeight: 'bold'}}>
                     Convo with {partnerName}
                 </Text>
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.unemphasizedTextColor}}>
@@ -107,18 +107,26 @@ export default function SingleConvoDetails({route, navigation}: any){
                 <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>
                     {convertApprovalStatusToText(myApproval)}
                 </Text>
-            </View>
-            
-            <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
+            </View>        
+            <View style={styles.dividerLineHolder}>
+                <View style={styles.dividerLine}/>
+            </View>      
+            <View style={styles.setApprovalContainer}>
+                <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>Set Approval</Text>
+                <SecondaryButton title={'Approve'} onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}/>
+            </View>                      
+        </ScrollView>
+    )
+}
+
+/*
+<Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
             <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
             <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
             <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
-            
-        </ScrollView>
-    )
-}
+*/
 
 const styles = StyleSheet.create({
     flexContainer: {
@@ -144,6 +152,21 @@ const styles = StyleSheet.create({
     approvalStatusHolder: {
         display: 'flex',
         flexDirection: 'row'
+    },
+    dividerLineHolder: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    dividerLine: {
+        marginTop: Constants.paddingTop,
+        borderColor: Colors.dividerLineColor,
+        borderWidth: 1,
+        width: '80%',
+        height: 2,
+    },
+    setApprovalContainer: {
+        display: 'flex',
+        alignItems: 'center'
     }
 })
 
