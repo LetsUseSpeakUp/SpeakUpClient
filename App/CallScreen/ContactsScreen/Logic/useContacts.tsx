@@ -59,7 +59,8 @@ function convertToSectionListData(contactData: any): any{
             }
             
         })
-        sectionListData.push({title: curLetter, data: curLetterData});
+        if(curLetterData.length > 0)
+            sectionListData.push({title: curLetter, data: curLetterData});
     }
     return sectionListData;
 }
