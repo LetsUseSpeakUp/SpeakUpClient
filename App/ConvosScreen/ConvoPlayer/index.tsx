@@ -7,7 +7,7 @@ import Slider from '@react-native-community/slider';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
-import { Constants, Colors, PrimaryButton } from '../../Graphics'
+import { Constants, Colors, PrimaryButton, SecondaryButton } from '../../Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
@@ -125,7 +125,6 @@ export default function ConvoPlayer({ route }: any) {
     const partnerFirstName = amIInitiator ? metadata?.receiverFirstName : metadata?.initiatorFirstName;
     const partnerLastName = amIInitiator ? metadata?.receiverLastName : metadata?.initiatorLastName;
     const partnerName = (partnerFirstName ?? '') + ' ' + (partnerLastName ?? '');
-    const partnerPhoneNumber = amIInitiator ? metadata?.receiverId : metadata?.initiatorId;
     const dateTime = metadata?.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata?.timestampStarted) : 'Loading';
     const convoLength = metadata?.convoLength;
 
@@ -165,25 +164,30 @@ export default function ConvoPlayer({ route }: any) {
                     {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
                 </Text>
             </View>
-            <PlayPauseButton isPlaying={playbackState === TrackPlayer.STATE_PLAYING} onPress={onPlayPauseButtonPressed} />
-            <View style={{ flexDirection: 'row', paddingTop: 10, }}>
-                <Text>Snippet Start: {snippetStart}</Text>
-                <Button title={'Set'} onPress={setSnippetStartToCurrent} />
+            <PlayPauseButton isPlaying={playbackState === TrackPlayer.STATE_PLAYING} onPress={onPlayPauseButtonPressed} />            
+            <View style={{...styles.dividerLineHolder, marginTop: Constants.paddingTop}}>
+                <View style={styles.dividerLine}/>
+            </View>      
+            <View style={styles.snippetMakerContainer}>
+                <Text style={{...styles.propertyText, color: Colors.headingTextColor, paddingTop: Constants.propertySpacing}}>
+                    Snippet Maker
+                </Text>                
+            </View>  
+            <View style={{...styles.snippetTimeRow}}>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor}}>Start Time: </Text>
+                    <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>{getTrackFormattedTimeFromSeconds(snippetStart)}</Text>
+                </View>
+                <SecondaryButton title={'Set to Current'} onPress={setSnippetStartToCurrent}/>
             </View>
-            <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                <Text>Snippet End: {snippetEnd}</Text>
-                <Button title={'Set'} onPress={setSnippetEndToCurrent} />
+            <View style={{...styles.snippetTimeRow}}>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor}}>End Time: </Text>
+                    <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>{getTrackFormattedTimeFromSeconds(snippetEnd)}</Text>
+                </View>
+                <SecondaryButton title={'Set to Current'} onPress={setSnippetEndToCurrent}/>
             </View>
-            <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                <Text>Title:</Text>
-                <TextInput placeholder="Describe this snippet" onChangeText={(text) => { setSnippetDescription(text) }}
-                    style={{ borderWidth: 1, height: 50, width: 250 }} defaultValue={'Snippet from ' + userFirstName} />
-            </View>
-            <Button title={'Generate Snippet'} onPress={generateSnippet} />
-            <Text>Snippet Link: {loadingSnippet ? 'Generating...' : snippetLink}</Text>
-            {loadingSnippet && <ActivityIndicator />}
-            <Button title={'Copy'} onPress={() => { Clipboard.setString(snippetLink) }} />
-
+            
         </SafeAreaView>
 
     )
@@ -233,11 +237,7 @@ const styles = StyleSheet.create({
     propertyText: {
         fontSize: Constants.propertyFontSize,
         fontFamily: Constants.fontFamily
-    },
-    approvalStatusHolder: {
-        display: 'flex',
-        flexDirection: 'row'
-    },
+    },    
     dividerLineHolder: {
         display: 'flex',
         alignItems: 'center',
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
         width: '80%',
         height: 2,
     },
-    setApprovalContainer: {
+    snippetMakerContainer: {
         display: 'flex',
         alignItems: 'center',
         paddingBottom: Constants.paddingTop / 2
@@ -257,7 +257,14 @@ const styles = StyleSheet.create({
         paddingTop: Constants.paddingTop,
         display: 'flex',
         alignItems: 'center'
+    },
+    snippetTimeRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'        
     }
+
 })
 
 async function addLocalTrackToPlayer(filePath: string) {

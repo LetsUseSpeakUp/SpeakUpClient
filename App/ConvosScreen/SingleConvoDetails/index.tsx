@@ -136,7 +136,7 @@ export default function SingleConvoDetails({route, navigation}: any){
                 <View style={styles.dividerLine}/>
             </View>      
             <View style={styles.setApprovalContainer}>
-                <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>
+                <Text style={{...styles.propertyText, color: Colors.headingTextColor, paddingTop: Constants.propertySpacing}}>
                     Set Approval
                 </Text>
                 <SecondaryButton title={'Approve'} onPress={()=>{approvePressed()}}/>
