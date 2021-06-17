@@ -7,6 +7,7 @@ import React, {useState, useEffect} from 'react'
  * This will probably have errors on Web ?
  */
 export function useContactData(){
+    const [isLoading, setIsLoading] = useState(true);
     const [contactData, setContactData] = useState([]);
 
     React.useEffect(()=>{
@@ -14,15 +15,17 @@ export function useContactData(){
     }, [])    
 
     function fetchContactData(){
+        setIsLoading(true);
         Contacts.getAll().then(fetchedContacts=>{
             fetchedContacts = fetchedContacts.filter(contact => contact.phoneNumbers.length > 0);
             fetchedContacts.sort((a, b) => {
                 const name1 = a.familyName || a.givenName;
                 const name2 = b.familyName || b.givenName;
-                return name1.localeCompare(name2);
+                return name1.toUpperCase().localeCompare(name2.toUpperCase());
             })
             console.log("ContactsLogic.js::received contacts data. Now updating");            
             setContactData(convertToSectionListData(fetchedContacts));
+            setIsLoading(false);
             //TODO: send to server to filter out the contacts who aren't on Speakup
         }).catch(()=>{        
             console.log("ContactsLogic::Phone didn't allow contacts") 
@@ -30,7 +33,7 @@ export function useContactData(){
         })
     }
 
-    return contactData;
+    return {isLoading: isLoading, contactData: contactData};
 }
 
 function convertToSectionListData(contactData: any): any{

@@ -22,7 +22,7 @@ export const Constants = {
     paddingTop: 20,
     paddingBottom: 20,
     blurbFontSize: 32,
-    listItemFontSize: 14,
+    listItemFontSize: 17,
     buttonFontSize: 16,
     detailsFontSize: 14,
     fontFamily: 'Futura',

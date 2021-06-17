@@ -2,17 +2,18 @@ import * as React from 'react';
 
 import EmptyContactScreen from './EmptyContactScreen'
 import { useContactData, requestContacts } from './Logic/useContacts'
-import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView } from 'react-native';
+import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
 
 export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string) => void }) {
-    let contactsData = useContactData();
+    let contactsDataResponse = useContactData();
+    let contactData = contactsDataResponse.contactData;
 
     const onRetryPressed = () => {
         requestContacts.then((response) => {
             console.log("ContactsScreen::requestContacts: ", response);
             if (response === 'authorized')
-                contactsData = useContactData();
+                contactsDataResponse = useContactData();
         })
     }
 
@@ -20,13 +21,16 @@ export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: s
         props.onCallPlaced(contactNumber);
     }
 
-    if (contactsData.length == 0) {
+    if(contactsDataResponse.isLoading){
+        return <LoadingScreen/>
+    }
+    else if (contactData.length == 0) {
         return <EmptyContactScreen onRetryPressed={onRetryPressed} />
     }
     else return (
         <SafeAreaView style={styles.flexContainer}>
             <SectionList
-                sections={contactsData}
+                sections={contactData}
                 keyExtractor={(item, index) => index + item}
                 renderSectionHeader={({ section }: any) => {
                     return <ContactSectionHeader title={section.title} />
@@ -34,6 +38,14 @@ export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: s
                 renderItem={({ item }) => <SingleContactItem contact={item} onPress={onContactPressed}/>}
             />
         </SafeAreaView>
+    )
+}
+
+function LoadingScreen(){
+    return (
+        <View style={styles.loadingScreen}>
+            <ActivityIndicator/>
+        </View>
     )
 }
 
@@ -59,12 +71,18 @@ function ContactSectionHeader({ title }: { title: string }) {
 const styles = StyleSheet.create({
     flexContainer: {
         display:'flex',
-        backgroundColor: Colors.backgroundColor
+        backgroundColor: Colors.backgroundColor        
+    },
+    loadingScreen: {
+        flex: 1,
+        backgroundColor: Colors.backgroundColor,
+        display: 'flex',
+        justifyContent: 'center'
     },
     singleContactContainer: {        
         borderBottomColor: Colors.mediumTint,
         borderBottomWidth: 1,
-        paddingVertical: Constants.paddingTop/2,
+        paddingVertical: Constants.listViewPaddingVertical,
         marginHorizontal: Constants.paddingHorizontal,
         paddingHorizontal: Constants.paddingHorizontal/2
     },
