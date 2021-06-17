@@ -10,7 +10,7 @@ import ConvosContext from './ConvosData/ConvosContext'
 import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
 import SplashScreen from './SplashScreen'
-import { LogBox, Text } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import {Colors} from './Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -139,6 +139,7 @@ export default function App() {
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo, myPhoneNumber: userPhoneNumber
     }}>
       <NavigationContainer>
+        <StatusBar barStyle={'dark-content'}/>
         <Tab.Navigator tabBarOptions={{style: {backgroundColor: Colors.tabBackgroundColor}}} 
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {

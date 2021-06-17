@@ -1,8 +1,9 @@
 import React from 'react'
 import { KeyboardTypeOptions } from 'react-native'
-import { TouchableOpacity, View, Text, TextInput, StyleSheet, Button} from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, StyleSheet, Appearance} from 'react-native'
 
-export const Colors = {
+
+export const Colors = { //TODO: Support dark mode
     backgroundColor: '#fff',    
     blurbTextColor: '#000',
     headingTextColor: '#000',
@@ -12,7 +13,7 @@ export const Colors = {
     primaryButtonBackgroundColor: '#D67E81',
     primaryButtonTextColor: '#fff',
     secondaryButtonColor: '#555555',
-    tabBackgroundColor: '#f2f2f7',
+    tabBackgroundColor: '#f2f2f7', 
     mediumTint: '#dfdfec',
     lightTint: '#f2f2f7'
 }
