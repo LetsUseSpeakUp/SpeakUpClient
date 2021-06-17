@@ -59,8 +59,9 @@ export default function SingleConvoDetails({route, navigation}: any){
     }
     const amIInitiator = (metadata.initiatorId != null && metadata.receiverId != null) ? (convosContext.myPhoneNumber === metadata.initiatorId) : 
         metadata.initiatorFirstName === undefined;
-    const partnerName = amIInitiator ? metadata.receiverFirstName + " " + metadata.receiverLastName :
-        metadata.initiatorFirstName + " " + metadata.initiatorLastName;
+    const partnerFirstName = amIInitiator ? metadata.receiverFirstName: metadata.initiatorFirstName;
+    const partnerLastName = amIInitiator ? metadata.receiverLastName: metadata.initiatorLastName;
+    const partnerName = (partnerFirstName ?? '') + ' ' + (partnerLastName ?? '');
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
     const dateTime = metadata.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
     const convoLength = metadata.convoLength;
@@ -82,21 +83,32 @@ export default function SingleConvoDetails({route, navigation}: any){
                     {getFormattedTimeFromMs(convoLength)}
                 </Text>
             </View>
-            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation }}>
+            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop}}>
                     <Image source={doubleApproved ? require('../../Graphics/streamline-success--interface--1000x1000.png'): 
                         require('../../Graphics/streamline-protect-privacy--user-people--1000x1000.png')}
-                        resizeMode='contain' style={{ height: '70%', marginTop: '20%' }} />
+                        resizeMode='contain' style={{ width: '100%', height: '100%'}} />
             </Animated.View>
-            <Text>ConvoID: {convoId}</Text>
-            <Text>Partner Name: {partnerName}</Text>
-            <Text>Partner Phone number: {partnerPhoneNumber}</Text>
-            <Text>Time of Call: {dateTime}</Text>
-            <Text>Length: {convoLength}</Text>
-            <Text>Partner Approval: {convertApprovalStatusToText(partnerApproval)}</Text>
-            <Text>Your Approval: {convertApprovalStatusToText(myApproval)}</Text>
+            <Text style={{...styles.propertyText, fontWeight: 'bold'}}>{doubleApproved ? 'Approved': 'Unapproved'}</Text>
+            <View style={styles.approvalStatusHolder}>
+                <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor}}>
+                    {partnerFirstName + ': '}
+                </Text>
+                <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>
+                    {convertApprovalStatusToText(partnerApproval)}
+                </Text>
+            </View>
+            <View style={styles.approvalStatusHolder}>
+                <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor}}>
+                    {'You: '}
+                </Text>
+                <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>
+                    {convertApprovalStatusToText(myApproval)}
+                </Text>
+            </View>
+            
             <Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
             <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
-            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>
+            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
             <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
             
@@ -106,7 +118,11 @@ export default function SingleConvoDetails({route, navigation}: any){
 
 const styles = StyleSheet.create({
     flexContainer: {
-        backgroundColor: Colors.backgroundColor
+        backgroundColor: Colors.backgroundColor,
+        display: 'flex',
+        borderWidth: 1,
+        paddingHorizontal: Constants.paddingHorizontal,
+        flex: 1
     },
     headingContainer: {
         display: 'flex',        
@@ -115,7 +131,18 @@ const styles = StyleSheet.create({
     imageHolder: {
         display: 'flex',        
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 300, //TODO: Make % of device dimensions
+        // height: '70%',
+        // flex: 1
+    },
+    propertyText: {
+        fontSize: Constants.propertyFontSize,
+        fontFamily: Constants.fontFamily
+    },
+    approvalStatusHolder: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 })
 
