@@ -41,9 +41,10 @@ export default function ContactsScreen() {
 function SingleContactItem({ contact, onPress }: { contact: any, onPress: (contactNumber: string)=>void }) {
     return (
         <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{onPress(contact.phoneNumbers[0])}}>
-            <Text style={styles.contactText}>
-                {`${contact.givenName} ${contact.familyName}`}
-            </Text>
+            <View style={styles.contactNameContainer}>
+                <Text style={styles.contactText}>{contact.givenName} </Text>
+                <Text style={{...styles.contactText, fontWeight: 'bold'}}>{contact.familyName}</Text>
+            </View>            
         </TouchableHighlight>
     )
 }
@@ -61,30 +62,22 @@ const styles = StyleSheet.create({
         display:'flex',
         backgroundColor: Colors.backgroundColor
     },
-    singleContactContainer: {
-        display: 'flex',
-        flexDirection: 'row',
+    singleContactContainer: {        
         borderBottomColor: Colors.mediumTint,
         borderBottomWidth: 1,
         paddingVertical: Constants.paddingTop/2,
         marginHorizontal: Constants.paddingHorizontal,
         paddingHorizontal: Constants.paddingHorizontal/2
     },
+    contactNameContainer: {
+        display: 'flex',
+        flexDirection: 'row'
+    },
     contactText: {
         fontFamily: Constants.fontFamily,
-        fontSize: Constants.buttonFontSize,
-        color: Colors.headingTextColor        
+        fontSize: Constants.listItemFontSize,
+        color: Colors.headingTextColor,        
     },
-    item: {
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    marginHorizontal: 20,
-    borderBottomColor: '#CCCCCC',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}
 });
 
 
