@@ -164,17 +164,3 @@ function TabBarIcon({focused, color, size, tabName}: any){
   
   return <Icon name={getIconName()} size={size} color={color}/>  
 }
-
-/*let iconName;
-
-            if (route.name === 'Home') {
-              iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
-            }
-
-            // You can return any component that you like here!
-            //return <Text name={iconName} size={size} color={color}
-            return <Text>Sup</Text> */
