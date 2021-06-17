@@ -38,6 +38,8 @@ function convertToSectionListData(contactData: any): any{
         const curLetter = String.fromCharCode(currentLetterIndex + 65);
         const curLetterData: any = [];
         contactData.forEach((contact: any)=>{
+            if (contact.phoneNumbers[0] == null) return;
+            contact.phoneNumbers[0].number = convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number);
             const lastName: string = contact.familyName;
             if(lastName.length === 0){
                 const firstName = contact.givenName;
@@ -55,6 +57,20 @@ function convertToSectionListData(contactData: any): any{
         sectionListData.push({title: curLetter, data: curLetterData});
     }
     return sectionListData;
+}
+
+const convertPhoneNumberToSpeakupFormat = (rawPhoneNumber: string): string=>{
+    if(rawPhoneNumber.length < 2) return '';
+    if(rawPhoneNumber.substring(0, 2)!=='+1'){
+        rawPhoneNumber = '1' + rawPhoneNumber;
+    }
+    let convertedNumber = '';
+    for(let i = 0; i < rawPhoneNumber.length; i++){
+        if(rawPhoneNumber[i].match(/^\d+/)) convertedNumber += (rawPhoneNumber[i]);
+    }
+
+    convertedNumber = '+' + convertedNumber;
+    return convertedNumber;
 }
 
 export const requestContacts = Contacts.requestPermission();

@@ -17,7 +17,7 @@ export default function ContactsScreen() {
     }
 
     const onContactPressed= (contactNumber: string)=>{
-        console.log("Contacts::Contact pressed: ", convertPhoneNumberToSpeakupFormat(contactNumber)) //TODO
+        console.log("Contacts::Contact pressed: ", contactNumber) //TODO
     }
 
 
@@ -55,20 +55,6 @@ function ContactSectionHeader({ title }: { title: string }) {
             <Text style={styles.sectionText}>{title}</Text>
         </View>
     )
-}
-
-const convertPhoneNumberToSpeakupFormat = (rawPhoneNumber: string): string=>{
-    if(rawPhoneNumber.length < 2) return '';
-    if(rawPhoneNumber.substring(0, 2)!=='+1'){
-        rawPhoneNumber = '1' + rawPhoneNumber;
-    }
-    let convertedNumber = '';
-    for(let i = 0; i < rawPhoneNumber.length; i++){
-        if(rawPhoneNumber[i].match(/^\d+/)) convertedNumber += (rawPhoneNumber[i]);
-    }
-
-    convertedNumber = '+' + convertedNumber;
-    return convertedNumber;
 }
 
 const styles = StyleSheet.create({
