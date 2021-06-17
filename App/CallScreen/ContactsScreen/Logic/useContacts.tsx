@@ -23,6 +23,7 @@ export function useContactData(){
             })
             console.log("ContactsLogic.js::received contacts data. Now updating");            
             setContactData(convertToSectionListData(fetchedContacts));
+            //TODO: send to server to filter out the contacts who aren't on Speakup
         }).catch(()=>{        
             console.log("ContactsLogic::Phone didn't allow contacts") 
             //TODO: Set contactData to an error state and handle that on caller. Just using length == 0 is fine for now though
@@ -34,6 +35,7 @@ export function useContactData(){
 
 function convertToSectionListData(contactData: any): any{
     const sectionListData= [];
+    
     for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
         const curLetter = String.fromCharCode(currentLetterIndex + 65);
         const curLetterData: any = [];

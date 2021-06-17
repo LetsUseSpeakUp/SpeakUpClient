@@ -5,7 +5,7 @@ import { useContactData, requestContacts } from './Logic/useContacts'
 import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
 
-export default function ContactsScreen() {
+export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string) => void }) {
     let contactsData = useContactData();
 
     const onRetryPressed = () => {
@@ -17,9 +17,8 @@ export default function ContactsScreen() {
     }
 
     const onContactPressed= (contactNumber: string)=>{
-        console.log("Contacts::Contact pressed: ", contactNumber) //TODO
+        props.onCallPlaced(contactNumber);
     }
-
 
     if (contactsData.length == 0) {
         return <EmptyContactScreen onRetryPressed={onRetryPressed} />
