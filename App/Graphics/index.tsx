@@ -26,6 +26,8 @@ export const Constants = {
     buttonFontSize: 16,
     detailsFontSize: 14,
     fontFamily: 'Futura',
+    listViewFontFamily: 'System',
+    listViewPaddingVertical: 15,
     majorTitleFontSize: 22,
     minorTitleFontSize: 18,
 }
