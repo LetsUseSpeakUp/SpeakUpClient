@@ -24,6 +24,7 @@ export const Constants = {
     blurbFontSize: 32,
     listItemFontSize: 14,
     buttonFontSize: 16,
+    detailsFontSize: 14,
     fontFamily: 'Futura',
     majorTitleFontSize: 22,
     minorTitleFontSize: 18,

@@ -51,8 +51,8 @@ function SingleContactItem({ contact, onPress }: { contact: any, onPress: (conta
 
 function ContactSectionHeader({ title }: { title: string }) {
     return (
-        <View>
-            <Text>{title}</Text>
+        <View style={styles.sectionHeader}>
+            <Text style={styles.sectionText}>{title}</Text>
         </View>
     )
 }
@@ -78,6 +78,16 @@ const styles = StyleSheet.create({
         fontSize: Constants.listItemFontSize,
         color: Colors.headingTextColor,        
     },
+    sectionHeader: {
+        paddingHorizontal: Constants.paddingHorizontal,
+        backgroundColor: Colors.lightTint,
+        paddingVertical: 2
+    },
+    sectionText: {
+        fontFamily: Constants.fontFamily,
+        fontSize: Constants.detailsFontSize,
+        fontWeight: 'bold'
+    }
 });
 
 
