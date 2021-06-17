@@ -105,7 +105,12 @@ export default function ConvoPlayer({ route }: any) {
             setSnippetStart(0);
     }
 
-    const generateSnippet = () => {
+    const onCreateSnippetPressed = ()=>{
+        console.log("ConvoPlayer::onCreateSnippetPressed");
+        //TODO: Nav to gen snippet class and pass start time and end time
+    }
+
+    const generateSnippet = () => { //TODO: Move to the snippet creation file
         setLoadingSnippet(true);
         ConvosManager.generateSnippetLink(convoId, snippetStart, snippetEnd, snippetDescription)
             .then((snippetUrl) => {
@@ -186,6 +191,9 @@ export default function ConvoPlayer({ route }: any) {
                     <Text style={{...styles.propertyText, color: Colors.emphasizedTextColor}}>{getTrackFormattedTimeFromSeconds(snippetEnd)}</Text>
                 </View>
                 <SecondaryButton title={'Set to Current'} onPress={setSnippetEndToCurrent}/>
+            </View>
+            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: Constants.paddingTop}}>
+                <PrimaryButton text={'Create Snippet'} onPress={onCreateSnippetPressed}/>
             </View>
             
         </SafeAreaView>
