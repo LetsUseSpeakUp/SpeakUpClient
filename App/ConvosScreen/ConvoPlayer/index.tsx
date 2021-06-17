@@ -129,7 +129,7 @@ export default function ConvoPlayer({route}: any) {
     const convoLength = metadata?.convoLength;
 
     return (
-        <SafeAreaView style={{ display: 'flex', backgroundColor: Colors.backgroundColor, flex: 1}}>
+        <SafeAreaView style={styles.flexContainer}>
             <View style={styles.headingContainer}>
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor, fontWeight: 'bold'}}>
                     Convo with {partnerName}
@@ -146,10 +146,13 @@ export default function ConvoPlayer({route}: any) {
                         resizeMode='contain' style={{ width: '100%', height: '100%'}} />
             </Animated.View>
             <Slider
+                style={styles.sliderStyle}
                 onSlidingStart={() => { setSeekingInProgress(true) }}
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
                 value={sliderValue}
-                maximumValue={trackPlayerProgress.duration}
+                maximumValue={trackPlayerProgress.duration}                
+                minimumTrackTintColor={Colors.emphasizedTextColor}
+                maximumTrackTintColor={Colors.lightTint}
                 onValueChange={(newValue)=>{                    
                     if(playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)}}
             />
@@ -184,7 +187,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.backgroundColor,
         display: 'flex',        
         paddingHorizontal: Constants.paddingHorizontal,        
-        flex: 1
+        flex: 1,
+        
     },
     headingContainer: {
         paddingTop: Constants.paddingTop/2,
@@ -195,6 +199,9 @@ const styles = StyleSheet.create({
         display: 'flex',        
         alignItems: 'center',
         justifyContent: 'center',        
+    },
+    sliderStyle: {   
+        
     },
     propertyText: {
         fontSize: Constants.propertyFontSize,
