@@ -3,7 +3,7 @@ import { View, Text, Button} from 'react-native'
 import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
-import {RefreshControl, ScrollView, StyleSheet} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet, Image, Animated} from 'react-native'
 import {Colors, Constants, PrimaryButton} from '../../Graphics'
 
 export default function SingleConvoDetails({route, navigation}: any){
@@ -11,6 +11,15 @@ export default function SingleConvoDetails({route, navigation}: any){
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
     const [refreshing, setRefreshing] = useState(false);
+    const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
+    React.useEffect(() => {
+        Animated.timing(
+            blurbFadeInAnimation, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true
+        }).start();
+    }, [blurbFadeInAnimation])
 
     const fetchUpdatedConvoMetadata = ()=>{
         setRefreshing(true);
@@ -73,6 +82,11 @@ export default function SingleConvoDetails({route, navigation}: any){
                     {getFormattedTimeFromMs(convoLength)}
                 </Text>
             </View>
+            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation }}>
+                    <Image source={doubleApproved ? require('../../Graphics/streamline-success--interface--1000x1000.png'): 
+                        require('../../Graphics/streamline-protect-privacy--user-people--1000x1000.png')}
+                        resizeMode='contain' style={{ height: '70%', marginTop: '20%' }} />
+            </Animated.View>
             <Text>ConvoID: {convoId}</Text>
             <Text>Partner Name: {partnerName}</Text>
             <Text>Partner Phone number: {partnerPhoneNumber}</Text>
@@ -97,6 +111,11 @@ const styles = StyleSheet.create({
     headingContainer: {
         display: 'flex',        
         alignItems: 'center',        
+    },
+    imageHolder: {
+        display: 'flex',        
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 
