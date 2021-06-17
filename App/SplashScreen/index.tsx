@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
     splashImageContainer: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',        
-        flex: 1,
+        alignItems: 'center',                
         backgroundColor: Colors.backgroundColor
     },
     splashImage: {        
-        resizeMode:'center'                
+        height: '80%',
+        resizeMode:'contain'                
     }
 })
