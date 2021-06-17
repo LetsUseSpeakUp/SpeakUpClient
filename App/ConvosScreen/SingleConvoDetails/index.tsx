@@ -3,7 +3,7 @@ import { View, Text, Button} from 'react-native'
 import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
-import {RefreshControl, ScrollView, StyleSheet, Image, Animated} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet, Image, Animated, ActivityIndicator} from 'react-native'
 import {Colors, Constants, PrimaryButton, SecondaryButton} from '../../Graphics'
 import { useWindowDimensions } from 'react-native';
 
@@ -14,6 +14,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
     const [refreshing, setRefreshing] = useState(false);
+    const [loadingConvoToPlay, setLoadingConvoToPlay] = useState(false);
+
     const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
         Animated.timing(
@@ -45,13 +47,14 @@ export default function SingleConvoDetails({route, navigation}: any){
     }, [])
 
     const downloadAudioFile = ()=>{
+        setLoadingConvoToPlay(true);
         ConvosManager.downloadConvo(convoId).then((filePath)=>{
             console.log("SingleConvoDetail::downloadAudioFile. File downloaded: ", filePath);
             const firstName = amIInitiator ? metadata?.initiatorFirstName : metadata?.receiverFirstName;
             navigation.navigate('Convo Player', {audioFilePath: filePath, convoId: convoId, firstName: firstName});
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetail::downloadAudioFile: ", error);
-        })
+        }).finally(()=>setLoadingConvoToPlay(false));
     }
 
     if(metadata === undefined){
@@ -126,17 +129,12 @@ export default function SingleConvoDetails({route, navigation}: any){
             {doubleApproved &&
             <View style={styles.playButtonContainer}>
                 <PrimaryButton text={'Play'} onPress={()=>{downloadAudioFile()}}/>
+                <ActivityIndicator animating={loadingConvoToPlay} style={{paddingTop: Constants.paddingTop}}/>
             </View>
             }
         </ScrollView>
     )
 }
-
-/*
-<Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>            
-            <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
-            {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
-*/
 
 const styles = StyleSheet.create({
     flexContainer: {
