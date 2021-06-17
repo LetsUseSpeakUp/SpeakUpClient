@@ -1,6 +1,6 @@
 import React from 'react'
 import { KeyboardTypeOptions } from 'react-native'
-import { TouchableOpacity, View, Text, TextInput, StyleSheet, Appearance} from 'react-native'
+import { TouchableOpacity, View, Text, TextInput, StyleSheet} from 'react-native'
 
 
 export const Colors = { //TODO: Support dark mode
@@ -15,7 +15,7 @@ export const Colors = { //TODO: Support dark mode
     secondaryButtonColor: '#555555',
     tabBackgroundColor: '#f2f2f7', 
     mediumTint: '#dfdfec',
-    lightTint: '#f2f2f7'
+    lightTint: '#f2f2f7'    
 }
 
 export const Constants = {
@@ -25,6 +25,7 @@ export const Constants = {
     blurbFontSize: 32,
     contactsListFontSize: 17,
     buttonFontSize: 16,
+    playPauseIconSize: 50,
     detailsFontSize: 14,
     fontFamily: 'Roboto-bold',
     listViewFontFamily: 'Roboto',

@@ -8,6 +8,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import * as ConvosManager from '../../ConvosData/ConvosManager'
 import ConvosContext from '../../ConvosData/ConvosContext'
 import {Constants, Colors, PrimaryButton} from '../../Graphics'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
 export default function ConvoPlayer({route}: any) {
@@ -163,7 +164,7 @@ export default function ConvoPlayer({route}: any) {
                         {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
                     </Text>
             </View>            
-            <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} />
+            <PlayPauseButton isPlaying={playbackState === TrackPlayer.STATE_PLAYING} onPress={onPlayPauseButtonPressed}/>
             <View style={{flexDirection: 'row', paddingTop: 10, }}>
                 <Text>Snippet Start: {snippetStart}</Text>
                 <Button title={'Set'} onPress={setSnippetStartToCurrent}/>
@@ -187,6 +188,26 @@ export default function ConvoPlayer({route}: any) {
     )
 }
 
+function PlayPauseButton({isPlaying, onPress}: {isPlaying: boolean, onPress: ()=>void}){    
+    const iconName = isPlaying ? 'pause-circle-filled' : 'play-circle-filled';
+    return(
+        <View style={{display: 'flex', alignItems: 'center'}}>
+<TouchableOpacity onPress={onPress} style={{width: Constants.playPauseIconSize}}>
+            <View style={{display: 'flex', alignItems: 'center'}}>
+                <Icon name={iconName} size={Constants.playPauseIconSize} color={Colors.primaryButtonBackgroundColor} style={{}}/>
+            </View>            
+        </TouchableOpacity>
+        </View>
+        
+    )    
+}
+/*
+<TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
+            <View style={{ borderRadius: 30, paddingVertical: 10, paddingHorizontal: 30, opacity: opacity}}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.secondaryButtonColor}}>{props.title}</Text>
+            </View>
+        </TouchableOpacity>
+*/
 const styles = StyleSheet.create({
     flexContainer: {
         backgroundColor: Colors.backgroundColor,
