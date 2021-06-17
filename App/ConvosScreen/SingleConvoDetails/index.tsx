@@ -17,6 +17,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
     const [refreshing, setRefreshing] = useState(false);
     const [loadingConvoToPlay, setLoadingConvoToPlay] = useState(false);
+    const shouldFireConfetti = React.useRef(false);
     let confettiRef: any;
 
     const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
@@ -61,9 +62,11 @@ export default function SingleConvoDetails({route, navigation}: any){
     }
 
     const approvePressed = ()=>{
+        shouldFireConfetti.current = true;
         convosContext.approveOrDenySingleConvo(true, convoId);  
-        if(partnerApproval)
+        if(partnerApproval){            
             ReactNativeHapticFeedback.trigger('notificationSuccess', {enableVibrateFallback: true, ignoreAndroidSystemSettings: false});
+        }
     }    
 
     if(metadata === undefined){
@@ -86,7 +89,8 @@ export default function SingleConvoDetails({route, navigation}: any){
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
 
     useEffect(()=>{
-        if(doubleApproved){
+        console.log("SingleConvoDetails. Double approval changed: ", doubleApproved, " Should fire confetti: ", shouldFireConfetti);
+        if(doubleApproved && shouldFireConfetti.current){
             if(confettiRef) confettiRef.start();
         }
     }, [doubleApproved])
@@ -151,7 +155,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             }
             <ConfettiCannon
                 count={200}
-                origin={{x: 0, y: 0}}
+                origin={{x: -50, y: 0}}
                 autoStart={false}
                 fadeOut={true}
                 explosionSpeed={500}
