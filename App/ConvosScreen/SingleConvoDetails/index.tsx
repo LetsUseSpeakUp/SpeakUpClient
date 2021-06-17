@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
 
 function convertApprovalStatusToText(approvalStatus: ConvoResponseType | undefined): string{
     if(approvalStatus === ConvoResponseType.Approved) return "Approved";
-    if(approvalStatus === ConvoResponseType.Disapproved) return "Disapproved";
+    if(approvalStatus === ConvoResponseType.Disapproved) return "Denied";
     if(approvalStatus === ConvoResponseType.Unanswered) return "Unanswered";
     if(approvalStatus === undefined) return "Unanswered";
 
