@@ -53,8 +53,7 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
                     </Text>
                 </View>
                 <View style={styles.nextIconImageContainer}>
-                    <Image source={require('../../Graphics/streamline-icon-interface-arrows-button-left_blue@1000x1000.png')}
-                        resizeMode='contain' style={{height: 20, width: 20}} />
+                    {/* <Image source={require('../../Graphics/streamline-icon-interface-arrows-button-left_blue@1000x1000.png')} resizeMode='contain' style={{height: '50%', width: '50%'}}/> */}
                 </View>                
             </View>
         </TouchableOpacity>
@@ -63,16 +62,6 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
 }
 
 const styles = StyleSheet.create({
-    item: {
-        paddingHorizontal: 8,
-        paddingVertical: 16,
-        marginHorizontal: 20,
-        borderBottomColor: '#CCCCCC',
-        borderBottomWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     convoNameText: {
         fontSize: Constants.minorTitleFontSize,
         fontFamily: Constants.fontFamily,
@@ -94,18 +83,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: Constants.paddingHorizontal / 2,
         display: 'flex',
         flexDirection: 'row',
+        // height: 100,
+        // borderWidth: 1
         // alignContent: 'space-between'
     },
     contactNameDateContainer: {
         display: 'flex',
-        // borderWidth: 1
+        // borderWidth: 1,
+        flex: 0,
+        justifyContent: 'center'
+
     },
     nextIconImageContainer: {
         // borderWidth: 1,        
         flex: 1,
-        display: 'flex',        
-        justifyContent: 'center',
-        alignItems: 'flex-end'
+        display: 'flex',  
+        flexDirection: 'row'   ,   
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+        // alignItems: 'flex-end',
         // height: '100%'
     }
 });

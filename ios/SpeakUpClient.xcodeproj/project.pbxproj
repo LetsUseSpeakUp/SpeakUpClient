@@ -15,6 +15,9 @@
 		96905EF65AED1B983A6B3ABC /* libPods-SpeakUpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-SpeakUpClient.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		D2B3DE1C265C8FDC007EEE47 /* emptybridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B3DE1B265C8FDC007EEE47 /* emptybridge.swift */; };
+		D2D318BF267B130E00696F49 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2D318BD267B130E00696F49 /* Roboto-Regular.ttf */; };
+		D2D318C0267B130E00696F49 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2D318BE267B130E00696F49 /* Roboto-Bold.ttf */; };
+		D2D318C2267B131600696F49 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2D318C1267B131600696F49 /* MaterialIcons.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +36,9 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		D2B3DE1A265C8FDB007EEE47 /* SpeakUpClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SpeakUpClient-Bridging-Header.h"; sourceTree = "<group>"; };
 		D2B3DE1B265C8FDC007EEE47 /* emptybridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = emptybridge.swift; sourceTree = "<group>"; };
+		D2D318BD267B130E00696F49 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		D2D318BE267B130E00696F49 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		D2D318C1267B131600696F49 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -52,6 +58,7 @@
 		13B07FAE1A68108700A75B9A /* SpeakUpClient */ = {
 			isa = PBXGroup;
 			children = (
+				D2D318BC267B102A00696F49 /* Fonts */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -113,6 +120,16 @@
 			);
 			name = Supporting;
 			path = SpeakUpClient/Supporting;
+			sourceTree = "<group>";
+		};
+		D2D318BC267B102A00696F49 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D2D318C1267B131600696F49 /* MaterialIcons.ttf */,
+				D2D318BE267B130E00696F49 /* Roboto-Bold.ttf */,
+				D2D318BD267B130E00696F49 /* Roboto-Regular.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
@@ -188,8 +205,11 @@
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				D2D318C0267B130E00696F49 /* Roboto-Bold.ttf in Resources */,
+				D2D318BF267B130E00696F49 /* Roboto-Regular.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				D2D318C2267B131600696F49 /* MaterialIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
