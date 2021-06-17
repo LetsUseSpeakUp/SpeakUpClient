@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TextInput, SafeAreaView, TouchableOpacity, Image, Button, Animated, useWindowDimensions} from "react-native";
 import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
-import {getMyUserInfo} from '../../AuthLogic'
 import Slider from '@react-native-community/slider';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as ConvosManager from '../../ConvosData/ConvosManager'
+import ConvosContext from '../../ConvosData/ConvosContext'
+import {Constants, Colors, PrimaryButton} from '../../Graphics'
 
 
 export default function ConvoPlayer({route}: any) {
-    
+    const windowDimensions = useWindowDimensions();
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const [snippetStart, setSnippetStart] = useState(0);
@@ -23,8 +24,20 @@ export default function ConvoPlayer({route}: any) {
     const trackPlayerProgress = useTrackPlayerProgress(100);
 
     const audioFilePath = route.params.audioFilePath;
+    const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
-    const firstName = route.params.firstName;    
+    const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
+    const userFirstName = route.params.userFirstName;    
+
+    const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
+    React.useEffect(() => {
+        Animated.timing(
+            blurbFadeInAnimation, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true
+        }).start();
+    }, [blurbFadeInAnimation])
 
     useEffect(()=>{
         if(audioFilePath.length > 0){
@@ -106,8 +119,32 @@ export default function ConvoPlayer({route}: any) {
             });        
     }
 
+    const amIInitiator = (metadata?.initiatorId != null && metadata?.receiverId != null) ? (convosContext.myPhoneNumber === metadata?.initiatorId) : 
+        metadata?.initiatorFirstName === undefined;
+    const partnerFirstName = amIInitiator ? metadata?.receiverFirstName: metadata?.initiatorFirstName;
+    const partnerLastName = amIInitiator ? metadata?.receiverLastName: metadata?.initiatorLastName;
+    const partnerName = (partnerFirstName ?? '') + ' ' + (partnerLastName ?? '');
+    const partnerPhoneNumber = amIInitiator ? metadata?.receiverId : metadata?.initiatorId;
+    const dateTime = metadata?.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata?.timestampStarted) : 'Loading';
+    const convoLength = metadata?.convoLength;
+
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'stretch', paddingHorizontal: 20, marginTop: 30 }}>
+        <SafeAreaView style={{ display: 'flex', backgroundColor: Colors.backgroundColor, flex: 1}}>
+            <View style={styles.headingContainer}>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.minorTitleFontSize, color: Colors.headingTextColor, fontWeight: 'bold'}}>
+                    Convo with {partnerName}
+                </Text>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.unemphasizedTextColor}}>
+                    {dateTime}
+                </Text>
+                <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.emphasizedTextColor}}>
+                    {getFormattedTimeFromMs(convoLength)}
+                </Text>
+            </View>
+            <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop, height: windowDimensions.height*.3}}>
+                    <Image source={require('../../Graphics/streamline-entertain--content-media--1000x1000.png')}
+                        resizeMode='contain' style={{ width: '100%', height: '100%'}} />
+            </Animated.View>
             <Slider
                 onSlidingStart={() => { setSeekingInProgress(true) }}
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
@@ -130,7 +167,7 @@ export default function ConvoPlayer({route}: any) {
             <View style={{flexDirection: 'row', paddingTop: 10}}>
                 <Text>Title:</Text>
                 <TextInput placeholder="Describe this snippet" onChangeText={(text)=>{setSnippetDescription(text)}} 
-                    style={{borderWidth: 1, height: 50, width: 250}} defaultValue={'Snippet from ' + firstName}/>
+                    style={{borderWidth: 1, height: 50, width: 250}} defaultValue={'Snippet from ' + userFirstName}/>
             </View>
             <Button title={'Generate Snippet'} onPress={generateSnippet}/>
             <Text>Snippet Link: {loadingSnippet ? 'Generating...' : snippetLink}</Text>
@@ -142,6 +179,53 @@ export default function ConvoPlayer({route}: any) {
     )
 }
 
+const styles = StyleSheet.create({
+    flexContainer: {
+        backgroundColor: Colors.backgroundColor,
+        display: 'flex',        
+        paddingHorizontal: Constants.paddingHorizontal,        
+        flex: 1
+    },
+    headingContainer: {
+        paddingTop: Constants.paddingTop/2,
+        display: 'flex',        
+        alignItems: 'center',        
+    },
+    imageHolder: {
+        display: 'flex',        
+        alignItems: 'center',
+        justifyContent: 'center',        
+    },
+    propertyText: {
+        fontSize: Constants.propertyFontSize,
+        fontFamily: Constants.fontFamily
+    },
+    approvalStatusHolder: {
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    dividerLineHolder: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    dividerLine: {        
+        borderColor: Colors.dividerLineColor,
+        borderWidth: 1,
+        width: '80%',
+        height: 2,
+    },
+    setApprovalContainer: {
+        display: 'flex',
+        alignItems: 'center',  
+        paddingBottom: Constants.paddingTop/2         
+    },
+    playButtonContainer: {
+        paddingTop: Constants.paddingTop,
+        display: 'flex',
+        alignItems: 'center'
+    }
+})
+
 async function addLocalTrackToPlayer(filePath: string){
     await TrackPlayer.add({
         id: Date.now() + "",
@@ -149,4 +233,15 @@ async function addLocalTrackToPlayer(filePath: string){
         title: 'Convo',
         artist: 'SpeakUp'    
     });
+}
+
+function getFormattedTimeFromMs(timeInMs: number |undefined): string{
+    if(timeInMs == null) return '';
+
+    const minutes = Math.floor(timeInMs/60000);
+    const seconds = ((timeInMs % 60000)/1000).toFixed(0);
+
+    if(minutes > 1) return minutes + ' minutes';
+    else if (minutes === 1) return '1 minute';
+    else return seconds + ' seconds';
 }
