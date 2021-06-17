@@ -62,7 +62,6 @@ export default function SingleConvoDetails({route, navigation}: any){
     }
 
     const approvePressed = ()=>{
-        shouldFireConfetti.current = true;
         convosContext.approveOrDenySingleConvo(true, convoId);  
         if(partnerApproval){            
             ReactNativeHapticFeedback.trigger('notificationSuccess', {enableVibrateFallback: true, ignoreAndroidSystemSettings: false});
@@ -89,11 +88,14 @@ export default function SingleConvoDetails({route, navigation}: any){
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
 
     useEffect(()=>{
-        console.log("SingleConvoDetails. Double approval changed: ", doubleApproved, " Should fire confetti: ", shouldFireConfetti);
         if(doubleApproved && shouldFireConfetti.current){
             if(confettiRef) confettiRef.start();
         }
     }, [doubleApproved])
+
+    useEffect(()=>{
+        shouldFireConfetti.current = true;
+    }, [])
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>} style={styles.flexContainer}>
