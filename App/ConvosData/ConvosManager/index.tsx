@@ -271,20 +271,25 @@ export const _testExistingFileUpload = function () {
     })
 }
 
-export const getFormattedTimeFromTimestamp = (timestamp: number): string=>{
+export const getFormattedDateAndTimeFromTimestamp = (timestamp: number): string=>{
     const date = new Date(timestamp);
     let hours = date.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     const minutes = "0" + date.getMinutes();
-    const seconds = "0" + date.getSeconds();    
-    const month = date.getMonth() + 1; //0 indexed
+    const seconds = "0" + date.getSeconds();        
     
-
-    // const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + ' ' + ampm;
     const formattedTime = hours + ':' + minutes.substr(-2) + ' ' + ampm;
-    const formattedDate = month + "/" + date.getDate() + "/" + date.getFullYear();
+    const formattedDate = getFormattedDateFromTimestamp(timestamp);
     return formattedDate + " " + formattedTime;
+}
+
+export const getFormattedDateFromTimestamp = (timestamp: number): string=>{
+    const date = new Date(timestamp);
+    const month = date.getMonth() + 1; //0 indexed
+    const formattedDate = month + "/" + date.getDate() + "/" + date.getFullYear().toString().substring(2, 4);
+
+    return formattedDate;
 }
 
 const getUploadFileItem = function (filePath: string, fileName: string) {

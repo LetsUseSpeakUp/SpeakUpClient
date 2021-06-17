@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     contactText: {
-        fontFamily: Constants.listViewFontFamily,
-        fontSize: Constants.listItemFontSize,
+        fontFamily: Constants.contactsListFontFamily,
+        fontSize: Constants.contactsListFontSize,
         color: Colors.headingTextColor,        
     },
     sectionHeader: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         marginVertical: -1
     },
     sectionText: {
-        fontFamily: Constants.listViewFontFamily,
+        fontFamily: Constants.contactsListFontFamily,
         fontSize: Constants.detailsFontSize,
         fontWeight: 'bold'
     }

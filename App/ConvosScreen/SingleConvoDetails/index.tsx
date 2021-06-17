@@ -52,7 +52,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const partnerName = amIInitiator ? metadata.receiverFirstName + " " + metadata.receiverLastName :
         metadata.initiatorFirstName + " " + metadata.initiatorLastName;
     const partnerPhoneNumber = amIInitiator ? metadata.receiverId : metadata.initiatorId;
-    const dateTime = metadata.timestampStarted ? ConvosManager.getFormattedTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
+    const dateTime = metadata.timestampStarted ? ConvosManager.getFormattedDateAndTimeFromTimestamp(metadata.timestampStarted) : 'Loading';
     const convoLength = metadata.convoLength ? metadata.convoLength + " milliseconds" : 'Loading'; //TODO: Get formatted time
     const partnerApproval = amIInitiator ? metadata.convoStatus?.receiverResponse : metadata.convoStatus?.initiatorResponse;
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
