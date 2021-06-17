@@ -10,8 +10,9 @@ import ConvosContext from './ConvosData/ConvosContext'
 import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
 import SplashScreen from './SplashScreen'
-import { LogBox } from 'react-native';
+import { LogBox, Text } from 'react-native';
 import {Colors} from './Graphics'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
   'Non-serializable values were found in the navigation state',
@@ -138,7 +139,12 @@ export default function App() {
       approveOrDenySingleConvo: onApproveOrDenySingleConvo, clearConvoToNavTo: clearConvoToNavTo, myPhoneNumber: userPhoneNumber
     }}>
       <NavigationContainer>
-        <Tab.Navigator tabBarOptions={{style: {backgroundColor: Colors.tabBackgroundColor}}}>
+        <Tab.Navigator tabBarOptions={{style: {backgroundColor: Colors.tabBackgroundColor}}} 
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            return <TabBarIcon focused={focused} color={color} size={size} tabName={route.name}/>
+          },
+          })}>
           <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName}} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />
@@ -147,3 +153,28 @@ export default function App() {
     </ConvosContext.Provider>
   );
 }
+
+function TabBarIcon({focused, color, size, tabName}: any){
+  const getIconName= ()=>{
+    if(tabName === 'Call') return 'call';
+    if(tabName === 'Convos') return 'headset';
+    if(tabName === 'Logout') return 'logout';
+    return '';
+  }
+  
+  return <Icon name={getIconName()} size={size} color={color}/>  
+}
+
+/*let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused
+                ? 'ios-information-circle'
+                : 'ios-information-circle-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'ios-list-box' : 'ios-list';
+            }
+
+            // You can return any component that you like here!
+            //return <Text name={iconName} size={size} color={color}
+            return <Text>Sup</Text> */
