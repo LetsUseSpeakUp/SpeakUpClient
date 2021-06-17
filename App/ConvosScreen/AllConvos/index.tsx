@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConvoMetadata } from '../../ConvosData/ConvosManager'
 import * as ConvosManager from '../../ConvosData/ConvosManager'
-import { FlatList, StyleSheet, View, Text, TouchableOpacity, ListRenderItem, Image } from 'react-native';
+import { FlatList, StyleSheet, View, Text, TouchableOpacity, ListRenderItem, Image, Animated } from 'react-native';
 import ConvosContext from '../../ConvosData/ConvosContext'
 import { Constants, Colors } from '../../Graphics';
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -23,6 +23,9 @@ export default function AllConvos({ route, navigation }: any) {
             />
         )
     }
+    if(convosMetadata.length === 0){
+        return <EmptyConvoList/>
+    }
 
     return (
         <View style={styles.container}>
@@ -34,6 +37,35 @@ export default function AllConvos({ route, navigation }: any) {
             />
         </View>
     );
+}
+
+function EmptyConvoList(){
+    const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
+    React.useEffect(() => {
+        Animated.timing(
+            blurbFadeInAnimation, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true
+        }).start();
+    }, [blurbFadeInAnimation])
+    return (
+        <View style={{ ...styles.emptyConvosFlexContainer}}>
+                <Animated.View style={{ ...styles.emptyConvosImageHolder, opacity: blurbFadeInAnimation }}>
+                    <Image source={require('../../Graphics/streamline-icon-love-and-peace@1000x1000.png')}
+                        resizeMode='contain' style={{ height: '70%', marginTop: '20%' }} />
+                </Animated.View>
+                <View style={{ borderBottomWidth: 2, width: '60%' }} />
+                <Animated.View style={{
+                    display: 'flex', flex: 1, width: '100%',
+                    paddingHorizontal: Constants.paddingHorizontal, opacity: blurbFadeInAnimation
+                }}>
+                    <Text style={{ fontFamily: Constants.fontFamily, fontSize: Constants.blurbFontSize, fontWeight: 'bold', marginTop: 20 }}>
+                        Use the Call tab to start your first Convo.
+                    </Text>
+                </Animated.View>
+            </View>
+    )
 }
 
 const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress: () => void }) => {
@@ -84,14 +116,10 @@ const styles = StyleSheet.create({
         marginHorizontal: Constants.paddingHorizontal,
         paddingHorizontal: Constants.paddingHorizontal / 2,
         display: 'flex',
-        flexDirection: 'row',
-        // height: 100,
-        // borderWidth: 1
-        // alignContent: 'space-between'
+        flexDirection: 'row',        
     },
     contactNameDateContainer: {
-        display: 'flex',
-        // borderWidth: 1,
+        display: 'flex',        
         flex: 0,
         justifyContent: 'center'
 
@@ -101,8 +129,26 @@ const styles = StyleSheet.create({
         display: 'flex',  
         flexDirection: 'row'   ,   
         justifyContent: 'flex-end',
-        alignItems: 'center'
-        // alignItems: 'flex-end',
-        // height: '100%'
-    }
+        alignItems: 'center'        
+    },
+    emptyConvosFlexContainer: {
+        display: 'flex',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        backgroundColor: Colors.backgroundColor
+    },
+    emptyConvosImageHolder: {
+        display: 'flex',
+        flex: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    emptyConvosTextHolder: {
+        display: 'flex',
+        flex: 1,
+        width: '100%',
+        paddingHorizontal: Constants.paddingHorizontal
+    },
 });
