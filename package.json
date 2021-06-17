@@ -49,6 +49,7 @@
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-haptic-feedback": "^1.11.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.6",
     "react-native-randombytes": "^3.6.1",

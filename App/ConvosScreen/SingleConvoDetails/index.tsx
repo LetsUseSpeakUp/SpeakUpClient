@@ -7,6 +7,7 @@ import {RefreshControl, ScrollView, StyleSheet, Image, Animated, ActivityIndicat
 import {Colors, Constants, PrimaryButton, SecondaryButton} from '../../Graphics'
 import { useWindowDimensions } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 
 export default function SingleConvoDetails({route, navigation}: any){
@@ -60,10 +61,10 @@ export default function SingleConvoDetails({route, navigation}: any){
     }
 
     const approvePressed = ()=>{
-        convosContext.approveOrDenySingleConvo(true, convoId);
-        if(confettiRef)
-            confettiRef.start();
-    }
+        convosContext.approveOrDenySingleConvo(true, convoId);  
+        if(partnerApproval)
+            ReactNativeHapticFeedback.trigger('notificationSuccess', {enableVibrateFallback: true, ignoreAndroidSystemSettings: false});
+    }    
 
     if(metadata === undefined){
         console.log("ERROR -- SingleConvoDetails. Metadata is undefined. convoId: ", convoId);
@@ -83,6 +84,12 @@ export default function SingleConvoDetails({route, navigation}: any){
     const myApproval = amIInitiator ? metadata.convoStatus?.initiatorResponse : metadata.convoStatus?.receiverResponse;
 
     const doubleApproved = (myApproval === ConvoResponseType.Approved) && (partnerApproval === ConvoResponseType.Approved);
+
+    useEffect(()=>{
+        if(doubleApproved){
+            if(confettiRef) confettiRef.start();
+        }
+    }, [doubleApproved])
     
     return(
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={()=>{fetchUpdatedConvoMetadata()}}/>} style={styles.flexContainer}>
@@ -145,7 +152,7 @@ export default function SingleConvoDetails({route, navigation}: any){
             <ConfettiCannon
                 count={200}
                 origin={{x: 0, y: 0}}
-                autoStart={true}
+                autoStart={false}
                 fadeOut={true}
                 explosionSpeed={500}
                 fallSpeed={5000}
