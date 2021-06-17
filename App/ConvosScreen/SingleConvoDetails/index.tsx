@@ -108,22 +108,32 @@ export default function SingleConvoDetails({route, navigation}: any){
                     {convertApprovalStatusToText(myApproval)}
                 </Text>
             </View>        
-            <View style={styles.dividerLineHolder}>
+            <View style={{...styles.dividerLineHolder, marginTop: Constants.paddingTop}}>
                 <View style={styles.dividerLine}/>
             </View>      
             <View style={styles.setApprovalContainer}>
                 <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>Set Approval</Text>
                 <SecondaryButton title={'Approve'} onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}/>
-            </View>                      
+                <SecondaryButton title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}/>
+            </View>   
+            <View style={styles.dividerLineHolder}>
+                <View style={styles.dividerLine}/>
+            </View>   
+            {!doubleApproved &&                
+            <Text style={{...styles.propertyText, color: Colors.unemphasizedTextColor, paddingTop: Constants.paddingTop}}>
+                Convo must be approved by both participants for playback to be enabled.
+            </Text>}
+            {doubleApproved &&
+            <View style={styles.playButtonContainer}>
+                <PrimaryButton text={'Play'} onPress={()=>{downloadAudioFile()}}/>
+            </View>
+            }
         </ScrollView>
     )
 }
 
 /*
-<Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>
-            <Button title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}>Deny</Button>
-            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
-            <Button title="Refresh" onPress={()=>{fetchUpdatedConvoMetadata()}}></Button>            
+<Button title="Approve" onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}></Button>            
             <Button title="Play" onPress={()=>{downloadAudioFile()}} disabled={!doubleApproved}/>
             {!doubleApproved && <Text>Need approval from both you and your partner to play</Text>}
 */
@@ -157,14 +167,18 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
     },
-    dividerLine: {
-        marginTop: Constants.paddingTop,
+    dividerLine: {        
         borderColor: Colors.dividerLineColor,
         borderWidth: 1,
         width: '80%',
         height: 2,
     },
     setApprovalContainer: {
+        display: 'flex',
+        alignItems: 'center',        
+    },
+    playButtonContainer: {
+        paddingTop: Constants.paddingTop,
         display: 'flex',
         alignItems: 'center'
     }
