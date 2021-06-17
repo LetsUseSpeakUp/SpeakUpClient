@@ -4,6 +4,7 @@ import * as ConvosManager from '../../ConvosData/ConvosManager'
 import { FlatList, StyleSheet, View, Text, TouchableOpacity, ListRenderItem, Image } from 'react-native';
 import ConvosContext from '../../ConvosData/ConvosContext'
 import { Constants, Colors } from '../../Graphics';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default function AllConvos({ route, navigation }: any) {
     const convosContext = React.useContext(ConvosContext);
@@ -53,7 +54,7 @@ const ConvoListItem = ({ metadata, onPress }: { metadata: ConvoMetadata, onPress
                     </Text>
                 </View>
                 <View style={styles.nextIconImageContainer}>
-                    {/* <Image source={require('../../Graphics/streamline-icon-interface-arrows-button-left_blue@1000x1000.png')} resizeMode='contain' style={{height: '50%', width: '50%'}}/> */}
+                    <Icon name="chevron-right" size={Constants.chevronFontSize} color={Colors.unemphasizedTextColor}/>
                 </View>                
             </View>
         </TouchableOpacity>
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     convoNameText: {
         fontSize: Constants.minorTitleFontSize,
         fontFamily: Constants.fontFamily,
-        color: Colors.headingTextColor
+        color: Colors.headingTextColor,
     },
     convoDateText: {
         fontSize: Constants.detailsFontSize,
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        backgroundColor: Colors.backgroundColor
     },
     singleConvoContainer: {
         borderBottomColor: Colors.mediumTint,
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
 
     },
     nextIconImageContainer: {
-        // borderWidth: 1,        
         flex: 1,
         display: 'flex',  
         flexDirection: 'row'   ,   

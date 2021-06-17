@@ -30,6 +30,7 @@ export const Constants = {
     listViewPaddingVertical: 10,
     majorTitleFontSize: 22,
     minorTitleFontSize: 18,
+    chevronFontSize: 24
 }
 
 export const PrimaryButtonView = (props: { text: string, opacity?: number}) => {
