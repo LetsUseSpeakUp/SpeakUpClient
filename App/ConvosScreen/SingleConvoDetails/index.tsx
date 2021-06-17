@@ -6,6 +6,7 @@ import ConvosContext from '../../ConvosData/ConvosContext'
 import {RefreshControl, ScrollView, StyleSheet, Image, Animated, ActivityIndicator} from 'react-native'
 import {Colors, Constants, PrimaryButton, SecondaryButton} from '../../Graphics'
 import { useWindowDimensions } from 'react-native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 
 export default function SingleConvoDetails({route, navigation}: any){
@@ -15,6 +16,7 @@ export default function SingleConvoDetails({route, navigation}: any){
     const metadata = convosContext.allConvosMetadata.find((curMetadata)=>curMetadata.convoId === convoId);    
     const [refreshing, setRefreshing] = useState(false);
     const [loadingConvoToPlay, setLoadingConvoToPlay] = useState(false);
+    let confettiRef: any;
 
     const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
@@ -55,6 +57,12 @@ export default function SingleConvoDetails({route, navigation}: any){
         }).catch((error)=>{
             console.log("ERROR -- SingleConvoDetail::downloadAudioFile: ", error);
         }).finally(()=>setLoadingConvoToPlay(false));
+    }
+
+    const approvePressed = ()=>{
+        convosContext.approveOrDenySingleConvo(true, convoId);
+        if(confettiRef)
+            confettiRef.start();
     }
 
     if(metadata === undefined){
@@ -118,7 +126,7 @@ export default function SingleConvoDetails({route, navigation}: any){
                 <Text style={{...styles.propertyText, color: Colors.headingTextColor, fontWeight: 'bold', paddingTop: Constants.propertySpacing}}>
                     Set Approval
                 </Text>
-                <SecondaryButton title={'Approve'} onPress={()=>{convosContext.approveOrDenySingleConvo(true, convoId)}}/>
+                <SecondaryButton title={'Approve'} onPress={()=>{approvePressed()}}/>
                 <SecondaryButton title="Deny" onPress={()=>{convosContext.approveOrDenySingleConvo(false, convoId)}}/>
             </View>   
             <View style={styles.dividerLineHolder}>
@@ -134,6 +142,13 @@ export default function SingleConvoDetails({route, navigation}: any){
                 <ActivityIndicator animating={loadingConvoToPlay} style={{paddingTop: Constants.paddingTop}}/>
             </View>
             }
+            <ConfettiCannon
+                count={200}
+                origin={{x: -10, y: 0}}
+                autoStart={true}
+                fadeOut={true}
+                ref={ref => (confettiRef = ref)}
+            />
         </ScrollView>
     )
 }

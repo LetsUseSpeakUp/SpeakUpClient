@@ -8565,6 +8565,11 @@
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
 
+"react-native-confetti-cannon@^1.5.2":
+  "integrity" "sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg=="
+  "resolved" "https://registry.npmjs.org/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz"
+  "version" "1.5.2"
+
 "react-native-contacts@^7.0.0":
   "integrity" "sha512-K8DYUo3voC/cHFqy7FJzDRCmtsI5fkhjb7tWqfGe1hU/78XL3BcevEC6ZFCeiBDC2PaU6Y1bsq9969mEYODhCw=="
   "resolved" "https://registry.npmjs.org/react-native-contacts/-/react-native-contacts-7.0.0.tgz"
