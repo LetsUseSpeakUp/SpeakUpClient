@@ -138,15 +138,14 @@ export default function ConvoPlayer({route}: any) {
                     {dateTime}
                 </Text>
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.propertyFontSize, color: Colors.emphasizedTextColor}}>
-                    {getFormattedTimeFromMs(convoLength)}
+                    {getTitleFormattedTimeFromMs(convoLength)}
                 </Text>
             </View>
             <Animated.View style={{ ...styles.imageHolder, opacity: blurbFadeInAnimation, paddingVertical: Constants.paddingTop, height: windowDimensions.height*.3}}>
                     <Image source={require('../../Graphics/streamline-entertain--content-media--1000x1000.png')}
                         resizeMode='contain' style={{ width: '100%', height: '100%'}} />
             </Animated.View>
-            <Slider
-                style={styles.sliderStyle}
+            <Slider                
                 onSlidingStart={() => { setSeekingInProgress(true) }}
                 onSlidingComplete={(val) => { setSlidingCompleteVal(val) }}
                 value={sliderValue}
@@ -156,8 +155,14 @@ export default function ConvoPlayer({route}: any) {
                 onValueChange={(newValue)=>{                    
                     if(playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)}}
             />
-            <Text>Track Position: {playbackState === TrackPlayer.STATE_PLAYING ? trackPlayerProgress.position : sliderValue}</Text>
-            <Text>Track Duration: {trackPlayerProgress.duration}</Text>
+            <View style={styles.durationAndCurrentTimeContainer}>
+                    <Text style={styles.trackTimeText}>
+                        {playbackState === TrackPlayer.STATE_PLAYING ? getTrackFormattedTimeFromSeconds(trackPlayerProgress.position)  : getTrackFormattedTimeFromSeconds(sliderValue)}
+                    </Text>
+                    <Text style={styles.trackTimeText}>
+                        {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
+                    </Text>
+            </View>            
             <Button title={playbackState === TrackPlayer.STATE_PLAYING ? "Pause" : "Play"} onPress={() => { onPlayPauseButtonPressed() }} />
             <View style={{flexDirection: 'row', paddingTop: 10, }}>
                 <Text>Snippet Start: {snippetStart}</Text>
@@ -200,8 +205,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',        
     },
-    sliderStyle: {   
-        
+    durationAndCurrentTimeContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+    },
+    trackTimeText: {
+        color: Colors.unemphasizedTextColor,
+        fontSize: Constants.detailsFontSize
     },
     propertyText: {
         fontSize: Constants.propertyFontSize,
@@ -242,7 +253,7 @@ async function addLocalTrackToPlayer(filePath: string){
     });
 }
 
-function getFormattedTimeFromMs(timeInMs: number |undefined): string{
+function getTitleFormattedTimeFromMs(timeInMs: number |undefined): string{
     if(timeInMs == null) return '';
 
     const minutes = Math.floor(timeInMs/60000);
@@ -251,4 +262,12 @@ function getFormattedTimeFromMs(timeInMs: number |undefined): string{
     if(minutes > 1) return minutes + ' minutes';
     else if (minutes === 1) return '1 minute';
     else return seconds + ' seconds';
+}
+
+function getTrackFormattedTimeFromSeconds(timeInSeconds: number): string{
+    const minutes = Math.floor(timeInSeconds/60);
+    let seconds = ((timeInSeconds % 60)).toFixed(0);
+    if(seconds.length === 1) seconds = '0' + seconds;
+
+    return minutes + ":" + seconds;
 }
