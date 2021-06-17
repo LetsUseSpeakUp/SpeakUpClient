@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
     sectionHeader: {
         paddingHorizontal: Constants.paddingHorizontal,
         backgroundColor: Colors.lightTint,
-        paddingVertical: 2
+        paddingVertical: 2,
+        marginVertical: -1
     },
     sectionText: {
         fontFamily: Constants.listViewFontFamily,
