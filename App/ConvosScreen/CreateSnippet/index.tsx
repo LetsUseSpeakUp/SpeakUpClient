@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, SafeAreaView} from 'react-native'
+import {Text, View, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native'
 import {SpeakupTextInput, Colors, Constants, PrimaryButton} from '../../Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -10,10 +10,16 @@ export default function CreateSnippet({route, navigation}: any){
         //TODO
     }
 
+    const onClosePressed = ()=>{
+        //TODO
+    }
+
     return(
     <SafeAreaView style={styles.flexContainer}>
         <View style={styles.closeIconContainer}>
-            <Icon name='phone' size={Constants.playPauseIconSize}/>
+            <TouchableOpacity onPress={onClosePressed}>
+                <Icon name='close' size={Constants.closeIconSize}/>
+            </TouchableOpacity>            
         </View>        
         <Text>Give your Snippet a name.</Text>
         <SpeakupTextInput defaultValue={'Snippet from TODO'} onChangeText={(newText)=>setSnippetTitle(newText)} autoFocus={true}/>
@@ -29,13 +35,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flex: 1,
         backgroundColor: Colors.backgroundColor,
-        paddingTop: Constants.paddingTop,
-        paddingHorizontal: Constants.paddingHorizontal
+        paddingTop: Constants.paddingTop        
     },
     closeIconContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        paddingRight: Constants.paddingTop
     },
     createButtonContainer: {
         display: 'flex',

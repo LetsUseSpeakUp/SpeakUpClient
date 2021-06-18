@@ -26,6 +26,7 @@ export const Constants = {
     contactsListFontSize: 17,
     buttonFontSize: 16,
     playPauseIconSize: 50,
+    closeIconSize: 40,
     detailsFontSize: 14,
     fontFamily: 'Roboto-bold',
     listViewFontFamily: 'Roboto',
