@@ -145,7 +145,9 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             return <TabBarIcon focused={focused} color={color} size={size} tabName={route.name}/>
           },
-          })}>
+          })}
+          initialRouteName={'Convos'}
+          >
           <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName}} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />
