@@ -275,7 +275,7 @@ export const getFormattedDateAndTimeFromTimestamp = (timestamp: number): string=
     const date = new Date(timestamp);
     let hours = date.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
+    if(hours !== 12) hours = hours % 12;            
     const minutes = "0" + date.getMinutes();
     const seconds = "0" + date.getSeconds();        
     
