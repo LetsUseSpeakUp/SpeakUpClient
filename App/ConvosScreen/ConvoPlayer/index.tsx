@@ -11,7 +11,7 @@ import { Constants, Colors, PrimaryButton, SecondaryButton } from '../../Graphic
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
-export default function ConvoPlayer({ route }: any) {
+export default function ConvoPlayer({ route, navigation }: any) {
     const windowDimensions = useWindowDimensions();
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
@@ -28,7 +28,6 @@ export default function ConvoPlayer({ route }: any) {
     const convosContext = React.useContext(ConvosContext);
     const convoId = route.params.convoId;
     const metadata = convosContext.allConvosMetadata.find((curMetadata) => curMetadata.convoId === convoId);
-    const userFirstName = route.params.userFirstName;
 
     const blurbFadeInAnimation = React.useRef(new Animated.Value(0)).current
     React.useEffect(() => {
@@ -107,6 +106,7 @@ export default function ConvoPlayer({ route }: any) {
 
     const onCreateSnippetPressed = ()=>{
         console.log("ConvoPlayer::onCreateSnippetPressed");
+        navigation.navigate('CreateSnippetModal', {snippetStart: snippetStart, snippetEnd: snippetEnd});
         //TODO: Nav to gen snippet class and pass start time and end time
     }
 

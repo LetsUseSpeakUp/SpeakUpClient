@@ -4,10 +4,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import SingleConvoDetails from './SingleConvoDetails';
 import ConvosContext from '../ConvosData/ConvosContext'
 import ConvoPlayer from './ConvoPlayer'
+import CreateSnippet from './CreateSnippet'
 import {Colors} from '../Graphics'
 
+const MainStack = createStackNavigator();
+const RootStack = createStackNavigator();
 export default function ConvosScreen({route, navigation}: any) {  
-  const Stack = createStackNavigator();
   const convosContext = React.useContext(ConvosContext);
 
 
@@ -20,11 +22,20 @@ export default function ConvosScreen({route, navigation}: any) {
   }, [convosContext.convoToNavTo])
 
   return(
-      <Stack.Navigator>
-        <Stack.Screen name="All Convos" component={AllConvos} options={{...stackScreenOptions}}/>
-        <Stack.Screen name="Convo Details" component={SingleConvoDetails} options={{...stackScreenOptions}}/>
-        <Stack.Screen name="Convo Player" component={ConvoPlayer} options={{...stackScreenOptions}}/>
-      </Stack.Navigator>    
+    <RootStack.Navigator mode='modal'>
+        <RootStack.Screen name='Main' component={MainStackScreen} options={{headerShown: false}}/>
+        <RootStack.Screen name='CreateSnippetModal' component={CreateSnippet} options={{headerShown: false}}/>
+      </RootStack.Navigator>
+  )
+}
+
+function MainStackScreen(){
+  return(
+    <MainStack.Navigator>
+          <MainStack.Screen name="All Convos" component={AllConvos} options={{...stackScreenOptions}}/>
+          <MainStack.Screen name="Convo Details" component={SingleConvoDetails} options={{...stackScreenOptions}}/>
+          <MainStack.Screen name="Convo Player" component={ConvoPlayer} options={{...stackScreenOptions}}/>
+        </MainStack.Navigator>    
   )
 }
 
