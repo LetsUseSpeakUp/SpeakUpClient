@@ -12,7 +12,7 @@ import ConvosContext from '../ConvosData/ConvosContext'
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.Ringing_Receiver);    //useState(CallState.Contacts);    
+    const [callState, setCallState] = useState(CallState.Contacts);
 
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
@@ -124,7 +124,8 @@ export default function CallScreen({route, navigation}: any) {
             onHangup={onHangup} statusText={'Connecting...'}/>)
         case CallState.OnCall: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
             onHangup={onHangup} statusText={'On Call'}/>)
-        case CallState.Disconnecting: return(<View style={styles.container}><Text>Disconnecting</Text></View>)
+        case CallState.Disconnecting: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={()=>{}} statusText={'Disconnecting...'}/>)
         default: return(<View style={styles.container}><Text>Error - Unknown state</Text></View>)
     }
 }
