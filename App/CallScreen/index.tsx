@@ -8,6 +8,8 @@ import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
+import RNCallKeep from 'react-native-callkeep';
+import uuid from 'uuid-random'; 
 
 export default function CallScreen({route, navigation}: any) {    
 
@@ -22,6 +24,8 @@ export default function CallScreen({route, navigation}: any) {
     const convosContext = useContext(ConvosContext);
     const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
     const _curDummyCount = useRef(0);
+
+    const [callUUID, setCallUUID] = useState('');
     
 
     useEffect(()=>{
@@ -101,6 +105,11 @@ export default function CallScreen({route, navigation}: any) {
     const onCallPlaced = (tempPartnerPhoneNumber: string)=>{        
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
         callManager.current.placeCall(tempPartnerPhoneNumber);
+        const newUUID = uuid().toLowerCase();
+        setCallUUID(newUUID);
+        // RNCallKeep.startCall(newUUID, '408-343-1055', 'faraz home');
+        RNCallKeep.displayIncomingCall(newUUID, '408-917-8685', 'faraz random');
+        // RNCallKeep.setC
         setCallState(CallState.Ringing_Sender);
     }
 
@@ -109,7 +118,7 @@ export default function CallScreen({route, navigation}: any) {
         setCallState(CallState.Disconnecting);
     }
 
-    switch(callState){
+    switch(callState){ //TODO: Just return contacts. Let RNCallKeep handle the rest
         case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
         case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
         case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
