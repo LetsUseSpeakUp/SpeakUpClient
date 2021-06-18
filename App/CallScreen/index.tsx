@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, useContext} from 'react'
 
 import { View, StyleSheet, Text} from 'react-native';
 import {CallManagerInstance} from './Logic/CallManager'
-import RingingScreen from './RingingScreen'
+import GenericCallSCreen from './GenericCallScreen';
 import ContactsScreen from './ContactsScreen'
 import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
@@ -116,10 +116,10 @@ export default function CallScreen({route, navigation}: any) {
 
     switch(callState){
         case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
-        case CallState.Ringing_Sender: return(<RingingScreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
-            onHangup={()=>{onRingAnswered(false)}}/>)
-        case CallState.Ringing_Receiver: return(<RingingScreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
-            onHangup={()=>{onRingAnswered(false)}} onAcceptCall={()=>{onRingAnswered(true)}}/>)
+        case CallState.Ringing_Sender: return(<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={()=>{onRingAnswered(false)}} statusText={'Ringing...'}/>)
+        case CallState.Ringing_Receiver: return(<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={()=>{onRingAnswered(false)}} onAcceptCall={()=>{onRingAnswered(true)}} statusText={'Ringing...'}/>)
         case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)
         case CallState.OnCall: return (<OnCallScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>);
         case CallState.Disconnecting: return(<View style={styles.container}><Text>Disconnecting</Text></View>)
