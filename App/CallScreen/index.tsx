@@ -36,6 +36,7 @@ export default function CallScreen({route, navigation}: any) {
 
     useEffect(()=>{
         getMyUserInfo().then((userInfo)=>{
+            console.log("CallScreen::init. User info: ", userInfo);
             if(!userInfo.phoneNumber) throw 'user phone number is null';
             setUserPhoneNumber(userInfo.phoneNumber);
             setUserFirstName(userInfo.firstName ?? '');

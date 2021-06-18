@@ -69,8 +69,8 @@ export const enterPhoneNumberVerification = async(phoneNumber: string, verificat
 }
 
 export const setUserMetadata = async(metadata: {first_name: string, last_name: string})=>{    
-    await AsyncStorage.setItem('first_name', metadata.first_name);
-    await AsyncStorage.setItem('last_name', metadata.last_name);
+    await AsyncStorage.setItem('firstName', metadata.first_name);
+    await AsyncStorage.setItem('lastName', metadata.last_name);
     const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
     const userId = response.sub;
     return await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});    

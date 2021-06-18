@@ -61,6 +61,7 @@ class SignalServer extends EventEmitter{
     }
 
     async listenForMyPhoneNumber(myPhoneNumber: string){
+        console.log("SignalServer::listenForMyPhoneNumber");
         if(this.initialized){
             console.log("SignalServer::listenForMyPhoneNumber. Already initialized. Doing nothing");
             return;
@@ -68,16 +69,16 @@ class SignalServer extends EventEmitter{
         this.initialized = true;
         this.setupRtm();
         await this.client.createClient(APPID);
-        try{
+        try{            
             const rtmToken = await getRtmToken();
-            console.log("SignalServer::listenForMyPhoneNumber. RtmToken: ", rtmToken, " phone number: ", myPhoneNumber);
+            console.log("SignalServer::listenForMyPhoneNumber. RtmToken received");
             await this.client.login({
                 uid: myPhoneNumber,
                 token: rtmToken
             });
         }
         catch(error){
-            console.log("ERROR -- SignalServer::listenForMyPhoneNumber -- getRTMToken: ", error);
+            console.log("ERROR -- SignalServer::listenForMyPhoneNumber -- getRTMToken: ", error.toString());
         }
     }    
 
