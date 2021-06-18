@@ -109,7 +109,7 @@ export default function CallScreen({route, navigation}: any) {
         setCallState(CallState.Ringing_Sender);
     }
 
-    const onHangUp = ()=>{
+    const onHangup = ()=>{
         callManager.current.endCall();
         setCallState(CallState.Disconnecting);
     }
@@ -120,8 +120,10 @@ export default function CallScreen({route, navigation}: any) {
             onHangup={()=>{onRingAnswered(false)}} statusText={'Ringing...'}/>)
         case CallState.Ringing_Receiver: return(<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
             onHangup={()=>{onRingAnswered(false)}} onAcceptCall={()=>{onRingAnswered(true)}} statusText={'Ringing...'}/>)
-        case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)
-        case CallState.OnCall: return (<OnCallScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>);
+        case CallState.Connecting: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={onHangup} statusText={'Connecting...'}/>)
+        case CallState.OnCall: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={onHangup} statusText={'On Call'}/>)
         case CallState.Disconnecting: return(<View style={styles.container}><Text>Disconnecting</Text></View>)
         default: return(<View style={styles.container}><Text>Error - Unknown state</Text></View>)
     }
