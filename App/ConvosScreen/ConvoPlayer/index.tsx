@@ -106,8 +106,8 @@ export default function ConvoPlayer({ route, navigation }: any) {
 
     const onCreateSnippetPressed = ()=>{
         console.log("ConvoPlayer::onCreateSnippetPressed");
-        navigation.navigate('CreateSnippetModal', {snippetStart: snippetStart, snippetEnd: snippetEnd});
-        //TODO: Nav to gen snippet class and pass start time and end time
+        navigation.navigate('CreateSnippetModal', {snippetStart: snippetStart, snippetEnd: snippetEnd, 
+            convoId: convoId, userFirstName: route.params.userFirstName, audioFilePath: audioFilePath});        
     }
 
     const generateSnippet = () => { //TODO: Move to the snippet creation file

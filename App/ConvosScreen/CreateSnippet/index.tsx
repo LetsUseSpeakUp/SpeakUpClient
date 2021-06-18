@@ -4,14 +4,20 @@ import { SpeakupTextInput, Colors, Constants, PrimaryButton } from '../../Graphi
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default function CreateSnippet({ route, navigation }: any) {
-    const [snippetTitle, setSnippetTitle] = React.useState('Snippet from TODO');
+    const userFirstName = route.params.userFirstName;
+    const [snippetTitle, setSnippetTitle] = React.useState('Snippet from ' + userFirstName);
+
+    const convoId = route.params.convoId;
+    const snippetStart = route.params.snippetStart;
+    const snippetEnd = route.params.snippetEnd;
 
     const onCreatePressed = () => {
         //TODO
     }
 
     const onClosePressed = () => {
-        //TODO
+        navigation.navigate('Convo Player', {audioFilePath: route.params.audioFilePath, convoId: route.params.convoId, 
+            userFirstName: route.params.userFirstName});
     }
 
     return (
