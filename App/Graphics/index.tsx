@@ -1,7 +1,7 @@
 import React from 'react'
 import { KeyboardTypeOptions } from 'react-native'
-import { TouchableOpacity, View, Text, TextInput, StyleSheet} from 'react-native'
-
+import { TouchableOpacity, View, Text, TextInput, StyleSheet, TouchableHighlight} from 'react-native'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 export const Colors = { //TODO: Support dark mode
     backgroundColor: '#fff',    
@@ -16,7 +16,9 @@ export const Colors = { //TODO: Support dark mode
     tabBackgroundColor: '#f2f2f7', 
     mediumTint: '#dfdfec',
     lightTint: '#f2f2f7',
-    hangupIconBackgroundColor: '#ff3a30'
+    hangupIconBackgroundColor: '#ff3a30',
+    callAnswer: '#34C759',
+    callHangup: '#FF3A30'
 }
 
 export const Constants = {
@@ -64,6 +66,17 @@ export const SecondaryButton = (props: {title: string, onPress: ()=> void, disab
                 <Text style={{fontFamily: Constants.fontFamily, fontSize: Constants.buttonFontSize, color: Colors.secondaryButtonColor}}>{props.title}</Text>
             </View>
         </TouchableOpacity>
+    )
+}
+
+export const CallScreenButton = (props: {onPress: ()=>void, text: string, color: string})=>{
+    const buttonSize = 70;
+    return (
+        <TouchableOpacity style={{width: buttonSize, height: buttonSize, display: 'flex', justifyContent: 'center', 
+            alignItems: 'center', backgroundColor: props.color, borderRadius: buttonSize}} onPress={props.onPress}>
+            <MaterialIcon name={props.text} size={buttonSize*.6} color={Colors.backgroundColor}/>
+        </TouchableOpacity>
+        
     )
 }
 

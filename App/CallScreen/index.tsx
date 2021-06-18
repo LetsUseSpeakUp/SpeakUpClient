@@ -48,7 +48,8 @@ export default function CallScreen({route, navigation}: any) {
         }
         callManager.current.on('callReceived', (callerPhoneNumber: string, callerFirstName: string, callerLastName: string)=>{
             setPartnerPhoneNumber(callerPhoneNumber);
-            setPartnerName(callerFirstName + ' ' + callerLastName);
+            setPartnerFirstName(callerFirstName);
+            setPartnerLastName(callerLastName);            
             setCallState(CallState.Ringing_Receiver);
         })
         callManager.current.on('disconnected', ()=>{

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Button, Text, SafeAreaView } from 'react-native';
-import {Colors, Constants} from '../../Graphics'
+import {Colors, Constants, CallScreenButton} from '../../Graphics'
 
 export default function RingingScreen({partnerFirstName, partnerLastName, onHangup, onAcceptCall}: 
     {partnerFirstName: string, partnerLastName: string, onHangup: ()=>void, onAcceptCall?: ()=>void}){
@@ -10,7 +10,7 @@ export default function RingingScreen({partnerFirstName, partnerLastName, onHang
                 <Text style={styles.partnerNameText}>{partnerFirstName + ' ' + partnerLastName}</Text>    
                 <Text style={styles.ringingText}>Ringing...</Text>
             </View>            
-            <View>
+            <View style={styles.buttonContainer}>
                 {onAcceptCall && <HangupAndAcceptButton onHangup={onHangup} onAccept={onAcceptCall}/>}
                 {!onAcceptCall && <HangupButton onHangup={onHangup}/> }
             </View>            
@@ -20,7 +20,7 @@ export default function RingingScreen({partnerFirstName, partnerLastName, onHang
 }
 
 function HangupButton({onHangup}: {onHangup: ()=>void}){
-    return <Text>Hangup</Text>; //TODO
+    return <CallScreenButton text='call-end' onPress={onHangup} color={Colors.callHangup}/>
 }
 
 function HangupAndAcceptButton({onHangup, onAccept}: {onHangup: ()=>void, onAccept: ()=>void}){
@@ -50,5 +50,10 @@ const styles = StyleSheet.create({
         fontSize: Constants.minorTitleFontSize,
         color: Colors.emphasizedTextColor,
         paddingTop: Constants.propertySpacing
+    },
+    buttonContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        // justifyContent: 'space-between',        
     }
 })
