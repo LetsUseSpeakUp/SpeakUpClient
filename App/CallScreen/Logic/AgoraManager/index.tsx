@@ -53,27 +53,32 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine.enableAudio();
     }
 
-    public async joinChannel(channelName: string, isInitiator: boolean) {        
-        if (this.connectionState === ConnectionState.Connected) {
-            console.log("ERROR. AgoraManager::joinChannel. connection state == connected");
-        }
-        this.connectionState = ConnectionState.Connecting;
-
-        const channelToken = await getChannelToken(channelName, isInitiator);
-        await this.rtcEngine?.joinChannel(
-            channelToken,
-            channelName, null, 0
-        );
-
-        console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production        
-
-        const intervalID = setInterval(() => {
-            if (!this.isConnectedToPartner()) {
-                console.log("AgoraManager::joinChannel -- not connected to partner after 30 seconds. Disconnecting");
-                this.leaveChannel();
-                clearInterval(intervalID);
+    public async joinChannel(channelName: string, isInitiator: boolean) {  
+        try{
+            if (this.connectionState === ConnectionState.Connected) {
+                console.log("ERROR. AgoraManager::joinChannel. connection state == connected");
             }
-        }, 30000)
+            this.connectionState = ConnectionState.Connecting;
+    
+            const channelToken = await getChannelToken(channelName, isInitiator);
+            await this.rtcEngine?.joinChannel(
+                channelToken,
+                channelName, null, 0
+            );
+    
+            console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production        
+    
+            const intervalID = setInterval(() => {
+                if (!this.isConnectedToPartner()) {
+                    console.log("AgoraManager::joinChannel -- not connected to partner after 30 seconds. Disconnecting");
+                    this.leaveChannel();
+                    clearInterval(intervalID);
+                }
+            }, 30000)
+        }            
+        catch(error)  {
+            console.log("ERROR -- AgoraManager::joinChannel: ", error);
+        }
     }
 
     /**
