@@ -9,11 +9,9 @@ export default function RingingScreen({partnerFirstName, partnerLastName, onHang
             <View style={styles.titleContainer}>
                 <Text style={styles.partnerNameText}>{partnerFirstName + ' ' + partnerLastName}</Text>    
                 <Text style={styles.ringingText}>Ringing...</Text>
-            </View>            
-            <View style={styles.buttonContainer}>
+            </View>                        
                 {onAcceptCall && <HangupAndAcceptButton onHangup={onHangup} onAccept={onAcceptCall}/>}
-                {!onAcceptCall && <HangupButton onHangup={onHangup}/> }
-            </View>            
+                {!onAcceptCall && <HangupButton onHangup={onHangup}/> }            
         </SafeAreaView>
         
     )
@@ -24,7 +22,12 @@ function HangupButton({onHangup}: {onHangup: ()=>void}){
 }
 
 function HangupAndAcceptButton({onHangup, onAccept}: {onHangup: ()=>void, onAccept: ()=>void}){
-    return <Text>Hangup. Accept</Text>; //TODO
+    return(
+        <View style={styles.buttonContainer}>            
+            <CallScreenButton text='call-end' onPress={onHangup} color={Colors.callHangup}/>
+            <CallScreenButton text='call' onPress={onAccept} color={Colors.callAnswer}/>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -54,6 +57,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         display: 'flex',
         flexDirection: 'row',
-        // justifyContent: 'space-between',        
+        justifyContent: 'space-around',        
+        width: '100%'
     }
 })

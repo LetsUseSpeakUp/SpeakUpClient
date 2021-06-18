@@ -12,7 +12,7 @@ import ConvosContext from '../ConvosData/ConvosContext'
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.Ringing_Sender);    //useState(CallState.Contacts);    
+    const [callState, setCallState] = useState(CallState.Ringing_Receiver);    //useState(CallState.Contacts);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
