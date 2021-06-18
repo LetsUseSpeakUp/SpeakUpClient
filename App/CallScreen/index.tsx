@@ -20,8 +20,8 @@ export default function CallScreen({route, navigation}: any) {
     const [userFirstName, setUserFirstName] = useState('');
     const [userLastName, setUserLastName] = useState('');
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
-    const [partnerFirstName, setPartnerFirstName] = useState('TestFirstName'); //TODO: Change
-    const [partnerLastName, setPartnerLastName] = useState('TestLastName'); //TODO: Change
+    const [partnerFirstName, setPartnerFirstName] = useState('');
+    const [partnerLastName, setPartnerLastName] = useState('');
     const convosContext = useContext(ConvosContext);
     const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
     const _curDummyCount = useRef(0);    

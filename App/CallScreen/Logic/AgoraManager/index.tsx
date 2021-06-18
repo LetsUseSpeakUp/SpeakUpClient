@@ -65,9 +65,7 @@ export default class AgoraManager extends EventEmitter {
                 channelToken,
                 channelName, null, 0
             );
-    
-            console.log("AgoraManager::joinChannel. Channel token: ", channelToken); //TODO: Delete this when in production        
-    
+        
             const intervalID = setInterval(() => {
                 if (!this.isConnectedToPartner()) {
                     console.log("AgoraManager::joinChannel -- not connected to partner after 30 seconds. Disconnecting");

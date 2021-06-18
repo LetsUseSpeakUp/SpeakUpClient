@@ -110,21 +110,6 @@ export default function ConvoPlayer({ route, navigation }: any) {
             convoId: convoId, userFirstName: route.params.userFirstName, audioFilePath: audioFilePath});        
     }
 
-    const generateSnippet = () => { //TODO: Move to the snippet creation file
-        setLoadingSnippet(true);
-        ConvosManager.generateSnippetLink(convoId, snippetStart, snippetEnd, snippetDescription)
-            .then((snippetUrl) => {
-                setSnippetLink(snippetUrl);
-            })
-            .catch((error) => {
-                console.log("")
-                setSnippetLink('Error - unable to generate snippet');
-            })
-            .finally(() => {
-                setLoadingSnippet(false);
-            });
-    }
-
     const amIInitiator = (metadata?.initiatorId != null && metadata?.receiverId != null) ? (convosContext.myPhoneNumber === metadata?.initiatorId) :
         metadata?.initiatorFirstName === undefined;
     const partnerFirstName = amIInitiator ? metadata?.receiverFirstName : metadata?.initiatorFirstName;

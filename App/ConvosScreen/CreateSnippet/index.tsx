@@ -7,7 +7,7 @@ import {generateSnippetLink} from '../../ConvosData/ConvosManager'
 export default function CreateSnippet({ route, navigation }: any) {
     const userFirstName = route.params.userFirstName;
     const [snippetTitle, setSnippetTitle] = React.useState('Snippet from ' + userFirstName);
-    const [isLoading, setIsLoading] = React.useState(false); //TODO
+    const [isLoading, setIsLoading] = React.useState(false);
     const [snippetURL, setSnippetURL] = React.useState('');
 
     const convoId = route.params.convoId;
@@ -24,7 +24,7 @@ export default function CreateSnippet({ route, navigation }: any) {
                 messageToShare = createdSnippetLink;
                 setSnippetURL(createdSnippetLink);
             }
-            const shareResult = await Share.share({message: messageToShare}); //TODO
+            const shareResult = await Share.share({message: messageToShare});
             console.log("CreateSnippet::onSharePressed. ShareResult: ", shareResult);
         }
         catch(error){
