@@ -21,7 +21,7 @@ class CallManager extends EventEmitter {
     myFirstName: string = ''
     myLastName: string = ''
     partnerPhoneNumber: string = ''
-    agoraChannelName: string = ''
+    agoraChannelName: string = ''    
     agoraManager: AgoraManager
     isInitiator = false
     convoMetadata: ConvoMetadata | undefined

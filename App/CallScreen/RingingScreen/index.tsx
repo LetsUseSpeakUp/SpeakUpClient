@@ -1,14 +1,27 @@
 import React from 'react'
-import { View, StyleSheet, Button, Text } from 'react-native';
+import { View, StyleSheet, Button, Text, SafeAreaView } from 'react-native';
 
-export default function RingingScreen(props: any){
+export default function RingingScreen({partnerFirstName, partnerLastName, onHangup, onAcceptCall}: 
+    {partnerFirstName: string, partnerLastName: string, onHangup: ()=>void, onAcceptCall?: ()=>void}){
     return(
-        <View style={styles.container}>                        
-            <Text>Ringing... {(props.isCaller) ? "Calling": " Call Received from "} {props.callerPhoneNumber}</Text>            
-            {!props.isCaller && <Button title={"Accept"} onPress={()=>{props.onRingAnswered(true)}}></Button>}               
-            <Button title={props.isCaller? "Cancel": "Decline"} onPress={()=>{props.onRingAnswered(false)}}></Button>               
-        </View>
-        )
+        <SafeAreaView>
+            <Text>{partnerFirstName + ' ' + partnerLastName}</Text>    
+            <Text>Ringing...</Text>
+            <View>
+                {onAcceptCall && <HangupAndAcceptButton onHangup={onHangup} onAccept={onAcceptCall}/>}
+                {!onAcceptCall && <HangupButton onHangup={onHangup}/> }
+            </View>            
+        </SafeAreaView>
+        
+    )
+}
+
+function HangupButton({onHangup}: {onHangup: ()=>void}){
+    return <Text>Hangup</Text>; //TODO
+}
+
+function HangupAndAcceptButton({onHangup, onAccept}: {onHangup: ()=>void, onAccept: ()=>void}){
+    return <Text>Hangup. Accept</Text>; //TODO
 }
 
 const styles = StyleSheet.create({

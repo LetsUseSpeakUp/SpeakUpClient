@@ -5,7 +5,7 @@ import { useContactData, requestContacts } from './Logic/useContacts'
 import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
 
-export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string) => void }) {
+export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string, receiverFirstName: string, receiverLastName: string) => void }) {
     let contactsDataResponse = useContactData();
     let contactData = contactsDataResponse.contactData;
 
@@ -17,8 +17,8 @@ export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: s
         })
     }
 
-    const onContactPressed= (contactNumber: string)=>{
-        props.onCallPlaced(contactNumber);
+    const onContactPressed= (contactNumber: string, contactFirstName: string, contactLastName: string)=>{
+        props.onCallPlaced(contactNumber, contactFirstName, contactLastName);
     }
 
     if(contactsDataResponse.isLoading){
@@ -49,9 +49,11 @@ function LoadingScreen(){
     )
 }
 
-function SingleContactItem({ contact, onPress }: { contact: any, onPress: (contactNumber: string)=>void }) {
+function SingleContactItem({ contact, onPress }: { contact: any, onPress: (contactNumber: string, contactFirstName: string, contactLastName: string)=>void }) {
     return (
-        <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{onPress(contact.phoneNumbers[0]?.number)}}>
+        <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{
+            onPress(contact.phoneNumbers[0]?.number, contact.givenName, contact.familyName);
+            }}>
             <View style={styles.contactNameContainer}>
                 <Text style={styles.contactText}>{contact.givenName} </Text>
                 <Text style={{...styles.contactText, fontWeight: 'bold'}}>{contact.familyName}</Text>

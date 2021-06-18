@@ -15,7 +15,8 @@ export const Colors = { //TODO: Support dark mode
     secondaryButtonColor: '#555555',
     tabBackgroundColor: '#f2f2f7', 
     mediumTint: '#dfdfec',
-    lightTint: '#f2f2f7'    
+    lightTint: '#f2f2f7',
+    hangupIconBackgroundColor: '#ff3a30'
 }
 
 export const Constants = {

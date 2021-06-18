@@ -12,19 +12,17 @@ import ConvosContext from '../ConvosData/ConvosContext'
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.Contacts);    
+    const [callState, setCallState] = useState(CallState.Ringing_Sender);    //useState(CallState.Contacts);    
 
     const userPhoneNumber = route.params.userPhoneNumber;
     const userFirstName = route.params.userFirstName;
     const userLastName = route.params.userLastName;
     const callManager = useRef(CallManagerInstance);     
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
+    const [partnerName, setPartnerName] = useState('');
     const convosContext = useContext(ConvosContext);
     const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
-    const _curDummyCount = useRef(0);
-
-    const [callUUID, setCallUUID] = useState('');
-    
+    const _curDummyCount = useRef(0);    
 
     useEffect(()=>{
         const convoToNavTo = convosContext.convoToNavTo;
@@ -48,7 +46,8 @@ export default function CallScreen({route, navigation}: any) {
             return;
         }
         callManager.current.on('callReceived', (callerPhoneNumber: string, callerFirstName: string, callerLastName: string)=>{
-            setPartnerPhoneNumber(callerPhoneNumber); //TODO: Include caller name in GUI
+            setPartnerPhoneNumber(callerPhoneNumber);
+            setPartnerName(callerFirstName + ' ' + callerLastName);
             setCallState(CallState.Ringing_Receiver);
         })
         callManager.current.on('disconnected', ()=>{
@@ -100,8 +99,9 @@ export default function CallScreen({route, navigation}: any) {
         convosContext.addSingleConvoMetadata(dummyMetadata);
     }
 
-    const onCallPlaced = (tempPartnerPhoneNumber: string)=>{        
+    const onCallPlaced = (tempPartnerPhoneNumber: string, tempPartnerFirstName: string, tempPartnerLastName: string)=>{        
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
+        setPartnerPhoneNumber(tempPartnerFirstName + ' ' + tempPartnerLastName);
         callManager.current.placeCall(tempPartnerPhoneNumber);
         setCallState(CallState.Ringing_Sender);
     }

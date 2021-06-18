@@ -41,8 +41,8 @@ class SignalServer extends EventEmitter{
         const data: SignalServerData = {
             type: MessageType.Signal,
             sender: myPhoneNumber,
-            message: agoraChannel
-            // message: JSON.stringify({channel: agoraChannel, firstName: myFirstName, lastName: myLastName})
+            // message: agoraChannel
+            message: JSON.stringify({channel: agoraChannel, firstName: myFirstName, lastName: myLastName})
         }        
         
         console.log("SignalServer::sendSignal. Receiver: ", receiverPhoneNumber, " data: ", data);
