@@ -27,6 +27,7 @@ export default function CallScreen({route, navigation}: any) {
     const _curDummyCount = useRef(0);    
 
     useEffect(()=>{
+        console.log("CallScreen. ConvoToNavTo changed: ", convosContext.convoToNavTo);
         const convoToNavTo = convosContext.convoToNavTo;
         if(convoToNavTo.length > 0){            
             navigation.navigate('Convos')            
@@ -115,7 +116,7 @@ export default function CallScreen({route, navigation}: any) {
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
         setPartnerFirstName(tempPartnerFirstName);
         setPartnerLastName(tempPartnerLastName);        
-        callManager.current.placeCall(tempPartnerPhoneNumber);
+        callManager.current.placeCall(tempPartnerPhoneNumber, tempPartnerFirstName, tempPartnerLastName);
         setCallState(CallState.Ringing_Sender);
     }
 
