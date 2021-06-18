@@ -15,16 +15,15 @@ export default function ConvosScreen({route, navigation}: any) {
 
   useEffect(()=>{    
     const convoToNavTo = convosContext.convoToNavTo;
-    console.log("ConvosScreen::convoToNavTo changed: ", convoToNavTo);
     if(convoToNavTo.length > 0){
       convosContext.clearConvoToNavTo();      
-      navigation.navigate('Convos', {screen: 'Convo Details', params:{convoId: convoToNavTo}}); 
+      navigation.navigate('ConvosMain', {screen: 'Convo Details', params:{convoId: convoToNavTo}}); 
     }
   }, [convosContext.convoToNavTo])
 
   return(
     <RootStack.Navigator mode='modal'>
-        <RootStack.Screen name='Main' component={MainStackScreen} options={{headerShown: false}}/>
+        <RootStack.Screen name='ConvosMain' component={MainStackScreen} options={{headerShown: false}}/>
         <RootStack.Screen name='CreateSnippetModal' component={CreateSnippet} options={{headerShown: false}}/>
       </RootStack.Navigator>
   )
