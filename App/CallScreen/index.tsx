@@ -8,16 +8,17 @@ import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
+import {getMyUserInfo} from '../AuthLogic'
 
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
     const [callState, setCallState] = useState(CallState.Contacts);
-
-    const userPhoneNumber = route.params.userPhoneNumber;
-    const userFirstName = route.params.userFirstName;
-    const userLastName = route.params.userLastName;
+    
     const callManager = useRef(CallManagerInstance);     
+    const [userPhoneNumber, setUserPhoneNumber] = useState('');
+    const [userFirstName, setUserFirstName] = useState('');
+    const [userLastName, setUserLastName] = useState('');
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
     const [partnerFirstName, setPartnerFirstName] = useState('TestFirstName'); //TODO: Change
     const [partnerLastName, setPartnerLastName] = useState('TestLastName'); //TODO: Change
@@ -33,8 +34,17 @@ export default function CallScreen({route, navigation}: any) {
     }, [convosContext.convoToNavTo])    
 
     useEffect(()=>{
-        callManager.current.initialize(userPhoneNumber, userFirstName, userLastName);
-        connectCallManagerListeners();        
+        getMyUserInfo().then((userInfo)=>{
+            if(!userInfo.phoneNumber) throw 'user phone number is null';
+            setUserPhoneNumber(userInfo.phoneNumber);
+            setUserFirstName(userInfo.firstName ?? '');
+            setUserLastName(userInfo.lastName ?? '');
+            callManager.current.initialize(userInfo.phoneNumber, userInfo.firstName ?? '', userInfo.lastName ?? '');
+            connectCallManagerListeners();        
+        }).catch((error)=>{
+            console.log("ERROR -- CallScreen::Init. Unable to get user info: ", error);
+        })
+        
     }, [])    
 
     useEffect(()=>{
