@@ -18,7 +18,11 @@ export default function RingingScreen({partnerFirstName, partnerLastName, onHang
 }
 
 function HangupButton({onHangup}: {onHangup: ()=>void}){
-    return <CallScreenButton text='call-end' onPress={onHangup} color={Colors.callHangup}/>
+    return(
+        <View style={{paddingBottom: Constants.paddingBottom}}>
+            <CallScreenButton text='call-end' onPress={onHangup} color={Colors.callHangup}/>
+        </View>
+    )    
 }
 
 function HangupAndAcceptButton({onHangup, onAccept}: {onHangup: ()=>void, onAccept: ()=>void}){
@@ -33,12 +37,12 @@ function HangupAndAcceptButton({onHangup, onAccept}: {onHangup: ()=>void, onAcce
 const styles = StyleSheet.create({
     flexContainer:{
         flex: 1, 
+        justifyContent: 'space-between',
         // justifyContent: 'center', 
         alignItems: 'center',
         backgroundColor: Colors.backgroundColor
     },
-    titleContainer: {
-        flex: .5,
+    titleContainer: {        
         alignItems: 'center',
         display: 'flex'
     },
@@ -58,6 +62,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around',        
-        width: '100%'
+        width: '100%',
+        paddingBottom: Constants.paddingBottom
     }
 })
