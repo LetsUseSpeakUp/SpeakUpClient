@@ -63,6 +63,7 @@ export default function CallScreen({route, navigation}: any) {
             setPartnerFirstName(callerFirstName);
             setPartnerLastName(callerLastName);            
             setCallState(CallState.Ringing_Receiver);
+            navigation.navigate('Call');
         })
         callManager.current.on('disconnected', ()=>{
             console.log("CallScreen::Callmanager emitted disconnected");
