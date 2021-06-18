@@ -32,7 +32,7 @@ export default function CreateSnippet({ route, navigation }: any) {
                     Give your Snippet a name.
                 </Text>
                 <View style={styles.textInputContainer}>
-                    <SpeakupTextInput defaultValue={'Snippet from TODO'} onChangeText={(newText) => setSnippetTitle(newText)} autoFocus={true} />
+                    <SpeakupTextInput defaultValue={'Snippet from ' + userFirstName} onChangeText={(newText) => setSnippetTitle(newText)} autoFocus={true} />
                 </View>                
                 <View style={styles.createButtonContainer}>
                     <PrimaryButton text={'Create'} onPress={onCreatePressed} disabled={snippetTitle.length === 0}/>
