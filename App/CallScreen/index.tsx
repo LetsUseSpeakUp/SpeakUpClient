@@ -19,7 +19,8 @@ export default function CallScreen({route, navigation}: any) {
     const userLastName = route.params.userLastName;
     const callManager = useRef(CallManagerInstance);     
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
-    const [partnerName, setPartnerName] = useState('');
+    const [partnerFirstName, setPartnerFirstName] = useState('TestFirstName'); //TODO: Change
+    const [partnerLastName, setPartnerLastName] = useState('TestLastName'); //TODO: Change
     const convosContext = useContext(ConvosContext);
     const convosContextRef = useRef(convosContext); //When using callbacks, call this instead of convosContext directly or you'll have out of date state
     const _curDummyCount = useRef(0);    
@@ -101,7 +102,8 @@ export default function CallScreen({route, navigation}: any) {
 
     const onCallPlaced = (tempPartnerPhoneNumber: string, tempPartnerFirstName: string, tempPartnerLastName: string)=>{        
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
-        setPartnerPhoneNumber(tempPartnerFirstName + ' ' + tempPartnerLastName);
+        setPartnerFirstName(tempPartnerFirstName);
+        setPartnerLastName(tempPartnerLastName);        
         callManager.current.placeCall(tempPartnerPhoneNumber);
         setCallState(CallState.Ringing_Sender);
     }
@@ -113,8 +115,10 @@ export default function CallScreen({route, navigation}: any) {
 
     switch(callState){
         case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
-        case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
-        case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)
+        case CallState.Ringing_Sender: return(<RingingScreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={()=>{onRingAnswered(false)}}/>)
+        case CallState.Ringing_Receiver: return(<RingingScreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
+            onHangup={()=>{onRingAnswered(false)}} onAcceptCall={()=>{onRingAnswered(true)}}/>)
         case CallState.Connecting: return (<ConnectingScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>)
         case CallState.OnCall: return (<OnCallScreen partnerPhoneNumber={partnerPhoneNumber} onHangUp={onHangUp}/>);
         case CallState.Disconnecting: return(<View style={styles.container}><Text>Disconnecting</Text></View>)
