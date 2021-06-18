@@ -8,8 +8,6 @@ import ConnectingScreen from './ConnectingScreen'
 import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
-import RNCallKeep from 'react-native-callkeep';
-import uuid from 'uuid-random'; 
 
 export default function CallScreen({route, navigation}: any) {    
 
@@ -105,11 +103,6 @@ export default function CallScreen({route, navigation}: any) {
     const onCallPlaced = (tempPartnerPhoneNumber: string)=>{        
         setPartnerPhoneNumber(tempPartnerPhoneNumber);
         callManager.current.placeCall(tempPartnerPhoneNumber);
-        const newUUID = uuid().toLowerCase();
-        setCallUUID(newUUID);
-        // RNCallKeep.startCall(newUUID, '408-343-1055', 'faraz home');
-        RNCallKeep.displayIncomingCall(newUUID, '408-917-8685', 'faraz random');
-        // RNCallKeep.setC
         setCallState(CallState.Ringing_Sender);
     }
 
@@ -118,7 +111,7 @@ export default function CallScreen({route, navigation}: any) {
         setCallState(CallState.Disconnecting);
     }
 
-    switch(callState){ //TODO: Just return contacts. Let RNCallKeep handle the rest
+    switch(callState){
         case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
         case CallState.Ringing_Sender: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={true}/>)
         case CallState.Ringing_Receiver: return(<RingingScreen callerPhoneNumber={partnerPhoneNumber} onRingAnswered={onRingAnswered} isCaller={false}/>)

@@ -13,32 +13,11 @@ import SplashScreen from './SplashScreen'
 import { LogBox, StatusBar } from 'react-native';
 import {Colors} from './Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import RNCallKeep from 'react-native-callkeep'
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
   'Non-serializable values were found in the navigation state',
   'Sending \`onAnimatedValueUpdate\` with no listeners registered.'
 ]);
-
-RNCallKeep.setup({
-  ios: {
-    appName: 'My app name',
-  },
-  android: {
-    alertTitle: 'Permissions required',
-    alertDescription: 'This application needs to access your phone accounts',
-    cancelButton: 'Cancel',
-    okButton: 'ok',
-    additionalPermissions: [],
-    // Required to get audio in background when using Android 11
-    foregroundService: {
-      channelId: 'com.company.my',
-      channelName: 'Foreground service for my app',
-      notificationTitle: 'My app is running on background',
-      notificationIcon: 'Path to the resource icon of the notification',
-    }, 
-  }
-});
 
 const Tab = createBottomTabNavigator();
 
