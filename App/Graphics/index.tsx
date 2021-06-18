@@ -65,7 +65,7 @@ export const SecondaryButton = (props: {title: string, onPress: ()=> void, disab
     )
 }
 
-export const SpeakupTextInput = (props: {placeholderText: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
+export const SpeakupTextInput = (props: {placeholderText?: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
     keyboardType?: KeyboardTypeOptions, defaultValue?: string, onSubmitEditing?: ()=>void})=>{
     const [isFocused, setIsFocused] = React.useState(false);
     
