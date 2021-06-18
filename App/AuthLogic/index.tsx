@@ -93,7 +93,6 @@ const refreshAuthToken = async(refreshToken='')=>{
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
         curAuthToken = refreshResponse.accessToken;
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;     
-        console.log("WARNING -- JUST FOR TESTING!!!! Delete this after. AuthLogic::refreshToken. Auth token: ", curAuthToken); //TODO: DELETE THIS!!! JUST FOR TESTING.
         return true;                 
     }
     catch(error){
