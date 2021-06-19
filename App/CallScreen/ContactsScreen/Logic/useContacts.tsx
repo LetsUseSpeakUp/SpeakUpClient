@@ -99,14 +99,16 @@ export function useContactData(){
 }
 
 function convertToSectionListData(contactData: Contacts.Contact[]): any{
-    const sectionListData: Array<{title: string, data: Contacts.Contact[]}>= [];
-    contactData.forEach((contact: Contacts.Contact)=>{
-        if(contact.phoneNumbers[0] == null) return;
-        if(contact.familyName.length === 0 && contact.givenName.length === 0) return;
-        
-        contact.phoneNumbers[0].number = convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number);
-        addContactToSectionListData(contact);
-    })
+    let sectionListData: Array<{title: string, data: Contacts.Contact[]}>= [];
+
+    const getSortingCharacter = (contact: Contacts.Contact)=>{
+        if(contact.familyName.length === 0){
+            return contact.givenName[0].toUpperCase();
+        }
+        else{
+            return contact.familyName[0].toUpperCase();
+        }
+    }    
 
     const addContactToSectionListData = (contact: Contacts.Contact)=>{
         const sortingCharacter = getSortingCharacter(contact);
@@ -117,41 +119,19 @@ function convertToSectionListData(contactData: Contacts.Contact[]): any{
         else{
             sectionListData[indexToInsert].data.push(contact);
         }
-    }
-
-    const getSortingCharacter = (contact: Contacts.Contact)=>{
-        if(contact.familyName.length === 0){
-            return contact.givenName[0].toUpperCase();
-        }
-        else{
-            return contact.familyName[0].toUpperCase();
-        }
     }    
-    
-   /* for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
-        const curLetter = String.fromCharCode(currentLetterIndex + 65);
-        const curLetterData: any = [];
-        contactData.forEach((contact: any)=>{
-            if (contact.phoneNumbers[0] == null) return;
-            contact.phoneNumbers[0].number = convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number);
-            const lastName: string = contact.familyName;
-            if(lastName.length === 0){
-                const firstName = contact.givenName;
-                if(firstName.length > 0 && firstName[0].toUpperCase() === curLetter){
-                    curLetterData.push(contact);
-                }
-            }
-            else{
-                if(lastName[0].toUpperCase() === curLetter){
-                    curLetterData.push(contact);
-                }
-            }
-            
-        })
-        if(curLetterData.length > 0)
-            sectionListData.push({title: curLetter, data: curLetterData});
-    } */
-    //TODO: Sort sectionListData
+
+    contactData.forEach((contact: Contacts.Contact)=>{
+        if(contact.phoneNumbers[0] == null) return;
+        if(contact.familyName.length === 0 && contact.givenName.length === 0) return;
+        
+        contact.phoneNumbers[0].number = convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number);
+        addContactToSectionListData(contact);
+    })
+
+    sectionListData = sectionListData.sort((a, b)=>{
+        return a.title.localeCompare(b.title);
+    })
     return sectionListData;
 }
 
