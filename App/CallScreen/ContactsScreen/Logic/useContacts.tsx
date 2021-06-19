@@ -99,9 +99,36 @@ export function useContactData(){
 }
 
 function convertToSectionListData(contactData: Contacts.Contact[]): any{
-    const sectionListData= [];
+    const sectionListData: Array<{title: string, data: Contacts.Contact[]}>= [];
+    contactData.forEach((contact: Contacts.Contact)=>{
+        if(contact.phoneNumbers[0] == null) return;
+        if(contact.familyName.length === 0 && contact.givenName.length === 0) return;
+        
+        contact.phoneNumbers[0].number = convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number);
+        addContactToSectionListData(contact);
+    })
+
+    const addContactToSectionListData = (contact: Contacts.Contact)=>{
+        const sortingCharacter = getSortingCharacter(contact);
+        const indexToInsert: number = sectionListData.findIndex((singleData)=>singleData.title === sortingCharacter)
+        if(indexToInsert === -1){
+            sectionListData.push({title: sortingCharacter, data: [contact]});
+        }
+        else{
+            sectionListData[indexToInsert].data.push(contact);
+        }
+    }
+
+    const getSortingCharacter = (contact: Contacts.Contact)=>{
+        if(contact.familyName.length === 0){
+            return contact.givenName[0].toUpperCase();
+        }
+        else{
+            return contact.familyName[0].toUpperCase();
+        }
+    }    
     
-    for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
+   /* for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
         const curLetter = String.fromCharCode(currentLetterIndex + 65);
         const curLetterData: any = [];
         contactData.forEach((contact: any)=>{
@@ -123,7 +150,8 @@ function convertToSectionListData(contactData: Contacts.Contact[]): any{
         })
         if(curLetterData.length > 0)
             sectionListData.push({title: curLetter, data: curLetterData});
-    }
+    } */
+    //TODO: Sort sectionListData
     return sectionListData;
 }
 
