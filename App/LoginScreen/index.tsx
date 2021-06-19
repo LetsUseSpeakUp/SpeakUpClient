@@ -7,10 +7,11 @@ import EnterVerificationCodeScreen from './EnterVerificationCodeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
 import OnboardingScreen from './OnboardingScreen'
+import {loginThroughWeb} from '../AuthLogic'
 
 enum Screens {Onboarding, EnterName, PhoneNumber, Verification}
 //TODO: Handle login without account creation
-export default function LoginScreen(props: any) {
+export default function LoginScreen(props: {onLoginComplete: ()=>void, onLoggedInToAppleTestAccount: (emailUsed: string)=>void}) {
     const phoneNumberRef = React.useRef('');
     const nameRef = React.useRef({first_name: '', last_name: ''});
     const [currentScreen, setCurrentScreen] = useState(Screens.Onboarding)
@@ -19,7 +20,14 @@ export default function LoginScreen(props: any) {
 
     const onNameSet = (firstName: string, lastName: string) =>{        
         nameRef.current = {first_name: firstName, last_name: lastName};
-        setCurrentScreen(Screens.PhoneNumber);
+        if(firstName === 'Apple' && lastName === 'Apple'){
+            loginThroughWeb().then((emailUsed)=>{
+                props.onLoggedInToAppleTestAccount(emailUsed);
+            })
+        }
+        else{
+            setCurrentScreen(Screens.PhoneNumber);
+        }        
     }
 
     const onPhoneNumberSet = (newPhoneNumber: string) => {

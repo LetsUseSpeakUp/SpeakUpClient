@@ -17,9 +17,7 @@ export const loginWithExistingCredentials = async ()=>{
     }
 }
 
-export const _getAuthObject = ()=>{
-    return auth0;
-}
+
 
 let curRefreshToken = '';
 let curAuthToken = '';
@@ -56,6 +54,25 @@ export const loginWithPhoneNumber = async(phoneNumber: string)=>{
     return auth0.auth.passwordlessWithSMS({
         phoneNumber: phoneNumber
     });
+}
+
+export const loginThroughWeb = async()=>{
+    const credentials = await auth0.webAuth.authorize({
+                    audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
+                    scope: 'read:current_user update:current_user_metadata openid profile offline_access'
+                });
+
+        if(!credentials.refreshToken){
+            console.log("ERROR -- AuthLogic::loginThroughWeb. Refresh token is null");
+            throw 'no refresh token';
+        }
+        else{
+            const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
+            //TODO: Return email
+            console.log("AuthLogic::loginThroughWeb. Response: ", response); 
+            await addNewRefreshToken(credentials.refreshToken);
+            return 'faraztest@gmail.com';
+        }        
 }
 
 export const enterPhoneNumberVerification = async(phoneNumber: string, verificationCode: string)=>{

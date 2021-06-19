@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { View, TextInput, Text, Button, StyleSheet } from 'react-native'
-import { _getAuthObject } from '../AuthLogic'
 import {Colors, PrimaryButton} from '../Graphics'
 
 export default function EnterSMSCodeScreen({ route }: any) {

@@ -61,6 +61,11 @@ export default function App() {
     });
   }
 
+  const onLoggedInToAppleTestAccount = (emailUsed: string)=>{
+    //TODO
+    console.log("App:onLoggedInToAppleTestAccount: ", emailUsed);
+  }
+
   useEffect(() => {
     if (convoToNavToBuffer.current.length > 0) {
       const bufferBuffer = convoToNavToBuffer.current;
@@ -128,7 +133,7 @@ export default function App() {
   }
 
   if (!isLoggedIn) {
-    return <LoginScreen  onLoginComplete={()=>{onLoggedIn()}}/>
+    return <LoginScreen  onLoginComplete={()=>{onLoggedIn()}} onLoggedInToAppleTestAccount={onLoggedInToAppleTestAccount}/>
   }
 
 
