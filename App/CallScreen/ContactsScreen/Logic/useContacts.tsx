@@ -1,27 +1,30 @@
 import * as Contacts from 'react-native-contacts';
 import React, {useState, useEffect} from 'react'
+import {isAppleTestAccount} from '../../../AuthLogic'
 
 /**
  * 
  * @returns Contact data from iOS/Android
  * This will probably have errors on Web ?
  */
-export function useContactData(isAppleTestAccount: boolean){
+export function useContactData(){
     const [isLoading, setIsLoading] = useState(true);
     const [contactData, setContactData] = useState([]);
 
     React.useEffect(()=>{
-        if(isAppleTestAccount){
-            fetchAppleTestAccountData();
-        }
-        else{
-            fetchContactData();
-        }        
+        isAppleTestAccount().then((isTestAccount)=>{
+            if(isTestAccount){
+                fetchAppleTestAccountData();
+            }
+            else{
+                fetchContactData();
+            }
+        })        
     }, [])    
 
     function fetchContactData(){
         setIsLoading(true);
-        Contacts.getAll().then(fetchedContacts=>{
+        return Contacts.getAll().then(fetchedContacts=>{
             fetchedContacts = fetchedContacts.filter(contact => contact.phoneNumbers.length > 0);
             fetchedContacts.sort((a, b) => {
                 const name1 = a.familyName || a.givenName;
@@ -39,13 +42,57 @@ export function useContactData(isAppleTestAccount: boolean){
     }
 
     async function fetchAppleTestAccountData(){ //TODO
-        // const firstContact: Contacts.Contact = {
-            // recordID: '00001',
+        const firstContact: Contacts.Contact = {
+            recordID: '6b2237ee0df85980',
+            backTitle: '',
+            company: '',
+            emailAddresses: [],
+            familyName: '00001',
+            givenName: 'Apple',
+            middleName: '',
+            jobTitle: '',
+            phoneNumbers: [{
+              label: 'mobile',
+              number: '+100001',
+            }],
+            hasThumbnail: false,
+            thumbnailPath: '',
+            postalAddresses: [],
+            prefix: '',
+            suffix: '',
+            department: '',
+            birthday: {'year': 1988, 'month': 0, 'day': 1 },
+            imAddresses: [], 
+            displayName: 'Apple 00001',
+            note: ''
+        }
 
-        // }
-        await fetchContactData();
-        console.log("useContacts::fetchAppleTestAccountData. 3: ", contactData[3]);
-        //TODO
+        const secondContact: Contacts.Contact = {
+            recordID: '6b2237ee0df85981',
+            backTitle: '',
+            company: '',
+            emailAddresses: [],
+            familyName: '00002',
+            givenName: 'Apple',
+            middleName: '',
+            jobTitle: '',
+            phoneNumbers: [{
+              label: 'mobile',
+              number: '+100002',
+            }],
+            hasThumbnail: false,
+            thumbnailPath: '',
+            postalAddresses: [],
+            prefix: '',
+            suffix: '',
+            department: '',
+            birthday: {'year': 1988, 'month': 0, 'day': 1 },
+            imAddresses: [], 
+            displayName: 'Apple 00001',
+            note: ''
+          }          
+          setContactData(convertToSectionListData([firstContact, secondContact]));
+          setIsLoading(false);
     }
 
     return {isLoading: isLoading, contactData: contactData};

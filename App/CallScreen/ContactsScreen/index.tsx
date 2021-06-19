@@ -5,15 +5,15 @@ import { useContactData, requestContacts } from './Logic/useContacts'
 import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
 
-export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string, receiverFirstName: string, receiverLastName: string) => void, isAppleTestAccount: boolean}) {
-    let contactsDataResponse = useContactData(props.isAppleTestAccount);
+export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string, receiverFirstName: string, receiverLastName: string) => void}) {
+    let contactsDataResponse = useContactData();
     let contactData = contactsDataResponse.contactData;
 
     const onRetryPressed = () => {
         requestContacts.then((response) => {
             console.log("ContactsScreen::requestContacts: ", response);
             if (response === 'authorized')
-                contactsDataResponse = useContactData(props.isAppleTestAccount);
+                contactsDataResponse = useContactData();
         })
     }
 

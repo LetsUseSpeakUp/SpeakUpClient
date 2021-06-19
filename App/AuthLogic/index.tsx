@@ -51,6 +51,7 @@ export const deleteExistingRefreshToken = async ()=>{
 
 export const loginWithPhoneNumber = async(phoneNumber: string)=>{
     await AsyncStorage.setItem('phoneNumber', phoneNumber);
+    await AsyncStorage.setItem('appleTestAccount', 'false');
     return auth0.auth.passwordlessWithSMS({
         phoneNumber: phoneNumber
     });
@@ -62,8 +63,6 @@ export const loginThroughWeb = async()=>{
                     scope: 'read:current_user update:current_user_metadata openid profile offline_access'
                 });
 
-                console.log("AuthLogic::loginThroughWeb: ", credentials);
-
                 curAuthToken = credentials.accessToken;
                 authTokenExpirationTime = Date.now() + credentials.expiresIn*1000;     
         
@@ -71,10 +70,12 @@ export const loginThroughWeb = async()=>{
             if(response.name==='faraz.abidi+apple00001@gmail.com'){
                 await setUserMetadata({first_name: 'Apple', last_name: '00001'});
                 await AsyncStorage.setItem('phoneNumber', '+100001');
+                await AsyncStorage.setItem('appleTestAccount', 'true');
             }
             else{
                 await setUserMetadata({first_name: 'Apple', last_name: '00002'});
                 await AsyncStorage.setItem('phoneNumber', '+100002');
+                await AsyncStorage.setItem('appleTestAccount', 'true');
             }
                         
             console.log("AuthLogic::loginThroughWeb. Response: ", response);                     
@@ -108,6 +109,11 @@ export const getMyUserInfo = async()=>{
         console.log("ERROR -- AuthLogic::getPhoneNumber: ", error);
         return {firstName: 'Speakup User', lastName: '', phoneNumber: ''};
     }
+}
+
+export const isAppleTestAccount = async()=>{
+    const isTestAccount = await AsyncStorage.getItem('appleTestAccount');
+    return (isTestAccount === 'true');    
 }
 
 const refreshAuthToken = async(refreshToken='')=>{

@@ -4,8 +4,6 @@ import { View, StyleSheet, Text} from 'react-native';
 import {CallManagerInstance} from './Logic/CallManager'
 import GenericCallSCreen from './GenericCallScreen';
 import ContactsScreen from './ContactsScreen'
-import ConnectingScreen from './ConnectingScreen'
-import OnCallScreen from './OnCallScreen/'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
 import {getMyUserInfo} from '../AuthLogic'
