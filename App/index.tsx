@@ -28,6 +28,7 @@ export default function App() {
   const [userLastName, setUserLastName] = useState('');
   const [convosMetadata, setConvosMetadata] = useState([] as Array<ConvoMetadata>);
   const [convoToNavTo, setConvoToNavTo] = useState('');
+  const [isAppleTestAccount, setIsAppleTestAccount] = useState(false);
   const clearConvoToNavTo = () => { setConvoToNavTo('') }
   const convoToNavToBuffer = useRef('');
   const isLoggedIn = userPhoneNumber.length > 0; 
@@ -62,7 +63,14 @@ export default function App() {
   }
 
   const onLoggedInToAppleTestAccount = (emailUsed: string)=>{
-    //TODO
+    getMyUserInfo().then((userInfo)=>{
+      if(userInfo == null) return;
+      if(userInfo.phoneNumber != null) setUserPhoneNumber(userInfo.phoneNumber);
+      if(userInfo.firstName != null) setUserFirstName(userInfo.firstName);
+      if(userInfo.lastName != null) setUserLastName(userInfo.lastName);
+      setIsAppleTestAccount(true);
+    })    
+    
     console.log("App:onLoggedInToAppleTestAccount: ", emailUsed);
   }
 
@@ -153,7 +161,7 @@ export default function App() {
           })}
           initialRouteName={'Convos'}
           lazy={false}>
-          <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName}} />
+          <Tab.Screen name={"Call"} component={CallScreen} initialParams={{ userPhoneNumber: userPhoneNumber, userFirstName: userFirstName, userLastName: userLastName, isAppleTestAccount: isAppleTestAccount}} />
           <Tab.Screen name={"Convos"} component={ConvosScreen} initialParams={{ convosMetadata: convosMetadata, userPhoneNumber: userPhoneNumber }} />
           <Tab.Screen name={"Logout"} component={LogoutScreen} initialParams={{logout: onLoggedOut}} />
         </Tab.Navigator>

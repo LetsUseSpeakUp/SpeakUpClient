@@ -15,11 +15,8 @@ export default function CallScreen({route, navigation}: any) {
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
     const [callState, setCallState] = useState(CallState.Contacts);
     
-    const callManager = useRef(CallManagerInstance);     
-    const [userPhoneNumber, setUserPhoneNumber] = useState('');
-    const [userFirstName, setUserFirstName] = useState('');
-    const [userLastName, setUserLastName] = useState('');
-    const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');   
+    const callManager = useRef(CallManagerInstance);  
+    const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');
     const [partnerFirstName, setPartnerFirstName] = useState('');
     const [partnerLastName, setPartnerLastName] = useState('');
     const convosContext = useContext(ConvosContext);
@@ -37,10 +34,7 @@ export default function CallScreen({route, navigation}: any) {
     useEffect(()=>{
         getMyUserInfo().then((userInfo)=>{
             console.log("CallScreen::init. User info: ", userInfo);
-            if(!userInfo.phoneNumber) throw 'user phone number is null';
-            setUserPhoneNumber(userInfo.phoneNumber);
-            setUserFirstName(userInfo.firstName ?? '');
-            setUserLastName(userInfo.lastName ?? '');
+            if(!userInfo.phoneNumber) throw 'user phone number is null';            
             callManager.current.initialize(userInfo.phoneNumber, userInfo.firstName ?? '', userInfo.lastName ?? '');
             connectCallManagerListeners();        
         }).catch((error)=>{

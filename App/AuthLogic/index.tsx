@@ -62,17 +62,23 @@ export const loginThroughWeb = async()=>{
                     scope: 'read:current_user update:current_user_metadata openid profile offline_access'
                 });
 
-        if(!credentials.refreshToken){
-            console.log("ERROR -- AuthLogic::loginThroughWeb. Refresh token is null");
-            throw 'no refresh token';
-        }
-        else{
+                console.log("AuthLogic::loginThroughWeb: ", credentials);
+
+                curAuthToken = credentials.accessToken;
+                authTokenExpirationTime = Date.now() + credentials.expiresIn*1000;     
+        
             const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
-            //TODO: Return email
-            console.log("AuthLogic::loginThroughWeb. Response: ", response); 
-            await addNewRefreshToken(credentials.refreshToken);
-            return 'faraztest@gmail.com';
-        }        
+            if(response.name==='faraz.abidi+apple00001@gmail.com'){
+                await setUserMetadata({first_name: 'Apple', last_name: '00001'});
+                await AsyncStorage.setItem('phoneNumber', '+100001');
+            }
+            else{
+                await setUserMetadata({first_name: 'Apple', last_name: '00002'});
+                await AsyncStorage.setItem('phoneNumber', '+100002');
+            }
+                        
+            console.log("AuthLogic::loginThroughWeb. Response: ", response);                     
+            return response.name;            
 }
 
 export const enterPhoneNumberVerification = async(phoneNumber: string, verificationCode: string)=>{

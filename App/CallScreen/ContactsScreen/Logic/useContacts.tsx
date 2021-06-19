@@ -6,12 +6,17 @@ import React, {useState, useEffect} from 'react'
  * @returns Contact data from iOS/Android
  * This will probably have errors on Web ?
  */
-export function useContactData(){
+export function useContactData(isAppleTestAccount: boolean){
     const [isLoading, setIsLoading] = useState(true);
     const [contactData, setContactData] = useState([]);
 
     React.useEffect(()=>{
-        fetchContactData();
+        if(isAppleTestAccount){
+            fetchAppleTestAccountData();
+        }
+        else{
+            fetchContactData();
+        }        
     }, [])    
 
     function fetchContactData(){
@@ -33,10 +38,20 @@ export function useContactData(){
         })
     }
 
+    async function fetchAppleTestAccountData(){ //TODO
+        // const firstContact: Contacts.Contact = {
+            // recordID: '00001',
+
+        // }
+        await fetchContactData();
+        console.log("useContacts::fetchAppleTestAccountData. 3: ", contactData[3]);
+        //TODO
+    }
+
     return {isLoading: isLoading, contactData: contactData};
 }
 
-function convertToSectionListData(contactData: any): any{
+function convertToSectionListData(contactData: Contacts.Contact[]): any{
     const sectionListData= [];
     
     for(let currentLetterIndex = 0; currentLetterIndex < 26; currentLetterIndex++){
