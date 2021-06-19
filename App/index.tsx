@@ -7,7 +7,7 @@ import LoginScreen from './LoginScreen'
 import * as ConvosManager from './ConvosData/ConvosManager'
 import { ConvoMetadata, ConvoStatus } from './ConvosData/ConvosManager'
 import ConvosContext from './ConvosData/ConvosContext'
-import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken} from './AuthLogic'
+import {loginWithExistingCredentials, getMyUserInfo, deleteExistingRefreshToken, logoutOfWeb} from './AuthLogic'
 import LogoutScreen from './LogoutScreen'
 import SplashScreen from './SplashScreen'
 import { LogBox, StatusBar } from 'react-native';
@@ -132,6 +132,7 @@ export default function App() {
     }).catch(error=>{
       console.log("ERROR -- App::onLoggedOut: ", error);
     })
+    logoutOfWeb();
   }
 
   if(showSplashScreen){

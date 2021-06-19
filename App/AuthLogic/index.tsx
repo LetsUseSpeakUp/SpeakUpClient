@@ -49,6 +49,15 @@ export const deleteExistingRefreshToken = async ()=>{
     }
 }
 
+export const logoutOfWeb = async()=>{
+    try{
+        await auth0.webAuth.clearSession();
+    }
+    catch(error){
+        console.log("ERROR -- AuthLogic::logoutOfWeb: ", error);
+    }
+}
+
 export const loginWithPhoneNumber = async(phoneNumber: string)=>{
     await AsyncStorage.setItem('phoneNumber', phoneNumber);
     await AsyncStorage.setItem('appleTestAccount', 'false');
