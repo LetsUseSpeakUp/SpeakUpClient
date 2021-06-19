@@ -51,6 +51,7 @@ export const deleteExistingRefreshToken = async ()=>{
 
 export const logoutOfWeb = async()=>{
     try{
+        if(!await isAppleTestAccount()) return;
         await auth0.webAuth.clearSession();
     }
     catch(error){
