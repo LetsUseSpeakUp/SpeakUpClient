@@ -11,7 +11,7 @@ import {getMyUserInfo} from '../AuthLogic'
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.OnCall); //TODO: Just for testing
+    const [callState, setCallState] = useState(CallState.Contacts);
     
     const callManager = useRef(CallManagerInstance);  
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');
@@ -121,7 +121,7 @@ export default function CallScreen({route, navigation}: any) {
 
     const onSpeakerToggled = (speakerIsToggled: boolean)=>{
         console.log("CallScreen::onSpeakerToggled: ", speakerIsToggled);
-        //TODO
+        callManager.current.setSpeaker(speakerIsToggled);
     }
 
     switch(callState){

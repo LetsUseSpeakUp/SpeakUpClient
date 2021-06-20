@@ -53,6 +53,12 @@ export default class AgoraManager extends EventEmitter {
         this.rtcEngine.enableAudio();
     }
 
+    public setSpeaker(speakerIsOn: boolean){
+        if(speakerIsOn){
+            this.rtcEngine?.setEnableSpeakerphone(speakerIsOn);
+        }
+    }
+
     public async joinChannel(channelName: string, isInitiator: boolean) {  
         try{
             if (this.connectionState === ConnectionState.Connected) {
@@ -180,6 +186,7 @@ export default class AgoraManager extends EventEmitter {
     }
 
     private onLeftChannel() {
+        this.setSpeaker(false);
         if (this.connectionState === ConnectionState.Ready) {
             return; //For some reason, AgoraManager spams us with a bunch of disconnect events if we leave very quickly after calling join. This is so we only emit one.
         }

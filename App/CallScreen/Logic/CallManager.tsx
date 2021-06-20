@@ -88,6 +88,10 @@ class CallManager extends EventEmitter {
         this.leaveAgoraChannel();            
     }
 
+    public setSpeaker(isOn: boolean){
+        this.agoraManager.setSpeaker(isOn);
+    }
+
     private setupSignalServer = (myNumber: string) => {
         this.signalServer.listenForMyPhoneNumber(myNumber);
         this.signalServer.on(MessageType.Signal, async (data: SignalServerData) => {            
