@@ -49,7 +49,8 @@ export default function CreateSnippet({ route, navigation }: any) {
                     Give your Snippet a name.
                 </Text>
                 <View style={styles.textInputContainer}>
-                    <SpeakupTextInput defaultValue={'Snippet from ' + userFirstName} onChangeText={(newText) => setSnippetTitle(newText)} autoFocus={true} />
+                    <SpeakupTextInput defaultValue={'Snippet from ' + userFirstName} onChangeText={(newText) => setSnippetTitle(newText)} autoFocus={true} 
+                        selectTextOnFocus={true}/>
                 </View>                
                 <View style={styles.shareButtonContainer}>
                     <PrimaryButton text={'Share'} onPress={onSharePressed} disabled={snippetTitle.length === 0}/>

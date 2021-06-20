@@ -100,7 +100,7 @@ export const CallScreenButton = (props: {onPress?: ()=>void, text: string, color
 }
 
 export const SpeakupTextInput = (props: {placeholderText?: string, onChangeText: (newText: string)=>void, autoFocus?: boolean, 
-    keyboardType?: KeyboardTypeOptions, defaultValue?: string, onSubmitEditing?: ()=>void})=>{
+    keyboardType?: KeyboardTypeOptions, defaultValue?: string, onSubmitEditing?: ()=>void, selectTextOnFocus?: boolean})=>{
     const [isFocused, setIsFocused] = React.useState(false);
     
 
@@ -129,6 +129,6 @@ export const SpeakupTextInput = (props: {placeholderText?: string, onChangeText:
         <TextInput onChangeText={props.onChangeText} placeholder={props.placeholderText} autoFocus={props.autoFocus}
         style={isFocused? styles.focused: styles.unfocused} onFocus={()=>{setIsFocused(true)}} onBlur={()=>{setIsFocused(false)}}
         onSubmitEditing={props.onSubmitEditing} placeholderTextColor={Colors.unemphasizedTextColor} defaultValue={props.defaultValue}
-        keyboardType={props.keyboardType}/>
+        keyboardType={props.keyboardType} selectTextOnFocus={props.selectTextOnFocus} multiline={props.selectTextOnFocus}/>
     )
 }
