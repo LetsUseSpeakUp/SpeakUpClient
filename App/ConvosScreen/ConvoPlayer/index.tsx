@@ -281,7 +281,7 @@ function getTitleFormattedTimeFromMs(timeInMs: number | undefined): string {
 
 function getTrackFormattedTimeFromSeconds(timeInSeconds: number): string {
     const minutes = Math.floor(timeInSeconds / 60);
-    let seconds = ((timeInSeconds % 60)).toFixed(0);
+    let seconds =  ((Math.trunc(timeInSeconds) % 60)).toFixed(0);
     if (seconds.length === 1) seconds = '0' + seconds;
 
     return minutes + ":" + seconds;
