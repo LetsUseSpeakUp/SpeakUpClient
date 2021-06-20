@@ -15,12 +15,10 @@ export default function ConvoPlayer({ route, navigation }: any) {
     const windowDimensions = useWindowDimensions();
     const [seekingInProgress, setSeekingInProgress] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
+    const [tempSliderValue, setTempSliderValue] = useState(0);
     const [snippetStart, setSnippetStart] = useState(0);
     const [snippetEnd, setSnippetEnd] = useState(1);
-    const [snippetDescription, setSnippetDescription] = useState('Snippet from ' + route.params.firstName);
-
-    const [snippetLink, setSnippetLink] = useState('Generate your snippet');
-    const [loadingSnippet, setLoadingSnippet] = useState(false);
+    
     const playbackState = usePlaybackState();
     const trackPlayerProgress = useTrackPlayerProgress(100);
 
@@ -143,12 +141,13 @@ export default function ConvoPlayer({ route, navigation }: any) {
                 minimumTrackTintColor={Colors.emphasizedTextColor}
                 maximumTrackTintColor={Colors.lightTint}
                 onValueChange={(newValue) => {
+                    setTempSliderValue(newValue);
                     if (playbackState !== TrackPlayer.STATE_PLAYING) setSliderValue(newValue)
                 }}
             />
             <View style={styles.durationAndCurrentTimeContainer}>
                 <Text style={styles.trackTimeText}>
-                    {playbackState === TrackPlayer.STATE_PLAYING ? getTrackFormattedTimeFromSeconds(trackPlayerProgress.position) : getTrackFormattedTimeFromSeconds(sliderValue)}
+                    {seekingInProgress ? getTrackFormattedTimeFromSeconds(tempSliderValue) : getTrackFormattedTimeFromSeconds(sliderValue)}
                 </Text>
                 <Text style={styles.trackTimeText}>
                     {getTrackFormattedTimeFromSeconds(trackPlayerProgress.duration)}
