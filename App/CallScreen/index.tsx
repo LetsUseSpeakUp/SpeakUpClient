@@ -7,6 +7,7 @@ import ContactsScreen from './ContactsScreen'
 import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
 import ConvosContext from '../ConvosData/ConvosContext'
 import {getMyUserInfo} from '../AuthLogic'
+import TrackPlayer from 'react-native-track-player';
 
 export default function CallScreen({route, navigation}: any) {    
 
@@ -27,7 +28,13 @@ export default function CallScreen({route, navigation}: any) {
         if(convoToNavTo.length > 0){            
             navigation.navigate('Convos')            
         }    
-    }, [convosContext.convoToNavTo])    
+    }, [convosContext.convoToNavTo])   
+    
+    useEffect(()=>{
+        if(callState !== CallState.Contacts){
+            TrackPlayer.pause();
+        }
+    }, [callState])
 
     useEffect(()=>{
         getMyUserInfo().then((userInfo)=>{
