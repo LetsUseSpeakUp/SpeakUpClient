@@ -11,7 +11,7 @@ import {getMyUserInfo} from '../AuthLogic'
 export default function CallScreen({route, navigation}: any) {    
 
     enum CallState {Contacts, Ringing_Sender, Ringing_Receiver, Connecting, Disconnecting, OnCall};
-    const [callState, setCallState] = useState(CallState.Contacts);
+    const [callState, setCallState] = useState(CallState.OnCall); //TODO: Just for testing
     
     const callManager = useRef(CallManagerInstance);  
     const [partnerPhoneNumber, setPartnerPhoneNumber] = useState('');
@@ -119,6 +119,11 @@ export default function CallScreen({route, navigation}: any) {
         setCallState(CallState.Disconnecting);
     }
 
+    const onSpeakerToggled = (speakerIsToggled: boolean)=>{
+        console.log("CallScreen::onSpeakerToggled: ", speakerIsToggled);
+        //TODO
+    }
+
     switch(callState){
         case CallState.Contacts: return (<ContactsScreen onCallPlaced={onCallPlaced}/>)
         case CallState.Ringing_Sender: return(<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
@@ -128,7 +133,7 @@ export default function CallScreen({route, navigation}: any) {
         case CallState.Connecting: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
             onHangup={onHangup} statusText={'Connecting...'}/>)
         case CallState.OnCall: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
-            onHangup={onHangup} statusText={'On Call'}/>)
+            onHangup={onHangup} onSpeakerToggled={onSpeakerToggled} statusText={'On Call'}/>)
         case CallState.Disconnecting: return (<GenericCallSCreen partnerFirstName={partnerFirstName} partnerLastName={partnerLastName} 
             onHangup={()=>{}} statusText={'Disconnecting...'}/>)
         default: return(<View style={styles.container}><Text>Error - Unknown state</Text></View>)

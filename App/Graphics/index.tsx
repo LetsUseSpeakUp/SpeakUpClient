@@ -14,11 +14,13 @@ export const Colors = { //TODO: Support dark mode
     primaryButtonTextColor: '#fff',
     secondaryButtonColor: '#555555',
     tabBackgroundColor: '#f2f2f7', 
+    darkTint: '#8e8e93',
     mediumTint: '#dfdfec',
     lightTint: '#f2f2f7',
     hangupIconBackgroundColor: '#ff3a30',
     callAnswer: '#34C759',
-    callHangup: '#FF3A30'
+    callHangup: '#FF3A30',
+
 }
 
 export const Constants = {
@@ -69,12 +71,29 @@ export const SecondaryButton = (props: {title: string, onPress: ()=> void, disab
     )
 }
 
-export const CallScreenButton = (props: {onPress: ()=>void, text: string, color: string})=>{
+export const CallScreenButton = (props: {onPress?: ()=>void, text: string, color: string, toggleable?: boolean, 
+    toggledColor?: string, onToggleChanged?: (isToggled: boolean)=>void, toggledText?: string})=>{
+    const [isToggled, setIsToggled] = React.useState(false);
+    const color = (props.toggleable && isToggled) ? props.toggledColor : props.color;
+    const text = (props.toggledText && isToggled) ? props.toggledText: props.text
+
     const buttonSize = 70;
+
+    const onPress = ()=>{
+        if(props.onPress){
+            props.onPress();
+        }
+
+        if(props.toggleable){
+            if(props.onToggleChanged) props.onToggleChanged(!isToggled);
+            setIsToggled(!isToggled);
+        }
+    }
+
     return (
         <TouchableOpacity style={{width: buttonSize, height: buttonSize, display: 'flex', justifyContent: 'center', 
-            alignItems: 'center', backgroundColor: props.color, borderRadius: buttonSize}} onPress={props.onPress}>
-            <MaterialIcon name={props.text} size={buttonSize*.6} color={Colors.backgroundColor}/>
+            alignItems: 'center', backgroundColor: color, borderRadius: buttonSize}} onPress={onPress}>
+            <MaterialIcon name={text} size={buttonSize*.6} color={Colors.backgroundColor}/>
         </TouchableOpacity>
         
     )

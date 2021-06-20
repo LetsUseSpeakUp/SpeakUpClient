@@ -130,7 +130,7 @@ const refreshAuthToken = async(refreshToken='')=>{
     if(refreshToken.length === 0) refreshToken = curRefreshToken;
     try{
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
-        curAuthToken = refreshResponse.accessToken;
+        curAuthToken = refreshResponse.accessToken;        
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;     
         return true;                 
     }
