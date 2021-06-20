@@ -54,9 +54,7 @@ export default class AgoraManager extends EventEmitter {
     }
 
     public setSpeaker(speakerIsOn: boolean){
-        if(speakerIsOn){
-            this.rtcEngine?.setEnableSpeakerphone(speakerIsOn);
-        }
+        this.rtcEngine?.setEnableSpeakerphone(speakerIsOn);
     }
 
     public async joinChannel(channelName: string, isInitiator: boolean) {  
