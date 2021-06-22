@@ -48,7 +48,8 @@ export default function LoginScreen(props: {onLoginComplete: ()=>void, onLoggedI
 
         try{
             await enterPhoneNumberVerification(phoneNumberRef.current, verificationCode);
-            await setUserMetadata(nameRef.current);                        
+            await setUserMetadata(nameRef.current);            
+            addNewUser();
             console.log("LoginScreen::onVerificationCodeSet. Calling login complete");       
             props.onLoginComplete();
         }

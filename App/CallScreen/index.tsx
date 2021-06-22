@@ -4,8 +4,8 @@ import { View, StyleSheet, Text} from 'react-native';
 import {CallManagerInstance} from './Logic/CallManager'
 import GenericCallSCreen from './GenericCallScreen';
 import ContactsScreen from './ContactsScreen'
-import { ConvoMetadata, _testExistingFileUpload} from '../ConvosData/ConvosManager';
-import ConvosContext from '../ConvosData/ConvosContext'
+import { ConvoMetadata, _testExistingFileUpload} from '../Services/ServerInterface';
+import ConvosContext from '../Services/ConvosContext'
 import {getMyUserInfo} from '../AuthLogic'
 import TrackPlayer from 'react-native-track-player';
 
