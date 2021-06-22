@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { SignalServer, SignalServerInstance, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
-import {ConvoMetadata, uploadConvo} from '../../ConvosData/ConvosManager'
+import {ConvoMetadata, uploadConvo} from '../../Services/ServerInterface'
 
 
 /**

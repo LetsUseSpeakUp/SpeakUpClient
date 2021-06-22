@@ -1,6 +1,7 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
 import {getAuthenticationToken} from '../../AuthLogic'
+import {SimplifiedContact} from '../../CallScreen/ContactsScreen/Logic/useContacts'
 
 // const SERVERENDPOINT = "http://192.168.86.39:3999" //During local testing, need to make this your server computer's IP
 const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";
@@ -147,6 +148,14 @@ export const downloadConvo = async function (convoId: string){
     })        
 }
 
+export const addNewUser = async (phoneNumber: string, firstName: string, lastName: string)=>{
+    //TODO
+}
+
+export const getContactsOnSpeakup = async (userContacts: SimplifiedContact []): Promise<SimplifiedContact[]>=>{
+    //TODO    
+}
+
 /**
  * Returns a URL
  * @param convoId 
@@ -271,6 +280,7 @@ export const _testExistingFileUpload = function () {
     })
 }
 
+//TODO: Refactor to a more appropriate file
 export const getFormattedDateAndTimeFromTimestamp = (timestamp: number): string=>{
     const date = new Date(timestamp);
     let hours = date.getHours();
@@ -284,6 +294,7 @@ export const getFormattedDateAndTimeFromTimestamp = (timestamp: number): string=
     return formattedDate + " " + formattedTime;
 }
 
+//TODO: Refactor to a more appropriate file
 export const getFormattedDateFromTimestamp = (timestamp: number): string=>{
     const date = new Date(timestamp);
     const month = date.getMonth() + 1; //0 indexed

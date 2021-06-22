@@ -9,7 +9,7 @@ import RtcEngine, {
 } from 'react-native-agora';
 
 import FileSystem from 'react-native-fs'
-import { ConvoMetadata, getChannelToken } from '../../../ConvosData/ConvosManager';
+import { ConvoMetadata, getChannelToken } from '../../../Services/ServerInterface';
 
 /**
  * Emits

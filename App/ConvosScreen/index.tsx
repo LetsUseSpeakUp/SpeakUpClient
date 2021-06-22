@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import AllConvos from './AllConvos'
 import {createStackNavigator} from '@react-navigation/stack'
 import SingleConvoDetails from './SingleConvoDetails';
-import ConvosContext from '../ConvosData/ConvosContext'
+import ConvosContext from '../Services/ConvosContext'
 import ConvoPlayer from './ConvoPlayer'
 import CreateSnippet from './CreateSnippet'
 import {Colors} from '../Graphics'

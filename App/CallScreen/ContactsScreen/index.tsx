@@ -52,11 +52,11 @@ function LoadingScreen(){
 function SingleContactItem({ contact, onPress }: { contact: any, onPress: (contactNumber: string, contactFirstName: string, contactLastName: string)=>void }) {
     return (
         <TouchableHighlight style={styles.singleContactContainer} underlayColor={Colors.lightTint} onPress={()=>{
-            onPress(contact.phoneNumbers[0]?.number, contact.givenName, contact.familyName);
+            onPress(contact.phoneNumber, contact.firstName, contact.lastName);
             }}>
             <View style={styles.contactNameContainer}>
-                <Text style={styles.contactText}>{contact.givenName} </Text>
-                <Text style={{...styles.contactText, fontWeight: 'bold'}}>{contact.familyName}</Text>
+                <Text style={styles.contactText}>{contact.firstName} </Text>
+                <Text style={{...styles.contactText, fontWeight: 'bold'}}>{contact.lastName}</Text>
             </View>            
         </TouchableHighlight>
     )

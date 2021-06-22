@@ -1,5 +1,5 @@
 import React from 'react';
-import {ConvoMetadata, ConvoStatus} from '../ConvosManager'
+import {ConvoMetadata, ConvoStatus} from '../ServerInterface'
 
 const dummyNavToNewRouteFunc = (newRoute: string)=>{}
 

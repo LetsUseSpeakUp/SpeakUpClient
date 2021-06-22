@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {enterPhoneNumberVerification, loginWithPhoneNumber, setUserMetadata} from '../AuthLogic'
 import OnboardingScreen from './OnboardingScreen'
 import {loginThroughWeb} from '../AuthLogic'
+import {addNewUser} from '../Services/ServerInterface'
 
 enum Screens {Onboarding, EnterName, PhoneNumber, Verification}
 //TODO: Handle login without account creation
@@ -47,7 +48,8 @@ export default function LoginScreen(props: {onLoginComplete: ()=>void, onLoggedI
 
         try{
             await enterPhoneNumberVerification(phoneNumberRef.current, verificationCode);
-            await setUserMetadata(nameRef.current);                 
+            await setUserMetadata(nameRef.current);            
+            addNewUser(phoneNumberRef.current, nameRef.current.first_name, nameRef.current.last_name);
             console.log("LoginScreen::onVerificationCodeSet. Calling login complete");       
             props.onLoginComplete();
         }

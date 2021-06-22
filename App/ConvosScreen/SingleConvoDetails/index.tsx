@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Button} from 'react-native'
-import {ConvoResponseType, ConvoStatus} from '../../ConvosData/ConvosManager'
-import * as ConvosManager from '../../ConvosData/ConvosManager'
-import ConvosContext from '../../ConvosData/ConvosContext'
+import {ConvoResponseType, ConvoStatus} from '../../Services/ServerInterface'
+import * as ConvosManager from '../../Services/ServerInterface'
+import ConvosContext from '../../Services/ConvosContext'
 import {RefreshControl, ScrollView, StyleSheet, Image, Animated, ActivityIndicator} from 'react-native'
 import {Colors, Constants, PrimaryButton, SecondaryButton} from '../../Graphics'
 import { useWindowDimensions } from 'react-native';

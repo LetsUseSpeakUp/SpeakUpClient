@@ -68,6 +68,7 @@ export const loginWithPhoneNumber = async(phoneNumber: string)=>{
 }
 
 export const loginThroughWeb = async()=>{
+    console.log("WARNING -- AuthLogic::loginThroughWeb. This should only be done in testing in app store approval!");
     const credentials = await auth0.webAuth.authorize({
                     audience: 'https://letsusespeakup.us.auth0.com/api/v2/',
                     scope: 'read:current_user update:current_user_metadata openid profile offline_access'

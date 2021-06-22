@@ -5,8 +5,8 @@ import TrackPlayer from 'react-native-track-player';
 import { useTrackPlayerProgress, usePlaybackState, useTrackPlayerEvents, TrackPlayerEvents } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 import Clipboard from '@react-native-clipboard/clipboard';
-import * as ConvosManager from '../../ConvosData/ConvosManager'
-import ConvosContext from '../../ConvosData/ConvosContext'
+import * as ConvosManager from '../../Services/ServerInterface'
+import ConvosContext from '../../Services/ConvosContext'
 import { Constants, Colors, PrimaryButton, SecondaryButton } from '../../Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 

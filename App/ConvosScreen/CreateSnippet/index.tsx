@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Share } from 'react-native'
 import { SpeakupTextInput, Colors, Constants, PrimaryButton } from '../../Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {generateSnippetLink} from '../../ConvosData/ConvosManager'
+import {generateSnippetLink} from '../../Services/ServerInterface'
 
 export default function CreateSnippet({ route, navigation }: any) {
     const userFirstName = route.params.userFirstName;
