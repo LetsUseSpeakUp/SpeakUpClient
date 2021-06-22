@@ -1,8 +1,8 @@
 import React from 'react';
-import { ConvoMetadata } from '../../ConvosData/ConvosManager'
-import * as ConvosManager from '../../ConvosData/ConvosManager'
+import { ConvoMetadata } from '../../Services/ServerInterface'
+import * as ConvosManager from '../../Services/ServerInterface'
 import { FlatList, StyleSheet, View, Text, TouchableOpacity, ListRenderItem, Image, Animated } from 'react-native';
-import ConvosContext from '../../ConvosData/ConvosContext'
+import ConvosContext from '../../Services/ConvosContext'
 import { Constants, Colors } from '../../Graphics';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 

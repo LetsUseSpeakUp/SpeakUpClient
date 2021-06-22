@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events'
 import RtmEngine from 'agora-react-native-rtm'
-import {getRtmToken} from '../../../ConvosData/ConvosManager'
+import {getRtmToken} from '../../../Services/ServerInterface'
 import { RTMEventCallback } from 'agora-react-native-rtm/lib/types';
 
 /**
@@ -83,27 +83,31 @@ class SignalServer extends EventEmitter{
     }    
 
     private setupRtm(){
-        this.client.on('connectionStateChanged', (event)=>{
-            console.log("SignalServer -- Connection state changed: ", event);
-        })
-        this.client.on('messageReceived', (event)=>{
-            const {text, peerId} = event;
-            const parsedText = JSON.parse(text);
-            const signalServerData: SignalServerData = {
-                sender: peerId,
-                type: parsedText.type,
-                message: parsedText.message
-            }
-            
-            console.log("SignalServer received Message: ", signalServerData); 
-            this.emit(signalServerData.type, signalServerData);
-        })
+        this.client.on('connectionStateChanged', this.rtmConnectionStateChanged as any);
+        this.client.on('messageReceived', this.rtmMessageReceived as any);
 
         const RTMRENEWALTIME = 1000*60*60;
         setInterval(async ()=>{            
             this.client.renewToken(await getRtmToken())
                 .then(()=>{console.log("SignalServer. Renewed rtm token.")})
         }, RTMRENEWALTIME)
+    }
+
+    rtmMessageReceived = (event: any)=>{
+        const {text, peerId} = event;
+        const parsedText = JSON.parse(text);
+        const signalServerData: SignalServerData = {
+            sender: peerId,
+            type: parsedText.type,
+            message: parsedText.message
+        }
+        
+        console.log("SignalServer received Message: ", signalServerData); 
+        this.emit(signalServerData.type, signalServerData);
+    }
+
+    rtmConnectionStateChanged = (event: any)=>{
+        console.log("SignalServer -- Connection state changed: ", event);
     }
 }
 
