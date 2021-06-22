@@ -148,12 +148,35 @@ export const downloadConvo = async function (convoId: string){
     })        
 }
 
-export const addNewUser = async (phoneNumber: string, firstName: string, lastName: string)=>{
-    //TODO
+/**
+ * Actual user info is contained in the auth token so no form data is necessary
+ */
+export const addNewUser = async ()=>{
+    const addUserEndpoint = SERVERENDPOINT + '/users/addUser';
+    const formData = new FormData();
+    return postFormDataToEndpoint(formData, addUserEndpoint);
 }
 
 export const getContactsOnSpeakup = async (userContacts: SimplifiedContact []): Promise<SimplifiedContact[]>=>{
-    //TODO    
+    const getContactsEndpoint = SERVERENDPOINT + '/users/getcontacts';
+    const phoneNumbersOnly = userContacts.map((userContact)=>userContact.phoneNumber);
+    const formData = new FormData();
+    formData.append('contacts', JSON.stringify(phoneNumbersOnly));
+    try{
+        const serverResponse = await postFormDataToEndpoint(formData, getContactsEndpoint);
+        let contactsInSpeakup = JSON.parse(serverResponse.contactsInDb);
+        if(typeof(contactsInSpeakup === 'string')) contactsInSpeakup = JSON.parse(contactsInSpeakup);
+        
+        const finalizedContacts = [];
+        return userContacts.filter((userContact)=>{
+            contactsInSpeakup.contains(userContact.phoneNumber);
+        });
+    }
+    catch(error){
+        console.log("ERROR -- ServerInterface::getContactsOnSpeakup: ", error);
+        return [];
+    }
+    
 }
 
 /**

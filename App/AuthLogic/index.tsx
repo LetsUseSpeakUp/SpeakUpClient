@@ -1,5 +1,6 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as APIServer from '../Services/ServerInterface';
 
 import Auth0 from 'react-native-auth0'
 const auth0 = new Auth0({ domain: 'letsusespeakup.us.auth0.com', clientId: 'SIaSdbWJmdIj0MnR5hHFSaGHKlVfgzCT' });
@@ -108,7 +109,9 @@ export const setUserMetadata = async(metadata: {first_name: string, last_name: s
     await AsyncStorage.setItem('lastName', metadata.last_name);
     const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
     const userId = response.sub;
-    return await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});    
+    const returnVal = await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});        
+    await APIServer.addNewUser();
+    return returnVal;
 }
 
 export const getMyUserInfo = async()=>{
