@@ -164,12 +164,13 @@ export const getContactsOnSpeakup = async (userContacts: SimplifiedContact []): 
     formData.append('contacts', JSON.stringify(phoneNumbersOnly));
     try{
         const serverResponse = await postFormDataToEndpoint(formData, getContactsEndpoint);
-        let contactsInSpeakup = JSON.parse(serverResponse.contactsInDb);
-        if(typeof(contactsInSpeakup === 'string')) contactsInSpeakup = JSON.parse(contactsInSpeakup);
+        console.log("ServerInterface::getContactsOnSpeakup. Server response: ", serverResponse);
+        let contactsInSpeakupObject =  serverResponse.contactsInDb;
+        if(typeof(contactsInSpeakupObject === 'string')) contactsInSpeakupObject = JSON.parse(contactsInSpeakupObject);
+        let contactsInSpeakup = Object.keys(contactsInSpeakupObject).map((key)=>contactsInSpeakupObject[key]);
         
-        const finalizedContacts = [];
         return userContacts.filter((userContact)=>{
-            contactsInSpeakup.contains(userContact.phoneNumber);
+            return contactsInSpeakup.includes(userContact.phoneNumber);
         });
     }
     catch(error){
@@ -254,8 +255,14 @@ const postFormDataToEndpoint = async function (formData: FormData, serverEndpoin
         const json = await response.json();
         throw (response.status + " error: " + json.message.message);
     }
-    else if(response.status === 200){
-        return await response.json();
+    else if(response.status === 200){        
+        try{
+            return await response.json();
+        }
+        catch(error){
+            throw error + ': ' + response;
+        }
+        
     }
     else{
         throw 'HTTP Error: ' + response.status;
