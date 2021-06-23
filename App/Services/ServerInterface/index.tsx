@@ -3,8 +3,8 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {getAuthenticationToken} from '../../AuthLogic'
 import {SimplifiedContact} from '../../CallScreen/ContactsScreen/Logic/useContacts'
 
-const SERVERENDPOINT = "http://192.168.86.39:1234/backend/needauth" //During local testing, need to make this your server computer's IP
-// const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";
+// const SERVERENDPOINT = "http://192.168.86.39:1234/backend/needauth" //During local testing, need to make this your server computer's IP
+const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";
 
 export type ConvoMetadata = {
     initiatorId: string,

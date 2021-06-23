@@ -73,7 +73,8 @@ function ContactSectionHeader({ title }: { title: string }) {
 const styles = StyleSheet.create({
     flexContainer: {
         display:'flex',
-        backgroundColor: Colors.backgroundColor        
+        backgroundColor: Colors.backgroundColor,
+        flex: 1    
     },
     loadingScreen: {
         flex: 1,
