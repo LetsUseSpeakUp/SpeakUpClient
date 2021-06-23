@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import EmptyContactScreen from './EmptyContactScreen'
-import { fetchContactData, SimplifiedContact } from './Logic/useContacts'
+import { fetchContactData, SimplifiedContact } from './Logic'
 import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
 import { useEffect } from 'react';
@@ -46,14 +46,6 @@ export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: s
                 }
             />
         </SafeAreaView>
-    )
-}
-
-function LoadingScreen(){
-    return (
-        <View style={styles.loadingScreen}>
-            <ActivityIndicator/>
-        </View>
     )
 }
 

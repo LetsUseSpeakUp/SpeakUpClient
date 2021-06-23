@@ -1,6 +1,6 @@
 import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
-import {getAuthenticationToken} from '../../AuthLogic'
+import {getAuthenticationToken, getMyUserInfo} from '../../AuthLogic'
 import {SimplifiedContact} from '../../CallScreen/ContactsScreen/Logic'
 
 // const SERVERENDPOINT = "http://192.168.86.39:1234/backend/needauth" //During local testing, need to make this your server computer's IP
@@ -169,8 +169,9 @@ export const getContactsOnSpeakup = async (userContacts: SimplifiedContact []): 
         if(typeof(contactsInSpeakupObject === 'string')) contactsInSpeakupObject = JSON.parse(contactsInSpeakupObject);
         let contactsInSpeakup = Object.keys(contactsInSpeakupObject).map((key)=>contactsInSpeakupObject[key]);
         
+        const userInfo = await getMyUserInfo();
         return userContacts.filter((userContact)=>{
-            return contactsInSpeakup.includes(userContact.phoneNumber);
+            return (contactsInSpeakup.includes(userContact.phoneNumber) && userContact.phoneNumber !== userInfo.phoneNumber);
         });
     }
     catch(error){
