@@ -169,7 +169,7 @@ export const getContactsOnSpeakup = async (userContacts: SimplifiedContact []): 
         if(typeof(contactsInSpeakupObject === 'string')) contactsInSpeakupObject = JSON.parse(contactsInSpeakupObject);
         let contactsInSpeakup = Object.keys(contactsInSpeakupObject).map((key)=>contactsInSpeakupObject[key]);
         
-        const userInfo = await getMyUserInfo();
+        const userInfo = await getMyUserInfo();        
         return userContacts.filter((userContact)=>{
             return (contactsInSpeakup.includes(userContact.phoneNumber) && userContact.phoneNumber !== userInfo.phoneNumber);
         });

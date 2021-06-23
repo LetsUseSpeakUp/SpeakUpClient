@@ -133,7 +133,7 @@ const refreshAuthToken = async(refreshToken='')=>{
     try{
         const refreshResponse = await auth0.auth.refreshToken({refreshToken: refreshToken});
         curAuthToken = refreshResponse.accessToken;       
-        console.log("TESTING: Delete before production!!!. Auth token: ", curAuthToken);
+        // console.log("TESTING: Delete before production!!!. Auth token: ", curAuthToken);
         authTokenExpirationTime = Date.now() + refreshResponse.expiresIn*1000;     
         return true;                 
     }
