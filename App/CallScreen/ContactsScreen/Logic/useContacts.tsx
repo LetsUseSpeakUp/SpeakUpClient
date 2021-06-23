@@ -36,7 +36,7 @@ export function useContactData(){
             console.log("ContactsLogic.js::received contacts data. Now updating");            
             return fetchedContacts.map((contact)=>{
                 const simplifiedContact: SimplifiedContact = {
-                    phoneNumber: contact.phoneNumbers[0].number,
+                    phoneNumber: convertPhoneNumberToSpeakupFormat(contact.phoneNumbers[0].number),
                     firstName: contact.givenName,
                     lastName: contact.familyName
                 };
