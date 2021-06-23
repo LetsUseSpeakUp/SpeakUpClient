@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%'
+        width: '100%',
+        backgroundColor: Colors.backgroundColor
     },
     imageHolder: {
         display: 'flex',
