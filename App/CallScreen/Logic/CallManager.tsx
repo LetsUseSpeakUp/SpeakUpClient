@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import { SignalServer, SignalServerInstance, MessageType, SignalServerData } from './SignalServer'
 import AgoraManager from './AgoraManager'
 import {ConvoMetadata, uploadConvo} from '../../Services/ServerInterface'
+import {CallKeep, CallKeepInstance } from './CallKeep'
 
 
 /**
@@ -17,6 +18,7 @@ import {ConvoMetadata, uploadConvo} from '../../Services/ServerInterface'
 class CallManager extends EventEmitter {
 
     signalServer: SignalServer
+    callKeep: CallKeep
     myPhoneNumber: string = ''
     myFirstName: string = ''
     myLastName: string = ''
@@ -38,6 +40,7 @@ class CallManager extends EventEmitter {
         this.agoraChannelName = "";
         this.agoraManager = new AgoraManager();
         this.signalServer = SignalServerInstance;
+        this.callKeep = CallKeepInstance;
         this.setupAgoraManagerListeners();
     }
 

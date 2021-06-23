@@ -2444,6 +2444,11 @@
   "resolved" "https://registry.npmjs.org/@types/stack-utils/-/stack-utils-1.0.1.tgz"
   "version" "1.0.1"
 
+"@types/uuid@^8.3.0":
+  "integrity" "sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ=="
+  "resolved" "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.0.tgz"
+  "version" "8.3.0"
+
 "@types/yargs-parser@*":
   "integrity" "sha512-37RSHht+gzzgYeobbG+KWryeAW8J33Nhr69cjTqSYymXVZEN9NbRYWoYlRtDhHKPVT1FyNKwaTPC1NynKZpzRA=="
   "resolved" "https://registry.npmjs.org/@types/yargs-parser/-/yargs-parser-20.2.0.tgz"
@@ -8555,6 +8560,11 @@
     "jsbn" "^1.1.0"
     "jwt-decode" "^2.2.0"
     "url" "^0.11.0"
+
+"react-native-callkeep@^4.2.0":
+  "integrity" "sha512-52cA2izvw46K3M6SElV8cH+jUxvH9CYOrsnpIgnBtWLnJDcCehRNIZ0rSGfV3entxBgErCLBeIHHv9nEkMDdFQ=="
+  "resolved" "https://registry.npmjs.org/react-native-callkeep/-/react-native-callkeep-4.2.0.tgz"
+  "version" "4.2.0"
 
 "react-native-codegen@^0.0.6":
   "integrity" "sha512-cMvrUelD81wiPitEPiwE/TCNscIVauXxmt4NTGcy18HrUd0WRWXfYzAQGXm0eI87u3NMudNhqFj2NISJenxQHg=="
