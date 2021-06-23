@@ -1,30 +1,35 @@
 import * as React from 'react';
 
 import EmptyContactScreen from './EmptyContactScreen'
-import { useContactData, requestContacts } from './Logic/useContacts'
-import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator } from 'react-native';
+import { fetchContactData, SimplifiedContact } from './Logic/useContacts'
+import { Text, View, SectionList, StyleSheet, TouchableHighlight, SafeAreaView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Colors, Constants } from '../../Graphics'
+import { useEffect } from 'react';
 
 export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: string, receiverFirstName: string, receiverLastName: string) => void}) {
-    let contactsDataResponse = useContactData();
-    let contactData = contactsDataResponse.contactData;
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [contactData, setContactData] = React.useState([]);    
 
+    useEffect(()=>{
+        fetchContacts();
+    },[])
+    
     const onRetryPressed = () => {
-        requestContacts.then((response) => {
-            console.log("ContactsScreen::requestContacts: ", response);
-            if (response === 'authorized')
-                contactsDataResponse = useContactData();
-        })
+        fetchContacts();
+    }
+
+    const fetchContacts = async()=>{
+        setRefreshing(true);
+        const updatedContactData = await fetchContactData();
+        setContactData(updatedContactData);
+        setRefreshing(false);
     }
 
     const onContactPressed= (contactNumber: string, contactFirstName: string, contactLastName: string)=>{
         props.onCallPlaced(contactNumber, contactFirstName, contactLastName);
     }
 
-    if(contactsDataResponse.isLoading){
-        return <LoadingScreen/>
-    }
-    else if (contactData.length == 0) {
+    if (contactData.length === 0) {
         return <EmptyContactScreen onRetryPressed={onRetryPressed} />
     }
     else return (
@@ -36,6 +41,9 @@ export default function ContactsScreen(props: { onCallPlaced: (receiverNumber: s
                     return <ContactSectionHeader title={section.title} />
                 }}
                 renderItem={({ item }) => <SingleContactItem contact={item} onPress={onContactPressed}/>}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={fetchContacts}/>
+                }
             />
         </SafeAreaView>
     )
