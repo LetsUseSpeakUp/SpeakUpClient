@@ -63,8 +63,11 @@ class CallManager extends EventEmitter {
             this.partnerPhoneNumber = receiverPhoneNumber;
             this.partnerFirstName = receiverFirstName;
             this.partnerLastName = receiverLastName;
+            
             this.signalServer.sendSignal({agoraChannel: this.agoraChannelName, myPhoneNumber: this.myPhoneNumber,
                 myFirstName: this.myFirstName, myLastName: this.myLastName, receiverPhoneNumber: this.partnerPhoneNumber});
+            
+            this.callKeep.placeOutgoingCall(receiverPhoneNumber, receiverFirstName + ' ' + receiverLastName);
         }
         catch(error){
             console.log("ERROR -- CallManager::placeCall. Unable to get user info for receiver: ", 
@@ -79,16 +82,19 @@ class CallManager extends EventEmitter {
         }
         this.isInitiator = false;        
         this.agoraManager.joinChannel(this.agoraChannelName, this.isInitiator);
+        this.callKeep.answerIncomingCall();
     }
 
     public declineCall() {        
         this.signalServer.sendDecline(this.myPhoneNumber, this.partnerPhoneNumber);
         this.resetCallState();
+        this.callKeep.endCall();
     }
 
     public endCall() {
         console.log("CallManager::endCall");
         this.leaveAgoraChannel();            
+        this.callKeep.endCall();
     }
 
     public setSpeaker(isOn: boolean){
@@ -117,6 +123,7 @@ class CallManager extends EventEmitter {
                     this.agoraChannelName = parsedUserInfo.channel;
                     this.isInitiator = false;                    
                     this.emit("callReceived", data.sender, this.partnerFirstName, this.partnerLastName);
+                    this.callKeep.displayIncomingCall((this.partnerFirstName + ' ' + this.partnerLastName), this.partnerPhoneNumber);
                 }
                 catch(error){
                     console.log("ERROR -- CallManager.onSignalReceived. Could not find user info for signaller: ", 
@@ -153,8 +160,10 @@ class CallManager extends EventEmitter {
         this.agoraManager.on('partnerJoined', ()=>{
             this.emit('connected');
             this.initializeConvoMetadata();
-            if(this.isInitiator)
-                this.startRecording();
+            if(this.isInitiator){
+                this.startRecording();            
+                this.callKeep.setOutgoingCallToStarted(this.partnerPhoneNumber, this.partnerFirstName + ' ' + this.partnerLastName);
+            }                
         })
         this.agoraManager.on('partnerDisconnected', ()=>{
             this.endCall();
