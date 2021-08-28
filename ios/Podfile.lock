@@ -1,11 +1,11 @@
 PODS:
-  - A0Auth0 (2.8.3):
+  - A0Auth0 (2.9.0):
     - React
-  - agora-react-native-rtm (1.2.2-alpha.3):
-    - AgoraRtm_iOS (= 1.2.2)
+  - agora-react-native-rtm (1.4.8):
+    - AgoraRtm_iOS (= 1.4.8)
     - React
-  - AgoraRtcEngine_iOS (3.4.2)
-  - AgoraRtm_iOS (1.2.2)
+  - AgoraRtcEngine_iOS (3.4.6)
+  - AgoraRtm_iOS (1.4.8)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXApplication (3.1.2):
@@ -30,7 +30,7 @@ PODS:
   - EXPermissions (12.0.1):
     - UMCore
     - UMPermissionsInterface
-  - EXSplashScreen (0.10.2):
+  - EXSplashScreen (0.10.3):
     - React-Core
     - UMCore
   - EXStructuredHeaders (1.0.1):
@@ -223,10 +223,10 @@ PODS:
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
   - React-jsinspector (0.63.4)
-  - react-native-agora (3.4.2):
-    - AgoraRtcEngine_iOS (= 3.4.2)
+  - react-native-agora (3.4.6):
+    - AgoraRtcEngine_iOS (= 3.4.6)
     - React
-  - react-native-contacts (7.0.0):
+  - react-native-contacts (7.0.2):
     - React-Core
   - react-native-encrypted-storage (4.0.2):
     - React-Core
@@ -234,7 +234,7 @@ PODS:
     - React-Core
   - react-native-safe-area (0.5.1):
     - React
-  - react-native-safe-area-context (3.2.0):
+  - react-native-safe-area-context (3.3.0):
     - React-Core
   - react-native-slider (3.0.3):
     - React
@@ -304,9 +304,9 @@ PODS:
     - React-jsi (= 0.63.4)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNCAsyncStorage (1.15.5):
+  - RNCAsyncStorage (1.15.7):
     - React-Core
-  - RNCClipboard (1.8.1):
+  - RNCClipboard (1.8.4):
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
@@ -362,7 +362,7 @@ PODS:
     - UMCore
   - UMConstantsInterface (6.1.0):
     - UMCore
-  - UMCore (7.1.0)
+  - UMCore (7.1.1)
   - UMFaceDetectorInterface (6.1.0)
   - UMFileSystemInterface (6.1.0)
   - UMFontInterface (6.1.0)
@@ -614,10 +614,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  A0Auth0: 72124e18b03e4a8292b190f7b157aa16a3010988
-  agora-react-native-rtm: e17d4992e3af6868985066b1bd87ae440cbf2d91
-  AgoraRtcEngine_iOS: 3a4d64f2866ffc122e090a693153bb673021f6fe
-  AgoraRtm_iOS: c6ba986a3af73dd0f02e6e2995ae4fe9c155e6ae
+  A0Auth0: 293fd04e4a4458bd260ca2782fbe25d8ec7ea9f1
+  agora-react-native-rtm: 126ac7bb4338632180f2ba355f1f0e08580d787d
+  AgoraRtcEngine_iOS: 8aa4a8e46bd81963607857b1d46703b93e4de156
+  AgoraRtm_iOS: 382a54763803dad098d3b31a2608ccd62972e00b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXApplication: 4797b8b37f0b0470f587fdccf6407f44b50d18b5
@@ -628,7 +628,7 @@ SPEC CHECKSUMS:
   EXImageLoader: da941c9399e01ec28f2d5b270bdd21f2c8ca596c
   EXKeepAwake: d4e4a3ed8c1c4fd940dd62fc5a8be2a190371fd4
   EXPermissions: 8f8c1c05580c4e02d4ee2c8dd74bfe173ff6a723
-  EXSplashScreen: a9baaf4fa866003884c90ba049f18760d6a8ce39
+  EXSplashScreen: 6d5b4274537d2b9f343a9ec2347dbb61f3d40ab7
   EXStructuredHeaders: be834496a4d9fd0069cd12ec1cc57b31c6d3b256
   EXUpdates: efe0e8c514dcff06a8fd0b63be6019a6365fb9c7
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
@@ -645,12 +645,12 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
-  react-native-agora: 8fe461c6e314fd6e4da746fabcac2b0a3b263c75
-  react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
+  react-native-agora: fe483050721855481edaa43a348f19534fb51acf
+  react-native-contacts: bc424db19c3384e44e6a9d9da9a78ee51b0aa7a1
   react-native-encrypted-storage: e78d848ce0fb663c2ce306e37921d026809322e6
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area: e8230b0017d76c00de6b01e2412dcf86b127c6a3
-  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
+  react-native-safe-area-context: 61c8c484a3a9e7d1fda19f7b1794b35bbfd2262a
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-track-player: 6ec965317dbf9d49f2f4f87d050b53b3f994a5b7
   react-native-udp: ff9d13e523f2b58e6bc5d4d32321ac60671b5dc9
@@ -665,8 +665,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNCAsyncStorage: 56a3355a10b5d660c48c6e37325ac85ebfd09885
-  RNCClipboard: 4935717a8e86273de4a45f113d01dad949b5374b
+  RNCAsyncStorage: 7102fe8985f889579a3ae148d957bbb3f308122b
+  RNCClipboard: ddd4d291537f1667209c9c405aaa4307297e252e
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
@@ -681,7 +681,7 @@ SPEC CHECKSUMS:
   UMBarCodeScannerInterface: 79f92bea5f7af39b381a4c82298105ceb537408a
   UMCameraInterface: 81ff46700da88435f17afedfc88915eaede7e6a6
   UMConstantsInterface: bb94dd46039dcde276ed50225b29e22785e604bf
-  UMCore: 60b35f4d217461f7b54934b0c5be67442871f01f
+  UMCore: 2f671796d7439604a1cf8ac7bbe5809cd5c50437
   UMFaceDetectorInterface: 791eec55ffca1171992976b7eceb73e69e391c58
   UMFileSystemInterface: f72245e90ce78fa6427180ff0b0904ead13d8161
   UMFontInterface: 5843cff7db85a42ba629aaac53d33091c35524d3
