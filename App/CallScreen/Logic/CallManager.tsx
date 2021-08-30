@@ -218,7 +218,7 @@ class CallManager extends EventEmitter {
 
     private uploadConvo = async (associatedMetadata: ConvoMetadata)=>{
         try{            
-            const filePath =  this.agoraManager.getFilePathOfConvo(associatedMetadata.convoId)
+            const filePath =  AgoraManager.getFilePathOfConvo(associatedMetadata.convoId)
             return await uploadConvo(filePath, associatedMetadata);
         }
         catch(error){
