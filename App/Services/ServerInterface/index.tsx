@@ -73,13 +73,31 @@ export const fetchLatestConvosMetadataForUser = async () => {
     try {
         const metadataJson = await fetchAllMetadataForUserFromServer();
         const metadataAsInitiator = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
-        const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);
+        uploadMissingConvos(metadataAsInitiator);
+        const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);        
         return metadataAsInitiator.concat(metadataAsReceiver);
     }
     catch (error) {
         console.log("ERROR -- ServerInterface::fetchExisstingConvosMetadataForUser: ", error);
         return [];
     }
+}
+
+/**
+ * 
+ * @param convoMetadataAsInitiator 
+ * To fix glitch where the convo didn't get uploaded at the end of the call
+ */
+const uploadMissingConvos = (convoMetadataAsInitiator: any)=>{
+    const metadata = convoMetadataAsInitiator as ConvoMetadata[];
+    for(let i = 0; i < metadata.length; i++){
+        const singleMetadata = metadata[i];
+        if(singleMetadata.timestampStarted > 0) continue;
+
+        //TODO: Look through disk for convo
+        //TODO: Gen good metadata for it
+        //TODO: Upload
+    }    
 }
 
 const convertFetchedMetadataToConvoMetadata = (fetchedMetadata: any[]) => {

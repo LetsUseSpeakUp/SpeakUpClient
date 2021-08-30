@@ -6,7 +6,7 @@ const dummyNavToNewRouteFunc = (newRoute: string)=>{}
 /**
  * Parent component who is the state holder should set all this.
  * You'll run into problems if children call the context before the
- * parent has set it, thought that shouldn't happen if you set the 
+ * parent has set it, though that shouldn't happen if you set the 
  * values in JSX
  * 
  * You shouldn't change any of these once they're set in the beginning.
