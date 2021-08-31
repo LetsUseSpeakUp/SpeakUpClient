@@ -2,7 +2,7 @@ import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
 import {getAuthenticationToken, getMyUserInfo} from '../../AuthLogic'
 import {SimplifiedContact} from '../../CallScreen/ContactsScreen/Logic'
-import AgoraManager from '../../CallScreen/Logic/AgoraManager'
+import {getFilePathOfConvo} from '../../CallScreen/Logic/AgoraManager'
 
 // const SERVERENDPOINT = "http://192.168.86.39:1234/backend/needauth" //During local testing, need to make this your server computer's IP
 const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";
@@ -92,7 +92,6 @@ export const fetchLatestConvosMetadataForUser = async () => {
  */
 const uploadMissingConvos = async (convoMetadataAsInitiator: any)=>{
     const metadata = convoMetadataAsInitiator as ConvoMetadata[];
-    console.log("ServerInterface::uploadMissingConvos. Metadata: ", metadata);
     for(let i = 0; i < metadata.length; i++){
         const singleMetadata = metadata[i];
         if(singleMetadata.timestampStarted > 0) continue;
