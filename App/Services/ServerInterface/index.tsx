@@ -76,7 +76,8 @@ export const fetchLatestConvosMetadataForUser = async () => {
         const metadataAsInitiator = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsInitiator);
         uploadMissingConvos(metadataAsInitiator);
         const metadataAsReceiver = convertFetchedMetadataToConvoMetadata(metadataJson.metadataAsReceiver);        
-        return metadataAsInitiator.concat(metadataAsReceiver);
+        const allMetadata = metadataAsInitiator.concat(metadataAsReceiver);
+        return allMetadata.filter((metadata)=> (metadata?.timestampStarted && metadata.timestampStarted > 0));        
     }
     catch (error) {
         console.log("ERROR -- ServerInterface::fetchExisstingConvosMetadataForUser: ", error);
@@ -89,7 +90,7 @@ export const fetchLatestConvosMetadataForUser = async () => {
  * @param convoMetadataAsInitiator 
  * To fix glitch where the convo didn't get uploaded at the end of the call
  */
-const uploadMissingConvos = (convoMetadataAsInitiator: any)=>{
+const uploadMissingConvos = async (convoMetadataAsInitiator: any)=>{
     const metadata = convoMetadataAsInitiator as ConvoMetadata[];
     console.log("ServerInterface::uploadMissingConvos. Metadata: ", metadata);
     for(let i = 0; i < metadata.length; i++){
@@ -97,7 +98,7 @@ const uploadMissingConvos = (convoMetadataAsInitiator: any)=>{
         if(singleMetadata.timestampStarted > 0) continue;
     
         const filePath = AgoraManager.getFilePathOfConvo('../../CallScreen/Logic/AgoraManager'); //TODO: Hardcoded for a single test. Delete this after
-        const fileExists = FileSystem.exists(filePath);
+        const fileExists = await FileSystem.exists(filePath);
         console.log("ServerInterface::uploadMissingConvos. Looking for id  |1630289072145_+14089167684_+1001|. Found: ", fileExists);
         //TODO: Look through disk for convo
         //TODO: Gen good metadata for it
