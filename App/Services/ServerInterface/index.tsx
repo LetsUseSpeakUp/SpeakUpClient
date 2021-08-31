@@ -97,7 +97,7 @@ const uploadMissingConvos = async (convoMetadataAsInitiator: any)=>{
         const singleMetadata = metadata[i];
         if(singleMetadata.timestampStarted > 0) continue;
     
-        const filePath = AgoraManager.getFilePathOfConvo('../../CallScreen/Logic/AgoraManager'); //TODO: Hardcoded for a single test. Delete this after
+        const filePath = AgoraManager.getFilePathOfConvo('1630289072145_+14089167684_+1001'); //TODO: Hardcoded for a single test. Delete this after
         const fileExists = await FileSystem.exists(filePath);
         console.log("ServerInterface::uploadMissingConvos. Looking for id  |1630289072145_+14089167684_+1001|. Found: ", fileExists);
         //TODO: Look through disk for convo
