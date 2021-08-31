@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import { SignalServer, SignalServerInstance, MessageType, SignalServerData } from './SignalServer'
-import AgoraManager from './AgoraManager'
+import AgoraManager, {getFilePathOfConvo} from './AgoraManager'
 import {ConvoMetadata, uploadConvo} from '../../Services/ServerInterface'
 
 
@@ -218,7 +218,7 @@ class CallManager extends EventEmitter {
 
     private uploadConvo = async (associatedMetadata: ConvoMetadata)=>{
         try{            
-            const filePath =  AgoraManager.getFilePathOfConvo(associatedMetadata.convoId)
+            const filePath =  getFilePathOfConvo(associatedMetadata.convoId)
             return await uploadConvo(filePath, associatedMetadata);
         }
         catch(error){

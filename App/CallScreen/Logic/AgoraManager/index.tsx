@@ -93,18 +93,13 @@ export default class AgoraManager extends EventEmitter {
         }
         this.startedRecording = true;
 
-        const filePath = AgoraManager.getFilePathOfConvo(convoId);
+        const filePath = getFilePathOfConvo(convoId);
         const config = new AudioRecordingConfiguration(filePath, { recordingPosition: AudioRecordingPosition.PositionMixedRecordingAndPlayback });
         this.rtcEngine?.startAudioRecordingWithConfig(config).then(() => {
             console.log("AgoraManager::startRecording. Promise returned without error. FilePath: ", filePath);
         }).catch((error) => {
             console.log("ERROR -- AgoraManager::startRecording: ", error);
         });
-    }
-
-    public static getFilePathOfConvo(convoId: string): string {
-        const filePath = FileSystem.DocumentDirectoryPath + '/' + convoId + '.aac';
-        return filePath;
     }
 
     public stopRecording(convoMetadata: ConvoMetadata) {
@@ -197,4 +192,9 @@ export default class AgoraManager extends EventEmitter {
             this.emit('leftChannelWithoutConnecting');
         }
     }
+}
+
+export const getFilePathOfConvo = (convoId: string): string =>{
+    const filePath = FileSystem.DocumentDirectoryPath + '/' + convoId + '.aac';
+    return filePath;
 }
