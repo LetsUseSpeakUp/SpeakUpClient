@@ -100,7 +100,7 @@ const uploadMissingConvos = async (convoMetadataAsInitiator: any)=>{
         const fileExists = await FileSystem.exists(filePath);
         if(fileExists){
             console.log("ServerInterface::uploadMissingConvos. Found convo for id |" , singleMetadata.convoId, "|. Uploading.");
-            singleMetadata.convoLength = 600; //Not accurate but fine for now
+            singleMetadata.convoLength = 600000; //Not accurate but fine for now
             singleMetadata.timestampStarted = parseInt(singleMetadata.convoId.substring(0, singleMetadata.convoId.indexOf('_')));
             await uploadConvo(filePath, singleMetadata);            
         }                
