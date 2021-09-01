@@ -2,7 +2,7 @@ import FileSystem, { UploadFileItem } from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob'
 import {getAuthenticationToken, getMyUserInfo} from '../../AuthLogic'
 import {SimplifiedContact} from '../../CallScreen/ContactsScreen/Logic'
-import {getFilePathOfConvo} from '../../CallScreen/Logic/AgoraManager'
+import {getFilePathOfConvo} from '../FileUtilities'
 
 // const SERVERENDPOINT = "http://192.168.86.39:1234/backend/needauth" //During local testing, need to make this your server computer's IP
 const SERVERENDPOINT = "https://letsusespeakup.com/backend/needauth";

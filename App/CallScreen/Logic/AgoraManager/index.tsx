@@ -8,8 +8,8 @@ import RtcEngine, {
     ConnectionStateType
 } from 'react-native-agora';
 
-import FileSystem from 'react-native-fs'
 import { ConvoMetadata, getChannelToken } from '../../../Services/ServerInterface';
+import { getFilePathOfConvo } from '../../../Services/FileUtilities';
 
 /**
  * Emits
@@ -192,9 +192,4 @@ export default class AgoraManager extends EventEmitter {
             this.emit('leftChannelWithoutConnecting');
         }
     }
-}
-
-export const getFilePathOfConvo = (convoId: string): string =>{
-    const filePath = FileSystem.DocumentDirectoryPath + '/' + convoId + '.aac';
-    return filePath;
 }
