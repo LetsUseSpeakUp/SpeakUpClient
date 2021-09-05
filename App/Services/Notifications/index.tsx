@@ -1,23 +1,29 @@
 import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
 
 
 export const setupNotifications = async (userPhoneNumber: string)=>{
     console.log("Notifications::setupNotifications. Phone Number: ", userPhoneNumber);
-    const token = await requestNotificationPermission();
+    const token = await getNotificationToken();
     if(token.length){
         console.log("Notifications::setupNotifications. Permission completed. Token: ", token);
         //TODO: authLogic.sendTokenToServer
     }
 }
 
-const requestNotificationPermission = async (): Promise<string>=>{
+const getNotificationToken = async (): Promise<string>=>{
     try {
-        const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-        if (!permission.granted) return "";
-        return await Notifications.getExpoPushTokenAsync();                
+        let { status: permissionStatus } = await Notifications.getPermissionsAsync();
+        if(permissionStatus !== 'granted'){
+            permissionStatus = await Notifications.requestPermissionsAsync().status;
+        }
+        if(permissionStatus !== 'granted'){
+            throw 'permission not granted';
+        }
+
+        return (await Notifications.getExpoPushTokenAsync()).data;
+        
      } catch (error) {
-       console.log('Error getting a token', error);
+       console.log('ERROR -- Notifications::getNotificationToken - Error getting a token: ', error);
        return "";
      }
 }
