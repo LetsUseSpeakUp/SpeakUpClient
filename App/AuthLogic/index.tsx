@@ -112,6 +112,23 @@ export const setUserMetadata = async(metadata: {first_name: string, last_name: s
     return returnVal;
 }
 
+export const setUserPushNotificationToken  = async(pushNotificationToken: string)=>{
+    let firstName = '';
+    let lastName = '';
+    try{
+        firstName = await AsyncStorage.getItem('firstName') ?? '';
+        lastName = await AsyncStorage.getItem('lastName') ?? '';
+    }
+    catch(error){}
+    
+    const metadata = {first_name: firstName, last_name: lastName, push_notification_token: pushNotificationToken};
+
+    const response = await auth0.auth.userInfo({token: await getAuthenticationToken()});
+    const userId = response.sub;    
+    const returnVal = await auth0.users(await getAuthenticationToken()).patchUser({id: userId, metadata: metadata});        
+    return returnVal;
+}
+
 export const getMyUserInfo = async()=>{
     try{
         const [phoneNumber, firstName, lastName] = await Promise.all([AsyncStorage.getItem('phoneNumber'), AsyncStorage.getItem('firstName'), AsyncStorage.getItem('lastName')]);

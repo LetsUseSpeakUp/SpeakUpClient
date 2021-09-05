@@ -1,4 +1,5 @@
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications';
+import * as AuthLogic from '../../AuthLogic'
 
 
 export const setupNotifications = async (userPhoneNumber: string)=>{
@@ -6,7 +7,7 @@ export const setupNotifications = async (userPhoneNumber: string)=>{
     const token = await getNotificationToken();
     if(token.length){
         console.log("Notifications::setupNotifications. Permission completed. Token: ", token);
-        //TODO: authLogic.sendTokenToServer
+        await AuthLogic.setUserPushNotificationToken(token);
     }
 }
 
@@ -14,7 +15,7 @@ const getNotificationToken = async (): Promise<string>=>{
     try {
         let { status: permissionStatus } = await Notifications.getPermissionsAsync();
         if(permissionStatus !== 'granted'){
-            permissionStatus = await Notifications.requestPermissionsAsync().status;
+            permissionStatus = (await Notifications.requestPermissionsAsync()).status;
         }
         if(permissionStatus !== 'granted'){
             throw 'permission not granted';
