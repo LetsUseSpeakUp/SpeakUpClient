@@ -13,6 +13,7 @@ import SplashScreen from './SplashScreen'
 import { LogBox, StatusBar } from 'react-native';
 import {Colors} from './Graphics'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import {setupNotifications} from './Services/Notifications'
 
 LogBox.ignoreLogs([ //This is to mute a fake error from react-navigation. If you encounter issues with react navigation, remove this line to see the warning
   'Non-serializable values were found in the navigation state',
@@ -44,6 +45,7 @@ export default function App() {
       ConvosManager.fetchLatestConvosMetadataForUser().then((metadata: any) => {
         setConvosMetadata(metadata);
       })
+      setupNotifications(userPhoneNumber);
     }
   }, [userPhoneNumber])
 
@@ -54,8 +56,8 @@ export default function App() {
           if(userInfo == null) return;
           if(userInfo.phoneNumber != null) setUserPhoneNumber(userInfo.phoneNumber);
           if(userInfo.firstName != null) setUserFirstName(userInfo.firstName);
-          if(userInfo.lastName != null) setUserLastName(userInfo.lastName);
-        })
+          if(userInfo.lastName != null) setUserLastName(userInfo.lastName);          
+        })        
       }      
       setShowSplashScreen(false);
     });

@@ -1,3 +1,6 @@
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+
 
 export const setupNotifications = async (userPhoneNumber: string)=>{
     console.log("Notifications::setupNotifications. Phone Number: ", userPhoneNumber);
@@ -9,7 +12,12 @@ export const setupNotifications = async (userPhoneNumber: string)=>{
 }
 
 const requestNotificationPermission = async (): Promise<string>=>{
-    //TODO
-    return "";
+    try {
+        const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        if (!permission.granted) return "";
+        return await Notifications.getExpoPushTokenAsync();                
+     } catch (error) {
+       console.log('Error getting a token', error);
+       return "";
+     }
 }
-
